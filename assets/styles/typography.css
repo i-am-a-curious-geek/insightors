@@ -1,0 +1,115 @@
+
+p, h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  font-weight: 400;
+  margin-bottom: 0;
+}
+.theme-light p, .theme-light h1, .theme-light h2, .theme-light h3, .theme-light h4, .theme-light h5, .theme-light h6 {
+  color: #646777;
+}
+p {
+  margin: 10px 0 0 0;
+}
+p:first-child {
+  margin: 0;
+}
+h1 {
+  font-size: 36px;
+  line-height: 48px;
+}
+h1.subhead {
+  font-size: 30px;
+  color: #999;
+  line-height: 36px;
+}
+h2 {
+  font-size: 30px;
+  line-height: 36px;
+}
+h2.subhead {
+  font-size: 24px;
+  color: #999;
+  line-height: 32px;
+}
+h3 {
+  font-size: 24px;
+  line-height: 32px;
+}
+h3.subhead {
+  font-size: 18px;
+  color: #999;
+  line-height: 24px;
+}
+h4 {
+  font-size: 18px;
+  line-height: 24px;
+}
+h4.subhead {
+  font-size: 12px;
+  color: #999;
+  line-height: 16px;
+}
+h5 {
+  font-size: 14px;
+  line-height: 18px;
+}
+h5.subhead {
+  font-size: 10px;
+  color: #999;
+  line-height: 12px;
+}
+h6 {
+  font-size: 12px;
+  line-height: 16px;
+}
+h6.subhead {
+  font-size: 8px;
+  color: #999;
+  line-height: 10px;
+}
+.bold-text {
+  font-weight: 700;
+}
+.typography--inline {
+  display: flex;
+  flex-wrap: wrap;
+}
+.typography--inline * {
+  margin-top: auto;
+  margin-right: 15px;
+}
+.typography-card h1, .typography-card h2, .typography-card h3, .typography-card h4, .typography-card h5, .typography-card h6 {
+  margin-bottom: 10px;
+}
+blockquote {
+  font-size: 13px;
+  font-style: italic;
+  border-left: 3px solid #a30032;
+  margin-bottom: 0;
+  padding-left: 10px;
+}
+.highlight {
+  background-color: #a30032;
+  color: #fff;
+}
+.red-text {
+  color: #ad4444;
+}
+.page-title {
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 20px;
+}
+.page-title:last-child {
+  margin-bottom: 30px;
+}
+.page-title.page-title--not-last {
+  margin-top: 20px;
+}
+.page-subhead {
+  margin-bottom: 20px;
+}
+.page-subhead.subhead {
+  font-size: 14px;
+  opacity: 0.7;
+}
