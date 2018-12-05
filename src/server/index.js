@@ -12,7 +12,7 @@ const chalk         = require('chalk');
 
 const DOCS_PATH = '../../dist/';
 /*
-const PORT      = 3002;
+const PORT      = 3001;
 const IP_ADRESS = 'localhost';
 */
 const PORT = process.env.PORT;

@@ -2,7 +2,7 @@
   "name": "insightors",
   "version": "0.0.0",
   "description": "a web app to upload data and visualise them",
-  "main": "src/app/index.js",
+  "main": "src/server/index.js",
   "scripts": {
     "start": "node src/server/index.js",
     "build": "rimraf dist && cross-env webpack",
