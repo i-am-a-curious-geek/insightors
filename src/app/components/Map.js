@@ -10,18 +10,6 @@ export default class Map extends PureComponent {
   constructor() {
     super();
     this.map = null;
-import React, {
-  PureComponent
-}                         from 'react';
-import PropTypes          from 'prop-types';
-import { Card, CardBody, Col } from 'reactstrap';
-
-import L from "leaflet";
-
-export default class Map extends PureComponent {
-  constructor() {
-    super();
-    this.map = null;
 
     this.featureGroupLayer = null;
     this.featureGroupMarkers = null;
@@ -316,7 +304,7 @@ export default class Map extends PureComponent {
     this.featureGroupLayer = featureGroupLayer; 
     this.featureGroupMarkers = featureGroupMarkers; 
 
-    this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
+    this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src="http://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
     });
   }
   
