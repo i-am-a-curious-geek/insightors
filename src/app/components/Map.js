@@ -241,10 +241,9 @@ export default class Map extends PureComponent {
 				let layer = e.target;
 
 				layer.setStyle({
-					weight: 3,
+					weight: 5,
 					color: "#333333",
-					dashArray: "",
-					fillOpacity: parseFloat(opacity/100)
+					dashArray: ""
 				});
 
 				if (!L.Browser.ie && !L.Browser.opera) {
@@ -261,8 +260,7 @@ export default class Map extends PureComponent {
 				layer.setStyle({
 				  weight: 2,
 				  color: "#333333",
-				  dashArray: "3",
-				  fillOpacity: parseFloat(opacity/100)
+				  dashArray: "3"
 				});
 			  }	
 	    	});
