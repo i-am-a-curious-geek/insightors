@@ -7,6 +7,9 @@ export {
 export {
 	fetchPreschoolLocationDataIfNeeded
 } from './modules/baby/preschoolLocationData';
+export {
+	fetchChildcareServicesDataIfNeeded
+} from './modules/baby/childcareServicesData';
 
 export {
 	toggleSidebar,

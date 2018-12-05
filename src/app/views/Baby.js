@@ -23,20 +23,23 @@ class Baby extends React.Component {
 
     this.featureGroupLayer = new L.featureGroup(); 
     this.featureGroupMarkers = new L.featureGroup();
+    this.featureGroupMarkers_2 = new L.featureGroup();
   }
 
   static propTypes = {            
     babySubzoneDataIsFetching:  PropTypes.bool,
     babyAreaDataIsFetching: PropTypes.bool,
     preschoolLocationDataIsFetching: PropTypes.bool,
+    childcareServicesDataIsFetching:  PropTypes.bool,
 
     actions: PropTypes.shape({
       enterBaby: PropTypes.func,
       leaveBaby: PropTypes.func,  
       
       fetchBabySubzoneDataIfNeeded:     PropTypes.func,
-      fetchBabyAreaDataIfNeeded:     PropTypes.func,
-      fetchPreschoolLocationDataIfNeeded:     PropTypes.func
+      fetchBabyAreaDataIfNeeded:        PropTypes.func,
+      fetchPreschoolLocationDataIfNeeded:     PropTypes.func,
+      fetchChildcareServicesDataIfNeeded:      PropTypes.func
     })
   };
 
@@ -44,6 +47,7 @@ class Baby extends React.Component {
     opacity: 70,
     agg: "PLANNING AREAS",
     preschools: false,
+    childcareServices: false,
     showFilters: true
   };
 
@@ -64,7 +68,7 @@ class Baby extends React.Component {
     const { actions: { leaveBaby } } = this.props;
     leaveBaby();    
   }
-
+ 
   render() {   
     const {           
       babyAreaData,
@@ -72,12 +76,18 @@ class Baby extends React.Component {
       babySubzoneData,
       babySubzoneDataIsFetching,
       preschoolLocationData,
-      preschoolLocationDataIsFetching
+      preschoolLocationDataIsFetching,
+      childcareServicesData,
+      childcareServicesDataIsFetching
     } = this.props;
                         
-    if(babyAreaDataIsFetching || babySubzoneDataIsFetching || preschoolLocationDataIsFetching) {  
+    if(babyAreaDataIsFetching || babySubzoneDataIsFetching || preschoolLocationDataIsFetching || childcareServicesDataIsFetching) {  
       this.featureGroupMarkers.eachLayer((layer) => {
         this.featureGroupMarkers.removeLayer(layer);
+      });
+
+      this.featureGroupMarkers_2.eachLayer((layer) => {
+        this.featureGroupMarkers_2.removeLayer(layer);
       });
 
       this.featureGroupLayer.eachLayer((layer) => {
@@ -99,7 +109,7 @@ class Baby extends React.Component {
       </AnimatedView>);    
     } else {           
       return(    
-        <AnimatedView>  
+        <AnimatedView> 
           <div className="row map-container-card">                                                
             <Map
               symbol="baby"
@@ -109,11 +119,13 @@ class Baby extends React.Component {
               attribute={"BELOW_4"}
               geojsonLayer={(this.state.agg === "SUBZONE") ? babySubzoneData : babyAreaData}
               geojsonMarkers={ (this.state.preschools) ? preschoolLocationData : undefined }
+              geojsonMarkers_2={ (this.state.childcareServices) ? childcareServicesData : undefined  }
               tooltipCaption={(this.state.agg === "SUBZONE") ? "Subzone" : "Planning Area"}
               tooltipAttribute={ (this.state.agg === "SUBZONE") ? "SUBZONE_N" : "PLN_AREA_N"}
               opacity={this.state.opacity}
               featureGroupLayer={this.featureGroupLayer}
               featureGroupMarkers={this.featureGroupMarkers}
+              featureGroupMarkers_2={this.featureGroupMarkers_2}
             />
           </div>
           <div id="filter-box">
@@ -172,7 +184,10 @@ class Baby extends React.Component {
                         <th>CHILDCARE SERVICES</th>
                         <td>                        
                           <label className="toggle-switch">
-                            <input type="checkbox"  />
+                            <input type="checkbox"  
+                              onChange={this.handleChangeChildcareServices}
+                              checked={this.state.childcareServices}
+                            />
                             <span className="toggle-slider round"></span>
                           </label>
                         </td>
@@ -254,6 +269,25 @@ class Baby extends React.Component {
     });
   }
 
+  handleChangeChildcareServices = (event) => {
+    if(event.target.checked) {
+      const { actions: {       
+        fetchChildcareServicesDataIfNeeded
+      } } = this.props;
+
+      fetchChildcareServicesDataIfNeeded();  
+    } else {
+      this.featureGroupMarkers_2.eachLayer((layer) => {
+        this.featureGroupMarkers_2.removeLayer(layer);
+      });
+    }    
+
+    this.setState({        
+      childcareServices: event.target.checked
+    });
+  }
+
+
   handleShowFilters = (event) => {
     this.setState({
       showFilters: !this.state.showFilters
@@ -274,7 +308,10 @@ const mapStateToProps = (state) => {
     babyAreaData: state.babyAreaData.data,
 
     preschoolLocationDataIsFetching: state.preschoolLocationData.isFetching,
-    preschoolLocationData: state.preschoolLocationData.data
+    preschoolLocationData: state.preschoolLocationData.data,
+
+    childcareServicesDataIsFetching: state.childcareServicesData.isFetching,
+    childcareServicesData: state.childcareServicesData.data
   };
 };
 
@@ -288,7 +325,8 @@ const mapDispatchToProps = (dispatch) => {
         
         fetchBabyAreaDataIfNeeded: actions.fetchBabyAreaDataIfNeeded,
         fetchBabySubzoneDataIfNeeded: actions.fetchBabySubzoneDataIfNeeded,
-        fetchPreschoolLocationDataIfNeeded: actions.fetchPreschoolLocationDataIfNeeded
+        fetchPreschoolLocationDataIfNeeded: actions.fetchPreschoolLocationDataIfNeeded,
+        fetchChildcareServicesDataIfNeeded: actions.fetchChildcareServicesDataIfNeeded
       },
       dispatch)
   };
