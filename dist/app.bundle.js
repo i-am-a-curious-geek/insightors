@@ -54414,7 +54414,7 @@ var Map_Map = function (_PureComponent) {
 												document.getElementById("map-canvas").style.background = "#bed4f9";
 												this.basemap = leaflet_src_default.a.tileLayer("http://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png", {
 																detectRetina: true,
-																maxZoom: 17,
+																maxZoom: 18,
 																minZoom: 11,
 																attribution: false
 												});
