@@ -54600,10 +54600,9 @@ var Map_Map = function (_PureComponent) {
 																												var layer = e.target;
 
 																												layer.setStyle({
-																																weight: 3,
+																																weight: 5,
 																																color: "#333333",
-																																dashArray: "",
-																																fillOpacity: parseFloat(opacity / 100)
+																																dashArray: ""
 																												});
 
 																												if (!leaflet_src_default.a.Browser.ie && !leaflet_src_default.a.Browser.opera) {
@@ -54620,8 +54619,7 @@ var Map_Map = function (_PureComponent) {
 																												layer.setStyle({
 																																weight: 2,
 																																color: "#333333",
-																																dashArray: "3",
-																																fillOpacity: parseFloat(opacity / 100)
+																																dashArray: "3"
 																												});
 																								}
 																				});
