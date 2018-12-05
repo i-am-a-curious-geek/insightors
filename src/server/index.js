@@ -11,29 +11,31 @@ const compiler      = webpack(config);
 const chalk         = require('chalk');
 
 const DOCS_PATH = '../../dist/';
+/*
 const PORT      = 3002;
 const IP_ADRESS = 'localhost';
-
+*/
+const PORT = process.env.PORT;
+const IP_ADRESS = process.env.HOSTNAME;
 const app       = express();   
 
 //const TARGET = process.env.npm_lifecycle_event;  
-const TARGET = "prod";
 
-if(TARGET === "dev") {
+/*if(TARGET === "dev") {
   app.use(devMiddleware(compiler, {
   publicPath: config.output.publicPath,
     historyApiFallback: true
   }));
   app.use(hotMiddleware(compiler));
-} else if(TARGET === "prod") {
+} else if(TARGET === "prod") {*/
   app.use(express.static(path.join(__dirname, DOCS_PATH)));
-}
+/*}*/
 app.get(
   '/*',
   (req, res) => res.sendFile(path.join(__dirname, DOCS_PATH, 'index.html'))
 );
 
-if(TARGET === "dev") {
+/*if(TARGET === "dev") {
   return app.listen(
     PORT, 
     (err) => {
@@ -46,7 +48,7 @@ if(TARGET === "dev") {
         =====================================================
     `);
   });
-} else if(TARGET === "prod") {
+} else if(TARGET === "prod") {*/
   return app.listen(
     PORT,
     IP_ADRESS,
@@ -56,4 +58,4 @@ if(TARGET === "dev") {
       =====================================================
     `)
   );
-}
+/*}*/

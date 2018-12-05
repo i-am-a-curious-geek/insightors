@@ -83,8 +83,8 @@ export default class Map extends PureComponent {
 				}
 
 				let name = feature["properties"]["CENTRE_NAME"];	
-				let address = feature["properties"]["CENTRE_CODE"];		
-				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Address:</b> <span>" + address + "</span>";	
+				let code = feature["properties"]["CENTRE_CODE"];		
+				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Center Code:</b> <span>" + code + "</span>";	
 				layer.bindTooltip(str).openTooltip();          
 			  },
 			  mouseout: function(e) {
