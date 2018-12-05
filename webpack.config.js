@@ -74,21 +74,14 @@ const config = {
             loader: 'json-x-loader'
           }
         ]
-      },   
-     /* { 
-        test: /\.(mbtiles)$/,  
-        loader: 'url-loader',
-        options: {
-          mimetype: 'image/png'
-        }
-      },*/
+      },       
       {
         test: /\.(txt)$/,    
         exclude:  [nodeModulesDir],
         loader: '@webpack-loader/raw'      
       },                                 
       {
-        test: /\.(gif|png|jpe?g|ico|svg)$/i, 
+        test: /\.(gif|png|jpe?g|svg)$/i, 
         exclude:  [nodeModulesDir],
         use: [
           'file-loader?name=[path][name].[ext]',
@@ -161,6 +154,7 @@ const config = {
       new ExtractTextPlugin('bootstrap.css'),
       new ExtractTextPlugin('layout.css'),
       new ExtractTextPlugin('topbar.css'),
+      new ExtractTextPlugin('sidebar.css'),
       new ExtractTextPlugin('typography.css'),
       new ExtractTextPlugin('leaflet_1.0.0.css'),
       new webpack.optimize.CommonsChunkPlugin({
