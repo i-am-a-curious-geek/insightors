@@ -5,9 +5,9 @@
   "main": "src/app/index.js",
   "scripts": {
     "start": "node src/server/index.js",
-    "build": "rimraf public && cross-env webpack",
-    "dev": "rimraf public && cross-env webpack && node src/server/index.js",
-    "prod": "rimraf public && cross-env webpack && node src/server/index.js"
+    "build": "rimraf dist && cross-env webpack",
+    "dev": "rimraf dist && cross-env webpack && node src/server/index.js",
+    "prod": "rimraf dist && cross-env webpack && node src/server/index.js"
   },
   "engines": {
     "node": "v10.4.1",
