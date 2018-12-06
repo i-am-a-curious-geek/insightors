@@ -504,7 +504,7 @@
 }
 
 .leaflet-left .leaflet-control-scale {
-	margin-left: 5px;
+	margin-left: 15px;
 }
 
 .leaflet-bottom .leaflet-control-scale {
@@ -512,17 +512,18 @@
 }
 
 .leaflet-control-scale-line {
-	border: 2px solid #777;
-	border-top: none;
-	line-height: 1.1;
-	padding: 2px 5px 1px;
-	font-size: 11px;
-	white-space: nowrap;
-	overflow: hidden;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	background: #fff;
-	background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #777;
+    border-top: none;
+    line-height: 1.1;
+    padding: 2px 5px 1px;
+    font-size: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
+    background: transparent;
 }
 
 .leaflet-control-scale-line:not(:first-child) {

@@ -3,7 +3,12 @@ export const navigation = {
     {      
       category: 'Pre-School Children',
       icon: 'baby',
-      path: '/'    
+      path: '/children'    
+    },  
+    {      
+      category: 'Elderly Citizens',
+      icon: 'old',
+      path: '/elderly'    
     },  
     {      
       category: 'Demographics',

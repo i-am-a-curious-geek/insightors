@@ -5971,12 +5971,14 @@ ul, ol {
   margin-bottom: 0;
 }
 a {
-  color: #70bbfd;
+  color: #ffffff;
+  background: transparent;
   transition: all 0.3s;
+  text-decoration: none;
 }
 a:hover {
   text-decoration: none;
-  color: #3ea3fc;
+  color: #ffffff;
 }
 img {
   width: 100%;
@@ -7703,9 +7705,11 @@ a.topbar__button {
   border: none;
 }
 
+.sidebar__link:hover,
 .sidebar__link:active,
 .sidebar__link:focus {
   outline: none;  
+  text-decoration: none;
 }
 
 .sidebar__link {
@@ -7721,10 +7725,7 @@ a.topbar__button {
   border: none;
   white-space: nowrap;
 }
-.sidebar__link {
-  fill: #a30032;
-  color: #a30032;
-}
+
 .sidebar__link-icon-chevron {
   margin-top: 2.25px;
   margin-bottom: 2.25px;
@@ -8469,7 +8470,7 @@ div.toggle__button div.topbar__button {
 }
 
 .leaflet-left .leaflet-control-scale {
-	margin-left: 5px;
+	margin-left: 15px;
 }
 
 .leaflet-bottom .leaflet-control-scale {
@@ -8477,17 +8478,18 @@ div.toggle__button div.topbar__button {
 }
 
 .leaflet-control-scale-line {
-	border: 2px solid #777;
-	border-top: none;
-	line-height: 1.1;
-	padding: 2px 5px 1px;
-	font-size: 11px;
-	white-space: nowrap;
-	overflow: hidden;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
-	background: #fff;
-	background: rgba(255, 255, 255, 0.5);
+    border: 1px solid #777;
+    border-top: none;
+    line-height: 1.1;
+    padding: 2px 5px 1px;
+    font-size: 80%;
+    white-space: nowrap;
+    overflow: hidden;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: #fff;
+    background: rgba(255, 255, 255, 0.5);
+    background: transparent;
 }
 
 .leaflet-control-scale-line:not(:first-child) {

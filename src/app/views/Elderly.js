@@ -4,7 +4,7 @@ import React, {
 import PropTypes          from 'prop-types';
 import { Card, CardBody, Col } from 'reactstrap';
 import { default as AnimatedView } from 'components/AnimatedView';
-import { default as Map } from 'components/Map';
+import { default as ElderlyMap } from 'components/ElderlyMap';
 import Slider from 'rc-slider';
 
 import L from "leaflet";
@@ -17,79 +17,57 @@ import { bindActionCreators } from 'redux';
 import { connect }            from 'react-redux';
 import * as actions           from '../redux/actions';
 
-class Baby extends React.Component { 
+class Elderly extends React.Component { 
   constructor() {
     super();
 
-    this.featureGroupLayer = new L.featureGroup(); 
-    this.featureGroupMarkers = new L.featureGroup();
-    this.featureGroupMarkers_2 = new L.featureGroup();
+    this.featureGroupLayer = new L.featureGroup();   
   }
 
   static propTypes = {            
-    babySubzoneDataIsFetching:  PropTypes.bool,
-    babyAreaDataIsFetching: PropTypes.bool,
-    preschoolLocationDataIsFetching: PropTypes.bool,
-    childcareServicesDataIsFetching:  PropTypes.bool,
+    elderlySubzoneDataIsFetching:  PropTypes.bool,
+    elderlyAreaDataIsFetching: PropTypes.bool,
 
     actions: PropTypes.shape({
-      enterBaby: PropTypes.func,
-      leaveBaby: PropTypes.func,  
+      enterElderly: PropTypes.func,
+      leaveElderly: PropTypes.func,  
       
-      fetchBabySubzoneDataIfNeeded:     PropTypes.func,
-      fetchBabyAreaDataIfNeeded:        PropTypes.func,
-      fetchPreschoolLocationDataIfNeeded:     PropTypes.func,
-      fetchChildcareServicesDataIfNeeded:      PropTypes.func
+      fetchElderlySubzoneDataIfNeeded:     PropTypes.func,
+      fetchElderlyAreaDataIfNeeded:        PropTypes.func
     })
   };
 
   state = {
     opacity: 70,
-    agg: "PLANNING AREAS",
-    preschools: false,
-    childcareServices: false,
+    agg: "PLANNING AREAS",   
     showFilters: true
   };
 
   componentWillMount() {     
-    const { actions: { enterBaby } } = this.props;           
-    enterBaby();    
+    const { actions: { enterElderly } } = this.props;           
+    enterElderly();    
+
+    const { actions: { fetchElderlyAreaDataIfNeeded } } = this.props;
+    fetchElderlyAreaDataIfNeeded();    
   }
   
-  componentDidMount() {        
-    const { actions: {       
-      fetchBabyAreaDataIfNeeded
-    } } = this.props;
-
-    fetchBabyAreaDataIfNeeded();    
+  componentDidMount() {            
   }
 
   componentWillUnmount() {
-    const { actions: { leaveBaby } } = this.props;
-    leaveBaby();    
+    const { actions: { leaveElderly } } = this.props;
+    leaveElderly();    
   }
  
   render() {   
     const {           
-      babyAreaData,
-      babyAreaDataIsFetching,
-      babySubzoneData,
-      babySubzoneDataIsFetching,
-      preschoolLocationData,
-      preschoolLocationDataIsFetching,
-      childcareServicesData,
-      childcareServicesDataIsFetching
+      elderlyAreaData,
+      elderlyAreaDataIsFetching,
+      elderlySubzoneData,
+      elderlySubzoneDataIsFetching     
     } = this.props;
                         
-    if(babyAreaDataIsFetching || babySubzoneDataIsFetching || preschoolLocationDataIsFetching || childcareServicesDataIsFetching) {  
-      this.featureGroupMarkers.eachLayer((layer) => {
-        this.featureGroupMarkers.removeLayer(layer);
-      });
-
-      this.featureGroupMarkers_2.eachLayer((layer) => {
-        this.featureGroupMarkers_2.removeLayer(layer);
-      });
-
+    if(elderlyAreaDataIsFetching || elderlySubzoneDataIsFetching) {  
       this.featureGroupLayer.eachLayer((layer) => {
         this.featureGroupLayer.removeLayer(layer);
       });
@@ -111,21 +89,17 @@ class Baby extends React.Component {
       return(    
         <AnimatedView> 
           <div className="row map-container-card">                                                
-            <Map
-              symbol="baby"
-              title="Distribution of Pre-School Children (≤ age 4) in Singapore (Year 2017)"             
-              breaks={(this.state.agg === "SUBZONE") ? [0, 330, 1060, 2250, 3710, 5710] : [0, 1080, 5090, 8640, 12260, 17660]}
-              colors={["#ffffff", "#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]}              
-              attribute={"BELOW_4"}
-              geojsonLayer={(this.state.agg === "SUBZONE") ? babySubzoneData : babyAreaData}
-              geojsonMarkers={ (this.state.preschools) ? preschoolLocationData : undefined }
-              geojsonMarkers_2={ (this.state.childcareServices) ? childcareServicesData : undefined  }
+            <ElderlyMap
+              symbol="elderly"
+              title="Distribution of Elderly (≥ age 65) in Singapore (Year 2017)"             
+              breaks={(this.state.agg === "SUBZONE") ? [0,920,2470,4390,9170,16400] : [0,4690,14220,23250,30970,46510]}
+              colors={["#ffffff", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]}              
+              attribute={"ABOVE_65"}
+              geojsonLayer={(this.state.agg === "SUBZONE") ? elderlySubzoneData : elderlyAreaData}         
               tooltipCaption={(this.state.agg === "SUBZONE") ? "Subzone" : "Planning Area"}
               tooltipAttribute={ (this.state.agg === "SUBZONE") ? "SUBZONE_N" : "PLN_AREA_N"}
               opacity={this.state.opacity}
-              featureGroupLayer={this.featureGroupLayer}
-              featureGroupMarkers={this.featureGroupMarkers}
-              featureGroupMarkers_2={this.featureGroupMarkers_2}
+              featureGroupLayer={this.featureGroupLayer}          
             />
           </div>
           <div id="filter-box">
@@ -178,33 +152,7 @@ class Baby extends React.Component {
                             <option>SUBZONE</option>
                           </select>
                         </td>
-                      </tr>
-                      <tr><td colSpan={2}><br /></td></tr>
-                      <tr>
-                        <th>CHILDCARE SERVICES</th>
-                        <td>                        
-                          <label className="toggle-switch">
-                            <input type="checkbox"  
-                              onChange={this.handleChangeChildcareServices}
-                              checked={this.state.childcareServices}
-                            />
-                            <span className="toggle-slider round"></span>
-                          </label>
-                        </td>
-                      </tr>
-                      <tr><td colSpan={2}><br /></td></tr>
-                      <tr>
-                        <th>PRE-SCHOOLS</th>
-                        <td>                        
-                          <label className="toggle-switch">
-                            <input type="checkbox" 
-                              onChange={this.handleChangPreSchools}
-                              checked={this.state.preschools}
-                            />
-                            <span className="toggle-slider round"></span>
-                          </label>
-                        </td>
-                      </tr>                      
+                      </tr>                                          
                     </tbody>                   
                   </table>                              
                 </CardBody>                
@@ -234,59 +182,22 @@ class Baby extends React.Component {
 
     if(agg === "SUBZONE") {
       const { actions: {       
-        fetchBabySubzoneDataIfNeeded
+        fetchElderlySubzoneDataIfNeeded
       } } = this.props;
 
-      fetchBabySubzoneDataIfNeeded();    
+      fetchElderlySubzoneDataIfNeeded();    
     } else if(agg === "PLANNING AREAS") {
       const { actions: {       
-        fetchBabyAreaDataIfNeeded
+        fetchElderlyAreaDataIfNeeded
       } } = this.props;
 
-      fetchBabyAreaDataIfNeeded();    
+      fetchElderlyAreaDataIfNeeded();    
     }
 
     this.setState({
         agg: agg
     });
   }
-
-  handleChangPreSchools = (event) => {    
-    if(event.target.checked) {
-      const { actions: {       
-        fetchPreschoolLocationDataIfNeeded
-      } } = this.props;
-
-      fetchPreschoolLocationDataIfNeeded();  
-    } else {
-      this.featureGroupMarkers.eachLayer((layer) => {
-        this.featureGroupMarkers.removeLayer(layer);
-      });
-    }
-
-    this.setState({
-        preschools: event.target.checked
-    });
-  }
-
-  handleChangeChildcareServices = (event) => {
-    if(event.target.checked) {
-      const { actions: {       
-        fetchChildcareServicesDataIfNeeded
-      } } = this.props;
-
-      fetchChildcareServicesDataIfNeeded();  
-    } else {
-      this.featureGroupMarkers_2.eachLayer((layer) => {
-        this.featureGroupMarkers_2.removeLayer(layer);
-      });
-    }    
-
-    this.setState({        
-      childcareServices: event.target.checked
-    });
-  }
-
 
   handleShowFilters = (event) => {
     this.setState({
@@ -301,17 +212,11 @@ const mapStateToProps = (state) => {
   return {
     currentView:  state.views.currentView,
     
-    babySubzoneDataIsFetching:  state.babySubzoneData.isFetching,    
-    babySubzoneData: state.babySubzoneData.data,
+    elderlySubzoneDataIsFetching:  state.elderlySubzoneData.isFetching,    
+    elderlySubzoneData: state.elderlySubzoneData.data,
 
-    babyAreaDataIsFetching:  state.babyAreaData.isFetching,    
-    babyAreaData: state.babyAreaData.data,
-
-    preschoolLocationDataIsFetching: state.preschoolLocationData.isFetching,
-    preschoolLocationData: state.preschoolLocationData.data,
-
-    childcareServicesDataIsFetching: state.childcareServicesData.isFetching,
-    childcareServicesData: state.childcareServicesData.data
+    elderlyAreaDataIsFetching:  state.elderlyAreaData.isFetching,    
+    elderlyAreaData: state.elderlyAreaData.data
   };
 };
 
@@ -320,11 +225,11 @@ const mapDispatchToProps = (dispatch) => {
   return {
     actions : bindActionCreators(
       {
-        enterBaby: actions.enterBaby,
-        leaveBaby: actions.leaveBaby,
+        enterElderly: actions.enterElderly,
+        leaveElderly: actions.leaveElderly,
         
-        fetchBabyAreaDataIfNeeded: actions.fetchBabyAreaDataIfNeeded,
-        fetchBabySubzoneDataIfNeeded: actions.fetchBabySubzoneDataIfNeeded,
+        fetchElderlyAreaDataIfNeeded: actions.fetchElderlyAreaDataIfNeeded,
+        fetchElderlySubzoneDataIfNeeded: actions.fetchElderlySubzoneDataIfNeeded,
         fetchPreschoolLocationDataIfNeeded: actions.fetchPreschoolLocationDataIfNeeded,
         fetchChildcareServicesDataIfNeeded: actions.fetchChildcareServicesDataIfNeeded
       },
@@ -335,4 +240,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Baby);
+)(Elderly);

@@ -1,10 +1,10 @@
 import moment               from 'moment';
 
-import json from "api/singapore-baby-residents-by-area-jun-2017.geojson";
+import json from "api/singapore-children-residents-by-subzone-jun-2017.geojson";
 
-const REQUEST_BABY_AREA_DATA   = 'REQUEST_BABY_AREA_DATA';
-const RECEIVED_BABY_AREA_DATA  = 'RECEIVED_BABY_AREA_DATA';
-const ERROR_BABY_AREA_DATA     = 'ERROR_BABY_AREA_DATA';
+const REQUEST_CHILDREN_SUBZONE_DATA   = 'REQUEST_CHILDREN_SUBZONE_DATA';
+const RECEIVED_CHILDREN_SUBZONE_DATA  = 'RECEIVED_CHILDREN_SUBZONE_DATA';
+const ERROR_CHILDREN_SUBZONE_DATA     = 'ERROR_CHILDREN_SUBZONE_DATA';
 
 var initialState = {
   isFetching: false,
@@ -12,22 +12,22 @@ var initialState = {
   time:       null
 };
 
-export default function babyAreaData(state = initialState, action) { // features
+export default function childrenSubzoneData(state = initialState, action) { // features
   switch (action.type) {    
-    case 'REQUEST_BABY_AREA_DATA':  
+    case 'REQUEST_CHILDREN_SUBZONE_DATA':  
       return {
         ...state,
         isFetching: action.isFetching,
         time:       action.time
       };   
-    case 'RECEIVED_BABY_AREA_DATA':  
+    case 'RECEIVED_CHILDREN_SUBZONE_DATA':  
       return {
         ...state,
         isFetching: action.isFetching,
         data:     {...action.data},
         time:       action.time
       };   
-    case 'ERROR_BABY_AREA_DATA':
+    case 'ERROR_CHILDREN_SUBZONE_DATA':
       return {
         ...state,
         isFetching: action.isFetching,
@@ -39,34 +39,34 @@ export default function babyAreaData(state = initialState, action) { // features
 }
 
 // ============================ ASYNCHRONOUS CALLS =================================== //
-function requestBabyAreaData(time = moment().format()) {
+function requestChildrenSubzoneData(time = moment().format()) {
   return {
-    type:       REQUEST_BABY_AREA_DATA,
+    type:       REQUEST_CHILDREN_SUBZONE_DATA,
     isFetching: true,
     time
   };
 }
-function receivedBabyAreaData(data, time = moment().format()) {
+function receivedChildrenSubzoneData(data, time = moment().format()) {
   return {
-    type:       RECEIVED_BABY_AREA_DATA,
+    type:       RECEIVED_CHILDREN_SUBZONE_DATA,
     isFetching: false,
     data,
     time
   };
 }
 
-function errorBabyAreaData(time = moment().format()) {
+function errorChildrenSubzoneData(time = moment().format()) {
   return {
-    type:       ERROR_BABY_AREA_DATA,
+    type:       ERROR_CHILDREN_SUBZONE_DATA,
     isFetching: false,
     time
   };
 }
 
-function fetchBabyAreaData() { // CALLING AN API
+function fetchChildrenSubzoneData() { // CALLING AN API
   return dispatch => {
     // dispatch request action first
-    dispatch(requestBabyAreaData()); 
+    dispatch(requestChildrenSubzoneData()); 
 
     var url = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}${json}`;
 
@@ -94,24 +94,24 @@ function fetchBabyAreaData() { // CALLING AN API
     .then(result => {            
       return result
     })
-    .then(data => dispatch(receivedBabyAreaData(data))) 
-    .catch(error => dispatch(errorBabyAreaData(error)))               
+    .then(data => dispatch(receivedChildrenSubzoneData(data))) 
+    .catch(error => dispatch(errorChildrenSubzoneData(error)))               
   }
 }
 
-function shouldFetchBabyAreaData(state) {
-  const babyAreaDataStore = state.babyAreaData; 
-  if(babyAreaDataStore.isFetching) {        
+function shouldFetchChildrenSubzoneData(state) {
+  const childrenSubzoneDataStore = state.childrenSubzoneData; 
+  if(childrenSubzoneDataStore.isFetching) {        
     return false;
   } else {        
     return true;
   }
 }
 
-export function fetchBabyAreaDataIfNeeded() {
+export function fetchChildrenSubzoneDataIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchBabyAreaData(getState())) {
-      return dispatch(fetchBabyAreaData());
+    if (shouldFetchChildrenSubzoneData(getState())) {
+      return dispatch(fetchChildrenSubzoneData());
     }
   };
 }

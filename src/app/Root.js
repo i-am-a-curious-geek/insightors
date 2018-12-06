@@ -10,7 +10,9 @@ import { Provider }             from 'react-redux';
 import configureStore           from './redux/configureStore';
 import { history }              from './redux/configureStore';
 import { default as Layout }    from './containers/Layout';
-import { default as Baby } from './views/Baby';
+import { default as Children } from './views/Children';
+import { default as Elderly } from './views/Elderly';
+import { default as PageNotFound } from './views/PageNotFound';
 import { default as ScrollTop    } from './components/ScrollToTop';
 
 type Props = any;
@@ -27,9 +29,7 @@ class Root extends Component<Props, State> {
           <ConnectedRouter history={history}>
             <ScrollTop>
               <Switch>
-                <Route path="/" component={Layout}>
-                <Route path="" component={Baby} />                                
-                </Route>                
+                <Route path="/" component={Layout} />                               
               </Switch>              
             </ScrollTop>
           </ConnectedRouter>

@@ -6,7 +6,7 @@ import { Card, CardBody, Col } from 'reactstrap';
 
 import L from "leaflet";
 
-export default class Map extends PureComponent {
+export default class ChildrenMap extends PureComponent {
   constructor() {
     super();
     this.map = null;

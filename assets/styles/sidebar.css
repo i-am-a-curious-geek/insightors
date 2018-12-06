@@ -74,9 +74,11 @@
   border: none;
 }
 
+.sidebar__link:hover,
 .sidebar__link:active,
 .sidebar__link:focus {
   outline: none;  
+  text-decoration: none;
 }
 
 .sidebar__link {
@@ -92,10 +94,7 @@
   border: none;
   white-space: nowrap;
 }
-.sidebar__link {
-  fill: #a30032;
-  color: #a30032;
-}
+
 .sidebar__link-icon-chevron {
   margin-top: 2.25px;
   margin-bottom: 2.25px;

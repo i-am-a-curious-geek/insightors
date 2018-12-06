@@ -1,10 +1,10 @@
 import moment               from 'moment';
 
-import json from "api/singapore-baby-residents-by-subzone-jun-2017.geojson";
+import json from "api/singapore-elderly-residents-by-subzone-jun-2017.geojson";
 
-const REQUEST_BABY_SUBZONE_DATA   = 'REQUEST_BABY_SUBZONE_DATA';
-const RECEIVED_BABY_SUBZONE_DATA  = 'RECEIVED_BABY_SUBZONE_DATA';
-const ERROR_BABY_SUBZONE_DATA     = 'ERROR_BABY_SUBZONE_DATA';
+const REQUEST_ELDERLY_SUBZONE_DATA   = 'REQUEST_ELDERLY_SUBZONE_DATA';
+const RECEIVED_ELDERLY_SUBZONE_DATA  = 'RECEIVED_ELDERLY_SUBZONE_DATA';
+const ERROR_ELDERLY_SUBZONE_DATA     = 'ERROR_ELDERLY_SUBZONE_DATA';
 
 var initialState = {
   isFetching: false,
@@ -12,22 +12,22 @@ var initialState = {
   time:       null
 };
 
-export default function babySubzoneData(state = initialState, action) { // features
+export default function elderlySubzoneData(state = initialState, action) { // features
   switch (action.type) {    
-    case 'REQUEST_BABY_SUBZONE_DATA':  
+    case 'REQUEST_ELDERLY_SUBZONE_DATA':  
       return {
         ...state,
         isFetching: action.isFetching,
         time:       action.time
       };   
-    case 'RECEIVED_BABY_SUBZONE_DATA':  
+    case 'RECEIVED_ELDERLY_SUBZONE_DATA':  
       return {
         ...state,
         isFetching: action.isFetching,
         data:     {...action.data},
         time:       action.time
       };   
-    case 'ERROR_BABY_SUBZONE_DATA':
+    case 'ERROR_ELDERLY_SUBZONE_DATA':
       return {
         ...state,
         isFetching: action.isFetching,
@@ -39,34 +39,34 @@ export default function babySubzoneData(state = initialState, action) { // featu
 }
 
 // ============================ ASYNCHRONOUS CALLS =================================== //
-function requestBabySubzoneData(time = moment().format()) {
+function requestElderlySubzoneData(time = moment().format()) {
   return {
-    type:       REQUEST_BABY_SUBZONE_DATA,
+    type:       REQUEST_ELDERLY_SUBZONE_DATA,
     isFetching: true,
     time
   };
 }
-function receivedBabySubzoneData(data, time = moment().format()) {
+function receivedElderlySubzoneData(data, time = moment().format()) {
   return {
-    type:       RECEIVED_BABY_SUBZONE_DATA,
+    type:       RECEIVED_ELDERLY_SUBZONE_DATA,
     isFetching: false,
     data,
     time
   };
 }
 
-function errorBabySubzoneData(time = moment().format()) {
+function errorElderlySubzoneData(time = moment().format()) {
   return {
-    type:       ERROR_BABY_SUBZONE_DATA,
+    type:       ERROR_ELDERLY_SUBZONE_DATA,
     isFetching: false,
     time
   };
 }
 
-function fetchBabySubzoneData() { // CALLING AN API
+function fetchElderlySubzoneData() { // CALLING AN API
   return dispatch => {
     // dispatch request action first
-    dispatch(requestBabySubzoneData()); 
+    dispatch(requestElderlySubzoneData()); 
 
     var url = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}${json}`;
 
@@ -94,24 +94,24 @@ function fetchBabySubzoneData() { // CALLING AN API
     .then(result => {            
       return result
     })
-    .then(data => dispatch(receivedBabySubzoneData(data))) 
-    .catch(error => dispatch(errorBabySubzoneData(error)))               
+    .then(data => dispatch(receivedElderlySubzoneData(data))) 
+    .catch(error => dispatch(errorElderlySubzoneData(error)))               
   }
 }
 
-function shouldFetchBabySubzoneData(state) {
-  const babySubzoneDataStore = state.babySubzoneData; 
-  if(babySubzoneDataStore.isFetching) {        
+function shouldFetchElderlySubzoneData(state) {
+  const elderlySubzoneDataStore = state.elderlySubzoneData; 
+  if(elderlySubzoneDataStore.isFetching) {        
     return false;
   } else {        
     return true;
   }
 }
 
-export function fetchBabySubzoneDataIfNeeded() {
+export function fetchElderlySubzoneDataIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchBabySubzoneData(getState())) {
-      return dispatch(fetchBabySubzoneData());
+    if (shouldFetchElderlySubzoneData(getState())) {
+      return dispatch(fetchElderlySubzoneData());
     }
   };
 }

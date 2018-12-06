@@ -19,8 +19,8 @@ import { navigation }         from '../config/sidebar';
 import * as viewsActions        from '../redux/modules/views';
 import * as sidebarActions from '../redux/modules/sidebar';
 
-import * as fetchBabyAreaDataIfNeeded from '../redux/modules/baby/babyAreaData';
-
+import * as fetchChildrenAreaDataIfNeeded from '../redux/modules/children/childrenAreaData';
+import * as fetchElderlyAreaDataIfNeeded from '../redux/modules/elderly/elderlyAreaData';
 
 class Layout extends Component {    
 
@@ -30,13 +30,18 @@ class Layout extends Component {
     history:  PropTypes.object.isRequired,
 
     sidebarIsOpen: PropTypes.bool,    
-    babyAreaDataIsFetching:  PropTypes.bool,
+    childrenAreaDataIsFetching:  PropTypes.bool,
+    elderlyAreaDataIsFetching:  PropTypes.bool,
 
     actions: PropTypes.shape({
-      enterBaby: PropTypes.func,
-      leaveBaby: PropTypes.func,  
+      enterChildren: PropTypes.func,
+      leaveChildren: PropTypes.func,  
       
-      fetchBabyAreaDataIfNeeded:     PropTypes.func,
+      enterElderly: PropTypes.func,
+      leaveElderly: PropTypes.func,  
+
+      fetchChildrenAreaDataIfNeeded:     PropTypes.func,
+      fetchElderlyAreaDataIfNeeded:     PropTypes.func,
 
       openSidebar:   PropTypes.func,
       closeSidebar:  PropTypes.func,
@@ -45,28 +50,24 @@ class Layout extends Component {
   };
 
   componentDidMount() {
-    const {
-      actions: {        
-        fetchBabyAreaDataIfNeeded,
-        toggleSidebar
-      }
-    } = this.props;
-
-    fetchBabyAreaDataIfNeeded();  
+    const { actions: { toggleSidebar } } = this.props;    
     toggleSidebar();   
   }
 
   componentWillMount() {  
-    const { actions: { enterBaby } } = this.props;    
-    enterBaby();    
+    const { actions: { enterWelcomePage } } = this.props;    
+    enterWelcomePage();    
 
-    const { actions: { fetchBabyAreaDataIfNeeded } } = this.props;    
-    fetchBabyAreaDataIfNeeded(); 
+    const { actions: { fetchChildrenAreaDataIfNeeded } } = this.props;    
+    fetchChildrenAreaDataIfNeeded(); 
+
+    const { actions: { fetchElderlyAreaDataIfNeeded } } = this.props;    
+    fetchElderlyAreaDataIfNeeded();     
   }
 
   componentWillUnmount() {
-    const { actions: { leaveBaby } } = this.props;
-    leaveBaby();
+    const { actions: { leaveWelcomePage } } = this.props;
+    leaveWelcomePage();
   }  
 
   render() {   
@@ -83,7 +84,7 @@ class Layout extends Component {
         />    
         <div className={ sidebarIsOpen ? "container__wrap" : "container__wrap container--collapse"} >
           <div className="container">             
-            <Routes />                                                      
+              <Routes />                                           
           </div>
         </div>
       </div>            
@@ -113,7 +114,8 @@ const mapDispatchToProps = (dispatch) => {
       {
         ...viewsActions,
         ...sidebarActions,
-        ...fetchBabyAreaDataIfNeeded
+        ...fetchChildrenAreaDataIfNeeded,
+        ...fetchElderlyAreaDataIfNeeded
       },
       dispatch)
   };

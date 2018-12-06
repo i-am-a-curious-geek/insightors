@@ -22,7 +22,7 @@ var enhancer = null;
 var configureStoreProd = null;
 var configureStoreDev = null;
 
-/*if(TARGET === "prod") { // for prod only  
+/*if(TARGET === "prod") { // for prod only  */
   enhancer = compose(
     applyMiddleware(
       localStorageManager,
@@ -36,7 +36,7 @@ var configureStoreDev = null;
     return store;
   }
 
-/*} else { // for dev only */
+/*} else { // for dev only 
   const loggerMiddleware = createLogger({ 
     level     : 'info',
     collapsed : true
@@ -60,8 +60,8 @@ var configureStoreDev = null;
     }
     return store;
   } 
-/*}*/
+}*/
 
-export const configureStore = /*(TARGET === "prod") ? configureStoreProd/* : */configureStoreDev 
+export const configureStore = /*(TARGET === "prod") ? */configureStoreProd /*: configureStoreDev */
 
 export default configureStore

@@ -21,12 +21,14 @@ ul, ol {
   margin-bottom: 0;
 }
 a {
-  color: #70bbfd;
+  color: #ffffff;
+  background: transparent;
   transition: all 0.3s;
+  text-decoration: none;
 }
 a:hover {
   text-decoration: none;
-  color: #3ea3fc;
+  color: #ffffff;
 }
 img {
   width: 100%;
