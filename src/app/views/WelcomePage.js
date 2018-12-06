@@ -38,23 +38,25 @@ class WelcomePage extends PureComponent {
   }
 
   render() {
-    return(                                    
-      <Card className="page-not-found">
-        <CardBody>            
-            <h3 className="card__title">
-              <b className="not-found-text">WELCOME TO INSIGHT             
-                <svg className="icon icon-eye">
-                  <use xlinkHref="#icon-eye"></use>
-                </svg> 
-                RS!
-              </b>
-            </h3>
-            <h3 className="card__title">
-              Select the menu on the left to start exploring!
-            </h3>   
-        </CardBody>
-      </Card>                               
-    );
+    
+      return(                                    
+        <Card className="page-not-found">
+          <CardBody>            
+              <h3 className="card__title">
+                <b className="not-found-text"><small style={{whiteSpace: "nowrap", "color": "#a30032"}}>WELCOME</small> <small style={{whiteSpace: "nowrap", "color": "#a30032"}}>TO</small> <small style={{whiteSpace: "nowrap", "color": "#a30032"}}>INSIGHT             
+                  <svg className="icon icon-eye">
+                    <use xlinkHref="#icon-eye"></use>
+                  </svg> 
+                  RS!</small>
+                </b>
+              </h3>
+              <small className="card__title">
+                Select the menu on the left to start exploring!
+              </small>   
+          </CardBody>
+        </Card>                               
+      );
+    
   }
 }
 

@@ -62435,6 +62435,7 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
   }, {
     key: 'render',
     value: function render() {
+
       return react_default.a.createElement(
         reactstrap_es_Card,
         { className: 'page-not-found' },
@@ -62447,17 +62448,33 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
             react_default.a.createElement(
               'b',
               { className: 'not-found-text' },
-              'WELCOME TO INSIGHT',
               react_default.a.createElement(
-                'svg',
-                { className: 'icon icon-eye' },
-                react_default.a.createElement('use', { xlinkHref: '#icon-eye' })
+                'small',
+                { style: { whiteSpace: "nowrap", "color": "#a30032" } },
+                'WELCOME'
               ),
-              'RS!'
+              ' ',
+              react_default.a.createElement(
+                'small',
+                { style: { whiteSpace: "nowrap", "color": "#a30032" } },
+                'TO'
+              ),
+              ' ',
+              react_default.a.createElement(
+                'small',
+                { style: { whiteSpace: "nowrap", "color": "#a30032" } },
+                'INSIGHT',
+                react_default.a.createElement(
+                  'svg',
+                  { className: 'icon icon-eye' },
+                  react_default.a.createElement('use', { xlinkHref: '#icon-eye' })
+                ),
+                'RS!'
+              )
             )
           ),
           react_default.a.createElement(
-            'h3',
+            'small',
             { className: 'card__title' },
             'Select the menu on the left to start exploring!'
           )
