@@ -21,7 +21,8 @@ class Elderly extends React.Component {
   constructor() {
     super();
 
-    this.featureGroupLayer = new L.featureGroup();   
+    this.featureGroupLayer = new L.featureGroup(); 
+    this.featureGroupMarkers = new L.featureGroup();  
   }
 
   static propTypes = {            
@@ -31,15 +32,18 @@ class Elderly extends React.Component {
     actions: PropTypes.shape({
       enterElderly: PropTypes.func,
       leaveElderly: PropTypes.func,  
-      
+      eldercareServicesDataIsFetching:  PropTypes.bool,
+
       fetchElderlySubzoneDataIfNeeded:     PropTypes.func,
-      fetchElderlyAreaDataIfNeeded:        PropTypes.func
+      fetchElderlyAreaDataIfNeeded:        PropTypes.func,
+      fetchEldercareServicesDataIfNeeded:  PropTypes.func
     })
   };
 
   state = {
     opacity: 70,
     agg: "PLANNING AREAS",   
+    eldercareServices: false,
     showFilters: true
   };
 
@@ -64,10 +68,16 @@ class Elderly extends React.Component {
       elderlyAreaData,
       elderlyAreaDataIsFetching,
       elderlySubzoneData,
-      elderlySubzoneDataIsFetching     
+      elderlySubzoneDataIsFetching,
+      eldercareServicesData,
+      eldercareServicesDataIsFetching     
     } = this.props;
                         
-    if(elderlyAreaDataIsFetching || elderlySubzoneDataIsFetching) {  
+    if(elderlyAreaDataIsFetching || elderlySubzoneDataIsFetching || eldercareServicesDataIsFetching) {  
+      this.featureGroupMarkers.eachLayer((layer) => {
+        this.featureGroupMarkers.removeLayer(layer);
+      });
+
       this.featureGroupLayer.eachLayer((layer) => {
         this.featureGroupLayer.removeLayer(layer);
       });
@@ -95,11 +105,13 @@ class Elderly extends React.Component {
               breaks={(this.state.agg === "SUBZONE") ? [0,920,2470,4390,9170,16400] : [0,4690,14220,23250,30970,46510]}
               colors={["#ffffff", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]}              
               attribute={"ABOVE_65"}
-              geojsonLayer={(this.state.agg === "SUBZONE") ? elderlySubzoneData : elderlyAreaData}         
+              geojsonLayer={(this.state.agg === "SUBZONE") ? elderlySubzoneData : elderlyAreaData}  
+              geojsonMarkers={ (this.state.eldercareServices) ? eldercareServicesData : undefined }       
               tooltipCaption={(this.state.agg === "SUBZONE") ? "Subzone" : "Planning Area"}
               tooltipAttribute={ (this.state.agg === "SUBZONE") ? "SUBZONE_N" : "PLN_AREA_N"}
               opacity={this.state.opacity}
-              featureGroupLayer={this.featureGroupLayer}          
+              featureGroupLayer={this.featureGroupLayer}     
+              featureGroupMarkers={this.featureGroupMarkers}     
             />
           </div>
           <div id="filter-box">
@@ -152,7 +164,20 @@ class Elderly extends React.Component {
                             <option>SUBZONE</option>
                           </select>
                         </td>
-                      </tr>                                          
+                      </tr>  
+                      <tr><td colSpan={2}><br /></td></tr>
+                      <tr>
+                        <th>ELDERCARE SERVICES</th>
+                        <td>                        
+                          <label className="toggle-switch">
+                            <input type="checkbox"  
+                              onChange={this.handleChangeEldercareServices}
+                              checked={this.state.eldercareServices}
+                            />
+                            <span className="toggle-slider round"></span>
+                          </label>
+                        </td>
+                      </tr>                                        
                     </tbody>                   
                   </table>                              
                 </CardBody>                
@@ -199,6 +224,24 @@ class Elderly extends React.Component {
     });
   }
 
+  handleChangeEldercareServices = (event) => {
+    if(event.target.checked) {
+      const { actions: {       
+        fetchEldercareServicesDataIfNeeded
+      } } = this.props;
+
+      fetchEldercareServicesDataIfNeeded();  
+    } else {
+      this.featureGroupMarkers.eachLayer((layer) => {
+        this.featureGroupMarkers.removeLayer(layer);
+      });
+    }    
+
+    this.setState({        
+      eldercareServices: event.target.checked
+    });
+  }
+
   handleShowFilters = (event) => {
     this.setState({
       showFilters: !this.state.showFilters
@@ -216,7 +259,10 @@ const mapStateToProps = (state) => {
     elderlySubzoneData: state.elderlySubzoneData.data,
 
     elderlyAreaDataIsFetching:  state.elderlyAreaData.isFetching,    
-    elderlyAreaData: state.elderlyAreaData.data
+    elderlyAreaData: state.elderlyAreaData.data,
+
+    eldercareServicesDataIsFetching: state.eldercareServicesData.isFetching,
+    eldercareServicesData: state.eldercareServicesData.data
   };
 };
 
@@ -229,9 +275,8 @@ const mapDispatchToProps = (dispatch) => {
         leaveElderly: actions.leaveElderly,
         
         fetchElderlyAreaDataIfNeeded: actions.fetchElderlyAreaDataIfNeeded,
-        fetchElderlySubzoneDataIfNeeded: actions.fetchElderlySubzoneDataIfNeeded,
-        fetchPreschoolLocationDataIfNeeded: actions.fetchPreschoolLocationDataIfNeeded,
-        fetchChildcareServicesDataIfNeeded: actions.fetchChildcareServicesDataIfNeeded
+        fetchElderlySubzoneDataIfNeeded: actions.fetchElderlySubzoneDataIfNeeded,        
+        fetchEldercareServicesDataIfNeeded: actions.fetchEldercareServicesDataIfNeeded
       },
       dispatch)
   };

@@ -18,6 +18,9 @@ export {
 export {
 	fetchElderlyAreaDataIfNeeded
 } from './modules/elderly/elderlyAreaData';
+export {
+	fetchEldercareServicesDataIfNeeded
+} from './modules/elderly/eldercareServicesData';
 
 export {
 	toggleSidebar,

@@ -8,6 +8,7 @@ import childcareServicesData from './modules/children/childcareServicesData';
 
 import elderlySubzoneData  from './modules/elderly/elderlySubzoneData';
 import elderlyAreaData from './modules/elderly/elderlyAreaData';
+import eldercareServicesData from './modules/elderly/eldercareServicesData';
 
 import sidebar                from './modules/sidebar';
 import views                from './modules/views';
@@ -20,6 +21,7 @@ export const reducers = {
 
   elderlySubzoneData,  
   elderlyAreaData,
+  eldercareServicesData,
 
   sidebar,
   views

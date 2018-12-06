@@ -19,10 +19,12 @@ export default class ElderlyMap extends PureComponent {
 
   componentWillMount() {          
   	const { 
-  		featureGroupLayer
+  		featureGroupLayer,
+  		featureGroupMarkers
   	} = this.props;
 
     this.featureGroupLayer = featureGroupLayer; 
+    this.featureGroupMarkers = featureGroupMarkers; 
 
     this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
     });
@@ -40,7 +42,9 @@ export default class ElderlyMap extends PureComponent {
     });    
     this.map.addLayer(this.featureGroupLayer); 
     this.featureGroupLayer.bringToBack;
-     
+    this.map.addLayer(this.featureGroupMarkers);
+    this.featureGroupMarkers.bringToFront;
+
     this.attribution.addTo(this.map);
 
     document.getElementById("map-canvas").style.background = "#bed4f9";
@@ -51,9 +55,77 @@ export default class ElderlyMap extends PureComponent {
 		attribution: false
 	});
 	this.map.addLayer(this.basemap);
-
 	this.addGeojsonLayer();
+	this.addGeojsonMarkers();
   }
+
+  addGeojsonMarkers() {
+  	const { 
+		geojsonMarkers,		
+		opacity
+	} = this.props;
+
+	var markers = new L.geoJson(geojsonMarkers, {
+        onEachFeature: function(feature, layer) {
+	        layer.on({
+		      mouseover: function(e) {
+				let layer = e.target;
+
+				layer.setStyle({
+					radius: 6,
+	                fillColor: '#ffffff',
+	                color: '#f7931e',
+	                weight: 2,
+	                opacity: 1.0,
+	                fillOpacity: 1.0
+				});
+
+				if (!L.Browser.ie && !L.Browser.opera) {
+					layer.bringToFront();
+				}
+				
+				let name = feature["properties"]["DESCRIPTION"];	
+				let address = feature["properties"]["ADDRESSSTREETNAME"];					
+
+				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Address:</b> <span>" + address + "</span>";	
+				layer.bindTooltip(str).openTooltip();          
+			  },
+			  mouseout: function(e) {
+				var layer = e.target;
+
+				layer.setStyle({
+				  	radius: 3,
+	                fillColor: '#ffffff',
+	                color: '#f7931e',
+	                weight: 2,
+	                opacity: 1.0,
+	                fillOpacity: 1.0
+				});
+			  }	
+	    	});
+	    },
+        pointToLayer: function(feature, latlng) {   
+        	/*let icon = L.icon({
+			    iconUrl: "/assets/img/eldercare-services-marker.png",
+			    iconSize: [10, 10]
+			});
+			return L.marker(latlng, {
+				icon: icon
+			});*/     	
+            return L.circleMarker(latlng, {
+                radius: 3,
+                fillColor: '#ffffff',
+                color: '#f7931e',
+                weight: 2,
+                opacity: 1.0,
+                fillOpacity: 1.0
+            });
+        }
+    });
+	
+  	this.featureGroupMarkers.addLayer(markers);
+  }  
+
 
   addGeojsonLayer() {
   	const { 
