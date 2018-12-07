@@ -291,37 +291,41 @@ export default class ChildrenMap extends PureComponent {
               		<Col xs={12} md={4}>                     		
                 		<table className="map-legend pull-left">
                 			<tbody> 
-                				<tr><th colSpan={2}>DISTRIBUTION</th></tr>               				
-                				<tr>
-                					<td style={{color: colors[1]}}>◼</td>
-                					<td style={{color: colors[2]}}>◼</td>
-									<td style={{color: colors[3]}}>◼</td>
-                					<td style={{color: colors[4]}}>◼</td>
-                					<td style={{color: colors[5]}}>◼</td>									
-								</tr>
-
-            					<tr>
-            						<td><small>{breaks[0]}-{breaks[1]}</small></td>
-            						<td><small>{breaks[1]}-{breaks[2]}</small></td>
-            						<td><small>{breaks[2]}-{breaks[3]}</small></td>
-            						<td><small>{breaks[3]}-{breaks[4]}</small></td>
-									<td><small>{breaks[4]}-{breaks[5]}</small></td>
-            					</tr>            					
-							</tbody>
-                		</table>
-                		<table className="map-legend pull-left">
-                			<tbody> 
-                				<tr><th colSpan={2}><br /></th></tr> 
+                				<tr><th colSpan={2}>DISTRIBUTION</th></tr> 
 		                		<tr>
-		                			<th>CHILDCARE SERVICE</th>
-		                			<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #df387c"}}></span></td>
+		                			<th><small>{breaks[0]}-{breaks[1]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[1]}}></span></td>
 		            			</tr>
 		            			<tr>
-		                			<th>PRE-SCHOOL</th>
-		            				<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #56b6de"}}></span></td>
+		                			<th><small>{breaks[1]}-{breaks[2]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[2]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[2]}-{breaks[3]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[3]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[3]}-{breaks[4]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[4]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[4]}-{breaks[5]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[5]}}></span></td>
 		            			</tr>
 	            			</tbody>
                 		</table>
+                		<table className="map-legend pull-left">
+                			<tbody>                 				
+		                		<tr>
+		                			<th>CHILDCARE SERVICE</th>
+		                			<td><span className="dot-symbol" style={{border: "2px solid #df387c"}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th>PRE-SCHOOL</th>
+		            				<td><span className="dot-symbol" style={{border: "2px solid #56b6de"}}></span></td>
+		            			</tr>
+	            			</tbody>
+                		</table>                		
                 	</Col>   
               		<Col xs={12} md={8}>                        
                 		<div id="map-canvas"></div> 

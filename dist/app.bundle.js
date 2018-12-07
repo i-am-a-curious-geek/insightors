@@ -55297,36 +55297,7 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												'tr',
 																																												null,
 																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[1] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[2] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[3] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[4] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[5] } },
-																																																'\u25FC'
-																																												)
-																																								),
-																																								react_default.a.createElement(
-																																												'tr',
-																																												null,
-																																												react_default.a.createElement(
-																																																'td',
+																																																'th',
 																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
@@ -55339,6 +55310,15 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[1] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -55349,6 +55329,15 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
+																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[2] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
 																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
@@ -55361,6 +55350,15 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[3] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -55372,6 +55370,15 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[4] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -55379,6 +55386,11 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																																				'-',
 																																																				breaks[5]
 																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[5] } })
 																																												)
 																																								)
 																																				)
@@ -55394,21 +55406,12 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												null,
 																																												react_default.a.createElement(
 																																																'th',
-																																																{ colSpan: 2 },
-																																																react_default.a.createElement('br', null)
-																																												)
-																																								),
-																																								react_default.a.createElement(
-																																												'tr',
-																																												null,
-																																												react_default.a.createElement(
-																																																'th',
 																																																null,
 																																																'CHILDCARE SERVICE'
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
-																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																null,
 																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #df387c" } })
 																																												)
 																																								),
@@ -55422,7 +55425,7 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
-																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																null,
 																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #56b6de" } })
 																																												)
 																																								)
@@ -62534,36 +62537,7 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												'tr',
 																																												null,
 																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[1] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[2] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[3] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[4] } },
-																																																'\u25FC'
-																																												),
-																																												react_default.a.createElement(
-																																																'td',
-																																																{ style: { color: colors[5] } },
-																																																'\u25FC'
-																																												)
-																																								),
-																																								react_default.a.createElement(
-																																												'tr',
-																																												null,
-																																												react_default.a.createElement(
-																																																'td',
+																																																'th',
 																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
@@ -62576,6 +62550,15 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[1] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -62586,6 +62569,15 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
+																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[2] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
 																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
@@ -62598,6 +62590,15 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[3] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -62609,6 +62610,15 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												react_default.a.createElement(
 																																																'td',
 																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[4] } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
 																																																react_default.a.createElement(
 																																																				'small',
 																																																				null,
@@ -62616,6 +62626,11 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																																				'-',
 																																																				breaks[5]
 																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement('span', { className: 'square-symbol', style: { backgroundColor: colors[5] } })
 																																												)
 																																								)
 																																				)
@@ -62631,21 +62646,12 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												null,
 																																												react_default.a.createElement(
 																																																'th',
-																																																{ colSpan: 2 },
-																																																react_default.a.createElement('br', null)
-																																												)
-																																								),
-																																								react_default.a.createElement(
-																																												'tr',
-																																												null,
-																																												react_default.a.createElement(
-																																																'th',
 																																																null,
 																																																'ELDERCARE SERVICE'
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
-																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																null,
 																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #f7931e" } })
 																																												)
 																																								),
@@ -62659,7 +62665,7 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																												),
 																																												react_default.a.createElement(
 																																																'td',
-																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																null,
 																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #4ce1b6" } })
 																																												)
 																																								)

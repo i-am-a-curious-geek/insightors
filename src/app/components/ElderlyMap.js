@@ -292,37 +292,41 @@ export default class ElderlyMap extends PureComponent {
               <CardBody>
               <h5 className="bold-text"><b>{icon}{title}</b></h5>                                  
                 <div className="row">        
-              		<Col xs={12} md={4}>  
-              			<table className="map-legend pull-left">
-                			<tbody> 
-                				<tr><th colSpan={2}>DISTRIBUTION</th></tr>               				
-                				<tr>
-                					<td style={{color: colors[1]}}>◼</td>
-                					<td style={{color: colors[2]}}>◼</td>
-									<td style={{color: colors[3]}}>◼</td>
-                					<td style={{color: colors[4]}}>◼</td>
-                					<td style={{color: colors[5]}}>◼</td>									
-								</tr>
-
-            					<tr>
-            						<td><small>{breaks[0]}-{breaks[1]}</small></td>
-            						<td><small>{breaks[1]}-{breaks[2]}</small></td>
-            						<td><small>{breaks[2]}-{breaks[3]}</small></td>
-            						<td><small>{breaks[3]}-{breaks[4]}</small></td>
-									<td><small>{breaks[4]}-{breaks[5]}</small></td>
-            					</tr>            					
-							</tbody>
-                		</table>
+              		<Col xs={12} md={4}>                			
                 		<table className="map-legend pull-left">
                 			<tbody> 
-                				<tr><th colSpan={2}><br /></th></tr> 
+                				<tr><th colSpan={2}>DISTRIBUTION</th></tr> 
+		                		<tr>
+		                			<th><small>{breaks[0]}-{breaks[1]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[1]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[1]}-{breaks[2]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[2]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[2]}-{breaks[3]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[3]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[3]}-{breaks[4]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[4]}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th><small>{breaks[4]}-{breaks[5]}</small></th>
+		                			<td><span className="square-symbol" style={{backgroundColor: colors[5]}}></span></td>
+		            			</tr>
+	            			</tbody>
+                		</table>
+                		<table className="map-legend pull-left">
+                			<tbody>                 				
 		                		<tr>
 		                			<th>ELDERCARE SERVICE</th>
-		                			<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #f7931e"}}></span></td>
+		                			<td><span className="dot-symbol" style={{border: "2px solid #f7931e"}}></span></td>
 		            			</tr>
 		            			<tr>
 		                			<th>CHAS CLINIC</th>
-		            				<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #4ce1b6"}}></span></td>
+		            				<td><span className="dot-symbol" style={{border: "2px solid #4ce1b6"}}></span></td>
 		            			</tr>
 	            			</tbody>
                 		</table>
