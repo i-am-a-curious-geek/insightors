@@ -6,7 +6,7 @@ import { Card, CardBody, Col } from 'reactstrap';
 
 import L from "leaflet";
 
-export default class ChildrenMap extends PureComponent {
+export default class Map extends PureComponent {
   constructor() {
     super();
     this.map = null;
@@ -69,8 +69,9 @@ export default class ChildrenMap extends PureComponent {
 
   addGeojsonMarkers() {
   	const { 
-		geojsonMarkers,		
-		opacity
+		geojsonMarkers,	
+		geojsonMarkerColor,	
+		geojsonMarkerCaption		
 	} = this.props;
 
 	var markers = new L.geoJson(geojsonMarkers, {
@@ -82,7 +83,7 @@ export default class ChildrenMap extends PureComponent {
 				layer.setStyle({
 					radius: 6,
 	                fillColor: '#ffffff',
-	                color: '#56b6de',
+	                color: geojsonMarkerColor,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -92,10 +93,10 @@ export default class ChildrenMap extends PureComponent {
 					layer.bringToFront();
 				}
 
-				let name = feature["properties"]["CENTRE_NAME"];	
-				let address = feature["properties"]["CENTRE_CODE"];		
+				let name = feature["properties"]["NAME"];	
+				let address = feature["properties"]["ADDRESSSTREETNAME"];		
 
-				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Center Code:</b> <span>" + address + "</span>";		
+				let str = "<b>Name: </b><span>" + name + "</span><br />(<i> <span>" + address + "</i>)</span>";		
 				layer.bindTooltip(str).openTooltip();          
 			  },
 			  mouseout: function(e) {
@@ -104,7 +105,7 @@ export default class ChildrenMap extends PureComponent {
 				layer.setStyle({
 				  	radius: 3,
 	                fillColor: '#ffffff',
-	                color: '#56b6de',
+	                color: geojsonMarkerColor,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -125,7 +126,7 @@ export default class ChildrenMap extends PureComponent {
             return L.circleMarker(latlng, {
                 radius: 3,
                 fillColor: '#ffffff',
-                color: '#56b6de',
+                color: geojsonMarkerColor,
                 weight: 2,
                 opacity: 1.0,
                 fillOpacity: 1.0
@@ -138,8 +139,8 @@ export default class ChildrenMap extends PureComponent {
 
   addGeojsonMarkers_2() {
   	const { 
-		geojsonMarkers_2,		
-		opacity
+		geojsonMarkers_2,	
+		geojsonMarkerColor_2
 	} = this.props;
 
 	var markers = new L.geoJson(geojsonMarkers_2, {
@@ -151,7 +152,7 @@ export default class ChildrenMap extends PureComponent {
 				layer.setStyle({
 					radius: 6,
 	                fillColor: '#ffffff',
-	                color: '#df387c',
+	                color: geojsonMarkerColor_2,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -162,10 +163,9 @@ export default class ChildrenMap extends PureComponent {
 				}
 				
 				let name = feature["properties"]["NAME"];	
-				let address = feature["properties"]["ADDRESSSTREETNAME"];	
-				let type = feature["properties"]["DESCRIPTION"];
+				let address = feature["properties"]["ADDRESSSTREETNAME"];					
 
-				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Center Code:</b> <span>" + address + "</span><br /><b>Type:</b> <span>" + type + "</span>";	
+				let str = "<b>Name: </b><span>" + name + "</span><br />(<i> <span>" + address + "</i>)</span>";	
 				layer.bindTooltip(str).openTooltip();          
 			  },
 			  mouseout: function(e) {
@@ -174,7 +174,7 @@ export default class ChildrenMap extends PureComponent {
 				layer.setStyle({
 				  	radius: 3,
 	                fillColor: '#ffffff',
-	                color: '#df387c',
+	                color: geojsonMarkerColor_2,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -186,7 +186,7 @@ export default class ChildrenMap extends PureComponent {
             return L.circleMarker(latlng, {
                 radius: 3,
                 fillColor: '#ffffff',
-                color: '#df387c',
+                color: geojsonMarkerColor_2,
                 weight: 2,
                 opacity: 1.0,
                 fillOpacity: 1.0
@@ -273,7 +273,12 @@ export default class ChildrenMap extends PureComponent {
   render() {     	      
   	const { 
   		title,
-  		symbol
+  		symbol,
+  		geojsonMarkerColor,
+  		geojsonMarkerCaption,
+
+  		geojsonMarkerColor_2,
+  		geojsonMarkerCaption_2
   	} = this.props;
 
   	let icon = <svg className={`icon icon-${symbol}`}><use xlinkHref={`#icon-${symbol}`}></use></svg>;
@@ -317,12 +322,12 @@ export default class ChildrenMap extends PureComponent {
                 		<table className="map-legend pull-left">
                 			<tbody>                 				
 		                		<tr>
-		                			<th>CHILDCARE SERVICE</th>
-		                			<td><span className="dot-symbol" style={{border: "2px solid #df387c"}}></span></td>
+		                			<th>{geojsonMarkerCaption}</th>
+		                			<td><span className="dot-symbol" style={{border: `2px solid ${geojsonMarkerColor}`}}></span></td>
 		            			</tr>
 		            			<tr>
-		                			<th>PRE-SCHOOL</th>
-		            				<td><span className="dot-symbol" style={{border: "2px solid #56b6de"}}></span></td>
+		                			<th>{geojsonMarkerCaption_2}</th>
+		            				<td><span className="dot-symbol" style={{border: `2px solid ${geojsonMarkerColor_2}`}}></span></td>
 		            			</tr>
 	            			</tbody>
                 		</table>                		

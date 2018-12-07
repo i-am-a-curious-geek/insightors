@@ -16,7 +16,7 @@ export const navigation = {
       links: [
         {
           title: 'Pre-School Children',          
-          link: '/',
+          link: '/children',
         },
         {
           title: 'Senior Citizens',          

@@ -4,7 +4,7 @@ import React, {
 import PropTypes          from 'prop-types';
 import { Card, CardBody, Col } from 'reactstrap';
 import { default as AnimatedView } from 'components/AnimatedView';
-import { default as ElderlyMap } from 'components/ElderlyMap';
+import { default as Map } from 'components/Map';
 import Slider from 'rc-slider';
 
 import L from "leaflet";
@@ -109,17 +109,28 @@ class Elderly extends React.Component {
       return(    
         <AnimatedView> 
           <div className="row map-container-card">                                                
-            <ElderlyMap
+            <Map
               symbol="old"
               title="Elderly (≥ age 65) in Singapore (Year 2017)"             
               breaks={(this.state.agg === "SUBZONE") ? [0,920,2470,4390,9170,16400] : [0,4690,14220,23250,30970,46510]}
               colors={["#ffffff", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]}              
               attribute={"ABOVE_65"}
+
+
               geojsonLayer={(this.state.agg === "SUBZONE") ? elderlySubzoneData : elderlyAreaData}  
-              geojsonMarkers={ (this.state.eldercareServices) ? eldercareServicesData : undefined }     
-              geojsonMarkers_2={ (this.state.chasClinics) ? chasClinicsData : undefined }       
               tooltipCaption={(this.state.agg === "SUBZONE") ? "Subzone" : "Planning Area"}
               tooltipAttribute={ (this.state.agg === "SUBZONE") ? "SUBZONE_N" : "PLN_AREA_N"}
+
+              geojsonMarkerCaption="ELDERCARE SERVICES" 
+              geojsonMarkers={ (this.state.eldercareServices) ? eldercareServicesData : undefined } 
+              geojsonMarkerColor="#f7931e"
+
+              geojsonMarkerCaption_2="CHAS CLINICS"
+              geojsonMarkers_2={ (this.state.chasClinics) ? chasClinicsData : undefined }       
+              geojsonMarkerColor_2="#4ce1b6"
+
+              
+
               opacity={this.state.opacity}
               featureGroupLayer={this.featureGroupLayer}     
               featureGroupMarkers={this.featureGroupMarkers}  

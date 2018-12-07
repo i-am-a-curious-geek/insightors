@@ -6,7 +6,7 @@ import { Card, CardBody, Col } from 'reactstrap';
 
 import L from "leaflet";
 
-export default class ElderlyMap extends PureComponent {
+export default class Map extends PureComponent {
   constructor() {
     super();
     this.map = null;
@@ -21,14 +21,14 @@ export default class ElderlyMap extends PureComponent {
 
   componentWillMount() {          
   	const { 
-  		featureGroupLayer,
-  		featureGroupMarkers,
-  		featureGroupMarkers_2
+  		featureGroupLayer, 
+  		featureGroupMarkers, 
+  		featureGroupMarkers_2 
   	} = this.props;
 
     this.featureGroupLayer = featureGroupLayer; 
     this.featureGroupMarkers = featureGroupMarkers; 
-    this.featureGroupMarkers_2 = featureGroupMarkers_2; 
+    this.featureGroupMarkers_2 = featureGroupMarkers_2;
 
     this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
     });
@@ -50,7 +50,7 @@ export default class ElderlyMap extends PureComponent {
     this.featureGroupMarkers.bringToFront;
     this.map.addLayer(this.featureGroupMarkers_2);
     this.featureGroupMarkers_2.bringToFront;
-
+     
     this.attribution.addTo(this.map);
 
     document.getElementById("map-canvas").style.background = "#bed4f9";
@@ -61,6 +61,7 @@ export default class ElderlyMap extends PureComponent {
 		attribution: false
 	});
 	this.map.addLayer(this.basemap);
+
 	this.addGeojsonLayer();
 	this.addGeojsonMarkers();
 	this.addGeojsonMarkers_2();
@@ -68,8 +69,9 @@ export default class ElderlyMap extends PureComponent {
 
   addGeojsonMarkers() {
   	const { 
-		geojsonMarkers,		
-		opacity
+		geojsonMarkers,	
+		geojsonMarkerColor,	
+		geojsonMarkerCaption		
 	} = this.props;
 
 	var markers = new L.geoJson(geojsonMarkers, {
@@ -81,7 +83,7 @@ export default class ElderlyMap extends PureComponent {
 				layer.setStyle({
 					radius: 6,
 	                fillColor: '#ffffff',
-	                color: '#f7931e',
+	                color: geojsonMarkerColor,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -90,11 +92,11 @@ export default class ElderlyMap extends PureComponent {
 				if (!L.Browser.ie && !L.Browser.opera) {
 					layer.bringToFront();
 				}
-				
-				let name = feature["properties"]["DESCRIPTION"];	
-				let address = feature["properties"]["ADDRESSSTREETNAME"];					
 
-				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Address:</b> <span>" + address + "</span>";	
+				let name = feature["properties"]["NAME"];	
+				let address = feature["properties"]["ADDRESSSTREETNAME"];		
+
+				let str = "<b>Name: </b><span>" + name + "</span><br />(<i> <span>" + address + "</i>)</span>";		
 				layer.bindTooltip(str).openTooltip();          
 			  },
 			  mouseout: function(e) {
@@ -103,7 +105,7 @@ export default class ElderlyMap extends PureComponent {
 				layer.setStyle({
 				  	radius: 3,
 	                fillColor: '#ffffff',
-	                color: '#f7931e',
+	                color: geojsonMarkerColor,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -118,11 +120,13 @@ export default class ElderlyMap extends PureComponent {
 			});
 			return L.marker(latlng, {
 				icon: icon
-			});*/     	
+			});*/
+
+			    	
             return L.circleMarker(latlng, {
                 radius: 3,
                 fillColor: '#ffffff',
-                color: '#f7931e',
+                color: geojsonMarkerColor,
                 weight: 2,
                 opacity: 1.0,
                 fillOpacity: 1.0
@@ -131,12 +135,12 @@ export default class ElderlyMap extends PureComponent {
     });
 	
   	this.featureGroupMarkers.addLayer(markers);
-  }  
+  }
 
   addGeojsonMarkers_2() {
   	const { 
-		geojsonMarkers_2,		
-		opacity
+		geojsonMarkers_2,	
+		geojsonMarkerColor_2
 	} = this.props;
 
 	var markers = new L.geoJson(geojsonMarkers_2, {
@@ -148,7 +152,7 @@ export default class ElderlyMap extends PureComponent {
 				layer.setStyle({
 					radius: 6,
 	                fillColor: '#ffffff',
-	                color: '#f7931e',
+	                color: geojsonMarkerColor_2,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -161,7 +165,7 @@ export default class ElderlyMap extends PureComponent {
 				let name = feature["properties"]["NAME"];	
 				let address = feature["properties"]["ADDRESSSTREETNAME"];					
 
-				let str = "<b>Name: </b><span>" + name + "</span><br /><b>Address:</b> <span>" + address + "</span>";	
+				let str = "<b>Name: </b><span>" + name + "</span><br />(<i> <span>" + address + "</i>)</span>";	
 				layer.bindTooltip(str).openTooltip();          
 			  },
 			  mouseout: function(e) {
@@ -170,7 +174,7 @@ export default class ElderlyMap extends PureComponent {
 				layer.setStyle({
 				  	radius: 3,
 	                fillColor: '#ffffff',
-	                color: '#4ce1b6',
+	                color: geojsonMarkerColor_2,
 	                weight: 2,
 	                opacity: 1.0,
 	                fillOpacity: 1.0
@@ -178,18 +182,11 @@ export default class ElderlyMap extends PureComponent {
 			  }	
 	    	});
 	    },
-        pointToLayer: function(feature, latlng) {   
-        	/*let icon = L.icon({
-			    iconUrl: "/assets/img/eldercare-services-marker.png",
-			    iconSize: [10, 10]
-			});
-			return L.marker(latlng, {
-				icon: icon
-			});*/     	
+        pointToLayer: function(feature, latlng) {        	
             return L.circleMarker(latlng, {
                 radius: 3,
                 fillColor: '#ffffff',
-                color: '#4ce1b6',
+                color: geojsonMarkerColor_2,
                 weight: 2,
                 opacity: 1.0,
                 fillOpacity: 1.0
@@ -199,7 +196,6 @@ export default class ElderlyMap extends PureComponent {
 	
   	this.featureGroupMarkers_2.addLayer(markers);
   }  
-
 
 
   addGeojsonLayer() {
@@ -277,7 +273,12 @@ export default class ElderlyMap extends PureComponent {
   render() {     	      
   	const { 
   		title,
-  		symbol
+  		symbol,
+  		geojsonMarkerColor,
+  		geojsonMarkerCaption,
+
+  		geojsonMarkerColor_2,
+  		geojsonMarkerCaption_2
   	} = this.props;
 
   	let icon = <svg className={`icon icon-${symbol}`}><use xlinkHref={`#icon-${symbol}`}></use></svg>;
@@ -290,9 +291,9 @@ export default class ElderlyMap extends PureComponent {
     return(<Col xs={12} md={12}>
             <Card>
               <CardBody>
-              <h5 className="bold-text"><b>{icon}{title}</b></h5>                                  
-                <div className="row">        
-              		<Col xs={12} md={4}>                			
+              <h5 className="bold-text"><b>{icon}{title}</b></h5> 
+              	<div className="row">        
+              		<Col xs={12} md={4}>                     		
                 		<table className="map-legend pull-left">
                 			<tbody> 
                 				<tr><th colSpan={2}>DISTRIBUTION</th></tr> 
@@ -321,23 +322,22 @@ export default class ElderlyMap extends PureComponent {
                 		<table className="map-legend pull-left">
                 			<tbody>                 				
 		                		<tr>
-		                			<th>ELDERCARE SERVICE</th>
-		                			<td><span className="dot-symbol" style={{border: "2px solid #f7931e"}}></span></td>
+		                			<th>{geojsonMarkerCaption}</th>
+		                			<td><span className="dot-symbol" style={{border: `2px solid ${geojsonMarkerColor}`}}></span></td>
 		            			</tr>
 		            			<tr>
-		                			<th>CHAS CLINIC</th>
-		            				<td><span className="dot-symbol" style={{border: "2px solid #4ce1b6"}}></span></td>
+		                			<th>{geojsonMarkerCaption_2}</th>
+		            				<td><span className="dot-symbol" style={{border: `2px solid ${geojsonMarkerColor_2}`}}></span></td>
 		            			</tr>
 	            			</tbody>
-                		</table>
+                		</table>                		
                 	</Col>   
               		<Col xs={12} md={8}>                        
                 		<div id="map-canvas"></div> 
                 	</Col>                   	                   
-                </div>                        
+                </div>
               </CardBody>                
            </Card>
           </Col>);      
   }
-
 }

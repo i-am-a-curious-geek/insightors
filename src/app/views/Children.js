@@ -4,7 +4,7 @@ import React, {
 import PropTypes          from 'prop-types';
 import { Card, CardBody, Col } from 'reactstrap';
 import { default as AnimatedView } from 'components/AnimatedView';
-import { default as ChildrenMap } from 'components/ChildrenMap';
+import { default as Map } from 'components/Map';
 import Slider from 'rc-slider';
 
 import L from "leaflet";
@@ -110,15 +110,23 @@ class Children extends React.Component {
       return(    
         <AnimatedView> 
           <div className="row map-container-card">                                                
-            <ChildrenMap
+            <Map
               symbol="baby"
               title="Pre-School Children (≤ age 4) in Singapore (Year 2017)"             
               breaks={(this.state.agg === "SUBZONE") ? [0, 330, 1060, 2250, 3710, 5710] : [0, 1080, 5090, 8640, 12260, 17660]}
               colors={["#ffffff", "#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]}              
               attribute={"BELOW_4"}
               geojsonLayer={(this.state.agg === "SUBZONE") ? childrenSubzoneData : childrenAreaData}
-              geojsonMarkers={ (this.state.preschools) ? preschoolLocationData : undefined }
-              geojsonMarkers_2={ (this.state.childcareServices) ? childcareServicesData : undefined  }
+
+              geojsonMarkers={ (this.state.childcareServices) ? childcareServicesData : undefined  }
+              geojsonMarkerColor="#df387c"
+              geojsonMarkerCaption="CHILDCARE SERVICES"
+
+              geojsonMarkers_2={ (this.state.preschools) ? preschoolLocationData : undefined }
+              geojsonMarkerColor_2="#56b6de"
+              geojsonMarkerCaption_2="PRE-SCHOOL"
+              
+
               tooltipCaption={(this.state.agg === "SUBZONE") ? "Subzone" : "Planning Area"}
               tooltipAttribute={ (this.state.agg === "SUBZONE") ? "SUBZONE_N" : "PLN_AREA_N"}
               opacity={this.state.opacity}
@@ -258,8 +266,8 @@ class Children extends React.Component {
 
       fetchPreschoolLocationDataIfNeeded();  
     } else {
-      this.featureGroupMarkers.eachLayer((layer) => {
-        this.featureGroupMarkers.removeLayer(layer);
+      this.featureGroupMarkers_2.eachLayer((layer) => {
+        this.featureGroupMarkers_2.removeLayer(layer);
       });
     }
 
@@ -276,8 +284,8 @@ class Children extends React.Component {
 
       fetchChildcareServicesDataIfNeeded();  
     } else {
-      this.featureGroupMarkers_2.eachLayer((layer) => {
-        this.featureGroupMarkers_2.removeLayer(layer);
+      this.featureGroupMarkers.eachLayer((layer) => {
+        this.featureGroupMarkers.removeLayer(layer);
       });
     }    
 
