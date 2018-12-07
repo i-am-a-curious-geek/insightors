@@ -23,6 +23,10 @@ export {
 } from './modules/elderly/eldercareServicesData';
 
 export {
+	fetchChasClinicsDataIfNeeded
+} from './modules/elderly/chasClinicsData';
+
+export {
 	toggleSidebar,
 	openSidebar,
 	closeSidebar
