@@ -55079,7 +55079,7 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																},
 																pointToLayer: function pointToLayer(feature, latlng) {
 																				/*let icon = L.icon({
-                    iconUrl: "/assets/img/preschool-map-marker.png",
+                    iconUrl: "/assets/img/eldercare-services-marker.png",
                     iconSize: [10, 10]
                     });
                     return L.marker(latlng, {
@@ -55248,6 +55248,11 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																react_default.a.createElement('use', { xlinkHref: '#icon-' + symbol })
 												);
 
+												var _props6 = this.props,
+												    breaks = _props6.breaks,
+												    colors = _props6.colors;
+
+
 												return react_default.a.createElement(
 																reactstrap_es_Col,
 																{ xs: 12, md: 12 },
@@ -55267,7 +55272,169 @@ var ChildrenMap_ChildrenMap = function (_PureComponent) {
 																																title
 																												)
 																								),
-																								react_default.a.createElement('div', { id: 'map-canvas' })
+																								react_default.a.createElement(
+																												'div',
+																												{ className: 'row' },
+																												react_default.a.createElement(
+																																reactstrap_es_Col,
+																																{ xs: 12, md: 4 },
+																																react_default.a.createElement(
+																																				'table',
+																																				{ className: 'map-legend pull-left' },
+																																				react_default.a.createElement(
+																																								'tbody',
+																																								null,
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																{ colSpan: 2 },
+																																																'DISTRIBUTION'
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[1] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[2] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[3] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[4] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[5] } },
+																																																'\u25FC'
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[0],
+																																																				'-',
+																																																				breaks[1]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[1],
+																																																				'-',
+																																																				breaks[2]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[2],
+																																																				'-',
+																																																				breaks[3]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[3],
+																																																				'-',
+																																																				breaks[4]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[4],
+																																																				'-',
+																																																				breaks[5]
+																																																)
+																																												)
+																																								)
+																																				)
+																																),
+																																react_default.a.createElement(
+																																				'table',
+																																				{ className: 'map-legend pull-left' },
+																																				react_default.a.createElement(
+																																								'tbody',
+																																								null,
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																{ colSpan: 2 },
+																																																react_default.a.createElement('br', null)
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
+																																																'CHILDCARE SERVICE'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #df387c" } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
+																																																'PRE-SCHOOL'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #56b6de" } })
+																																												)
+																																								)
+																																				)
+																																)
+																												),
+																												react_default.a.createElement(
+																																reactstrap_es_Col,
+																																{ xs: 12, md: 8 },
+																																react_default.a.createElement('div', { id: 'map-canvas' })
+																												)
+																								)
 																				)
 																)
 												);
@@ -61748,8 +61915,8 @@ var Children_Children = function (_React$Component) {
             'div',
             { className: 'row map-container-card' },
             react_default.a.createElement(components_ChildrenMap, {
-              symbol: 'children',
-              title: 'Distribution of Pre-School Children (\u2264 age 4) in Singapore (Year 2017)',
+              symbol: 'baby',
+              title: 'Pre-School Children (\u2264 age 4) in Singapore (Year 2017)',
               breaks: this.state.agg === "SUBZONE" ? [0, 330, 1060, 2250, 3710, 5710] : [0, 1080, 5090, 8640, 12260, 17660],
               colors: ["#ffffff", "#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"],
               attribute: "BELOW_4",
@@ -62318,6 +62485,11 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																react_default.a.createElement('use', { xlinkHref: '#icon-' + symbol })
 												);
 
+												var _props6 = this.props,
+												    breaks = _props6.breaks,
+												    colors = _props6.colors;
+
+
 												return react_default.a.createElement(
 																reactstrap_es_Col,
 																{ xs: 12, md: 12 },
@@ -62337,7 +62509,169 @@ var ElderlyMap_ElderlyMap = function (_PureComponent) {
 																																title
 																												)
 																								),
-																								react_default.a.createElement('div', { id: 'map-canvas' })
+																								react_default.a.createElement(
+																												'div',
+																												{ className: 'row' },
+																												react_default.a.createElement(
+																																reactstrap_es_Col,
+																																{ xs: 12, md: 4 },
+																																react_default.a.createElement(
+																																				'table',
+																																				{ className: 'map-legend pull-left' },
+																																				react_default.a.createElement(
+																																								'tbody',
+																																								null,
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																{ colSpan: 2 },
+																																																'DISTRIBUTION'
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[1] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[2] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[3] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[4] } },
+																																																'\u25FC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { color: colors[5] } },
+																																																'\u25FC'
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[0],
+																																																				'-',
+																																																				breaks[1]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[1],
+																																																				'-',
+																																																				breaks[2]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[2],
+																																																				'-',
+																																																				breaks[3]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[3],
+																																																				'-',
+																																																				breaks[4]
+																																																)
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																null,
+																																																react_default.a.createElement(
+																																																				'small',
+																																																				null,
+																																																				breaks[4],
+																																																				'-',
+																																																				breaks[5]
+																																																)
+																																												)
+																																								)
+																																				)
+																																),
+																																react_default.a.createElement(
+																																				'table',
+																																				{ className: 'map-legend pull-left' },
+																																				react_default.a.createElement(
+																																								'tbody',
+																																								null,
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																{ colSpan: 2 },
+																																																react_default.a.createElement('br', null)
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
+																																																'ELDERCARE SERVICE'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #f7931e" } })
+																																												)
+																																								),
+																																								react_default.a.createElement(
+																																												'tr',
+																																												null,
+																																												react_default.a.createElement(
+																																																'th',
+																																																null,
+																																																'CHAS CLINIC'
+																																												),
+																																												react_default.a.createElement(
+																																																'td',
+																																																{ style: { border: "none", paddingLeft: 2 } },
+																																																react_default.a.createElement('span', { className: 'dot-symbol', style: { border: "2px solid #4ce1b6" } })
+																																												)
+																																								)
+																																				)
+																																)
+																												),
+																												react_default.a.createElement(
+																																reactstrap_es_Col,
+																																{ xs: 12, md: 8 },
+																																react_default.a.createElement('div', { id: 'map-canvas' })
+																												)
+																								)
 																				)
 																)
 												);
@@ -62557,8 +62891,8 @@ var Elderly_Elderly = function (_React$Component) {
             'div',
             { className: 'row map-container-card' },
             react_default.a.createElement(components_ElderlyMap, {
-              symbol: 'elderly',
-              title: 'Distribution of Elderly (\u2265 age 65) in Singapore (Year 2017)',
+              symbol: 'old',
+              title: 'Elderly (\u2265 age 65) in Singapore (Year 2017)',
               breaks: this.state.agg === "SUBZONE" ? [0, 920, 2470, 4390, 9170, 16400] : [0, 4690, 14220, 23250, 30970, 46510],
               colors: ["#ffffff", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"],
               attribute: "ABOVE_65",

@@ -110,8 +110,8 @@ class Elderly extends React.Component {
         <AnimatedView> 
           <div className="row map-container-card">                                                
             <ElderlyMap
-              symbol="elderly"
-              title="Distribution of Elderly (≥ age 65) in Singapore (Year 2017)"             
+              symbol="old"
+              title="Elderly (≥ age 65) in Singapore (Year 2017)"             
               breaks={(this.state.agg === "SUBZONE") ? [0,920,2470,4390,9170,16400] : [0,4690,14220,23250,30970,46510]}
               colors={["#ffffff", "#ffffb2", "#fecc5c", "#fd8d3c", "#f03b20", "#bd0026"]}              
               attribute={"ABOVE_65"}

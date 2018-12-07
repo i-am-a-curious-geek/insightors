@@ -6955,6 +6955,33 @@ input:checked + .toggle-slider:before {
   padding-bottom: 0;
 }
 
+table.map-legend {
+  margin-left: 15px;
+}
+table.map-legend tr th:first-child {
+  border: none;
+}
+
+table.map-legend th,
+table.map-legend td {
+  color: #a30032;
+  text-align: center; 
+  border-collapse: collapse; 
+  border: 1px solid #a30032;
+}
+
+span.dot-symbol {
+  height: 10px; 
+  width: 10px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: inline-block;  
+}
+
+table.map-legend.pull-left th {
+  border: none;
+  text-align: left;
+}
 ::selection {  
   color: #FFFFFF;
   background: #a30032;

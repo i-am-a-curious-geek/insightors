@@ -111,8 +111,8 @@ class Children extends React.Component {
         <AnimatedView> 
           <div className="row map-container-card">                                                
             <ChildrenMap
-              symbol="children"
-              title="Distribution of Pre-School Children (≤ age 4) in Singapore (Year 2017)"             
+              symbol="baby"
+              title="Pre-School Children (≤ age 4) in Singapore (Year 2017)"             
               breaks={(this.state.agg === "SUBZONE") ? [0, 330, 1060, 2250, 3710, 5710] : [0, 1080, 5090, 8640, 12260, 17660]}
               colors={["#ffffff", "#feebe2", "#fbb4b9", "#f768a1", "#c51b8a", "#7a0177"]}              
               attribute={"BELOW_4"}

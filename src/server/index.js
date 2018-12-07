@@ -15,6 +15,7 @@ const DOCS_PATH = '../../dist/';
 const PORT      = 3001;
 const IP_ADRESS = 'localhost';
 */
+
 const PORT = process.env.PORT;
 const IP_ADRESS = process.env.HOSTNAME;
 const app       = express();   

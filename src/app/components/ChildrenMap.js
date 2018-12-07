@@ -114,7 +114,7 @@ export default class ChildrenMap extends PureComponent {
 	    },
         pointToLayer: function(feature, latlng) {   
         	/*let icon = L.icon({
-			    iconUrl: "/assets/img/preschool-map-marker.png",
+			    iconUrl: "/assets/img/eldercare-services-marker.png",
 			    iconSize: [10, 10]
 			});
 			return L.marker(latlng, {
@@ -278,14 +278,57 @@ export default class ChildrenMap extends PureComponent {
 
   	let icon = <svg className={`icon icon-${symbol}`}><use xlinkHref={`#icon-${symbol}`}></use></svg>;
 
+  	const { 		
+		breaks, 
+		colors
+	} = this.props;
+
     return(<Col xs={12} md={12}>
             <Card>
               <CardBody>
-              <h5 className="bold-text"><b>{icon}{title}</b></h5>                                  
-                <div id="map-canvas"></div>                                
+              <h5 className="bold-text"><b>{icon}{title}</b></h5> 
+              	<div className="row">        
+              		<Col xs={12} md={4}>                     		
+                		<table className="map-legend pull-left">
+                			<tbody> 
+                				<tr><th colSpan={2}>DISTRIBUTION</th></tr>               				
+                				<tr>
+                					<td style={{color: colors[1]}}>◼</td>
+                					<td style={{color: colors[2]}}>◼</td>
+									<td style={{color: colors[3]}}>◼</td>
+                					<td style={{color: colors[4]}}>◼</td>
+                					<td style={{color: colors[5]}}>◼</td>									
+								</tr>
+
+            					<tr>
+            						<td><small>{breaks[0]}-{breaks[1]}</small></td>
+            						<td><small>{breaks[1]}-{breaks[2]}</small></td>
+            						<td><small>{breaks[2]}-{breaks[3]}</small></td>
+            						<td><small>{breaks[3]}-{breaks[4]}</small></td>
+									<td><small>{breaks[4]}-{breaks[5]}</small></td>
+            					</tr>            					
+							</tbody>
+                		</table>
+                		<table className="map-legend pull-left">
+                			<tbody> 
+                				<tr><th colSpan={2}><br /></th></tr> 
+		                		<tr>
+		                			<th>CHILDCARE SERVICE</th>
+		                			<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #df387c"}}></span></td>
+		            			</tr>
+		            			<tr>
+		                			<th>PRE-SCHOOL</th>
+		            				<td style={{border: "none", paddingLeft: 2}}><span className="dot-symbol" style={{border: "2px solid #56b6de"}}></span></td>
+		            			</tr>
+	            			</tbody>
+                		</table>
+                	</Col>   
+              		<Col xs={12} md={8}>                        
+                		<div id="map-canvas"></div> 
+                	</Col>                   	                   
+                </div>
               </CardBody>                
            </Card>
           </Col>);      
   }
-
 }
