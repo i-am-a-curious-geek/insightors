@@ -20,7 +20,7 @@ export const navigation = {
         },
         {
           title: 'Senior Citizens',          
-          link: '/seniors',
+          link: '/elderly'
         }
       ]
     }
