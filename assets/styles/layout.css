@@ -1037,7 +1037,8 @@ span.square-symbol {
 }
 
 .btn.btn-default.view-switcher {
-  z-index: 5000;
+    z-index: 5000;
+    position: relative;
 }
 
 ::selection {  
