@@ -59504,7 +59504,7 @@ var Map_Map = function (_PureComponent) {
 				data: {
 					labels: labels,
 					datasets: [{
-						label: "LOCATION",
+						label: "COUNT",
 						fill: false,
 						backgroundColor: graphColor,
 						borderColor: borderColor,

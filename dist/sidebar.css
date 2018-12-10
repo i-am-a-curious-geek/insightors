@@ -6986,13 +6986,15 @@ span.square-symbol {
   display: inline-block;
 }
 
+.btn.btn-default.view-switcher {
+  z-index: 5000;
+}
+
 ::selection {  
   color: #FFFFFF;
   background: #a30032;
   outline: #a30032;
-}
-
-.topbar {
+}.topbar {
   width: 100%;
   position: fixed;
   top: 0;
