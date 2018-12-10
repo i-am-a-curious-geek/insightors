@@ -55,7 +55,7 @@ export default class Map extends PureComponent {
 	        labels: labels,
 	        datasets: [
 	            {
-	                label: "LOCATION",
+	                label: "COUNT",
 	                fill: false,                
 	                backgroundColor: graphColor,
 	                borderColor: borderColor,                              
