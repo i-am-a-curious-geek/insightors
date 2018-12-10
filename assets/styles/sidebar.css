@@ -334,3 +334,7 @@ div.toggle__button div.topbar__button {
     padding-top: 18px;
     padding-bottom: 18px;
 }
+
+.sidebar.sidebar--collapse {
+  opacity: 0.85;
+}

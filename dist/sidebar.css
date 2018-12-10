@@ -6458,7 +6458,7 @@ template {
   padding-right: 10px;
   padding-top: 70px;
   min-height: 100vh;
-  background: #f2f4f7;
+  background: #ffffff;
   transition: padding-left 0.3s;
 }
 
@@ -6952,8 +6952,12 @@ input:checked + .toggle-slider:before {
   }
 }
 
-#filter-box .card {
+#filter-box div.card {
   padding-bottom: 0;
+}
+
+#filter-box div.card-body {
+  opacity: 0.95;
 }
 
 table.map-legend {
@@ -7991,6 +7995,10 @@ div.toggle__button div.topbar__button {
     margin: 0;
     padding-top: 18px;
     padding-bottom: 18px;
+}
+
+.sidebar.sidebar--collapse {
+  opacity: 0.85;
 }/* required styles */
 
 .leaflet-pane,
