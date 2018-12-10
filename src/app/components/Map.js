@@ -5,6 +5,8 @@ import PropTypes          from 'prop-types';
 import { Card, CardBody, Col } from 'reactstrap';
 
 import L from "leaflet";
+import onemapLogo from "img/onemap.png";
+import Chart from "chart.js";
 
 export default class Map extends PureComponent {
   constructor() {
@@ -16,7 +18,7 @@ export default class Map extends PureComponent {
     this.featureGroupMarkers_2 = null;
 
     this.attribution = null;   
-    this.basemap = null;   
+    this.basemap = null;      
   }  
 
   componentWillMount() {          
@@ -30,16 +32,60 @@ export default class Map extends PureComponent {
     this.featureGroupMarkers = featureGroupMarkers; 
     this.featureGroupMarkers_2 = featureGroupMarkers_2;
 
-    this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src="https://docs.onemap.sg/maps/images/oneMap64-01.png" style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
+    this.attribution = L.control.attribution({ prefix: '<small class="prefix-attribution"><img src=' + onemapLogo + ' style="height:10px;width:10px;"/> New OneMap | Map data © contributors, <a href="http://SLA.gov.sg">SLA</a></small>'
     });
   }
   
-  componentDidMount() {        
+
+  renderChart() { // RENDER CHART
+  	const { 
+  		graphData, 
+  		graphLabels,
+  		graphColor,
+  		borderColor
+  	} = this.props;
+
+  	var ctx = document.getElementById("chart_view");
+  	var labels = graphLabels;
+  	var data = graphData;
+
+  	var myChart = new Chart(ctx,{
+        type: 'bar',
+        data: {
+	        labels: labels,
+	        datasets: [
+	            {
+	                label: "LOCATION",
+	                fill: false,                
+	                backgroundColor: graphColor,
+	                borderColor: borderColor,                              
+	                borderWidth: 1,
+	                data: data
+	            }
+	        ]
+	    },
+        options: {
+			"scales":{
+				"xAxes":[
+					{
+						"ticks":{
+							"beginAtZero":true
+						}
+					}
+				]
+			}
+		}
+    });
+
+  }
+
+  componentDidMount() { 
+	this.renderChart();
+ 	
     this.map = new L.Map('map-canvas', {
         center: new L.LatLng(1.33883688455388, 103.83842469658703),
         zoom: 11,
         minZoom: 11,
-        maxZoom: 17,
         attributionControl: false,
         zoomControl: true,
         scaleControl: false
@@ -54,12 +100,17 @@ export default class Map extends PureComponent {
     this.attribution.addTo(this.map);
 
     document.getElementById("map-canvas").style.background = "#bed4f9";
-    this.basemap = L.tileLayer("http://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png",{    	
+    var url = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}/maps/ONEMAP/{z}/{x}/{y}.png`;
+
+    url = "http://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png";
+    
+    this.basemap = L.tileLayer(url, {    	
 		detectRetina: true,
 		maxZoom: 18,
 		minZoom: 11,		
 		attribution: false
 	});
+   
 	this.map.addLayer(this.basemap);
 
 	this.addGeojsonLayer();
@@ -131,7 +182,7 @@ export default class Map extends PureComponent {
                 opacity: 1.0,
                 fillOpacity: 1.0
             });
-        }
+        }        
     });
 	
   	this.featureGroupMarkers.addLayer(markers);
@@ -264,11 +315,16 @@ export default class Map extends PureComponent {
 				});
 			  }	
 	    	});
-	  	} 
+	  	},
+	  	filter: function(feature) {
+	    	return true;
+	    } 
   	}); 
 
   	this.featureGroupLayer.addLayer(layer);
   }
+
+
 
   render() {     	      
   	const { 
@@ -288,11 +344,28 @@ export default class Map extends PureComponent {
 		colors
 	} = this.props;
 
+	const { 
+		geojsonLayer,
+		attribute,
+
+		geojsonMarkers,
+		geojsonMarkers_2
+	} = this.props;
+
+	const {
+		view
+	} = this.props;
+
     return(<Col xs={12} md={12}>
             <Card>
-              <CardBody>
+              <CardBody>          	  
               <h5 className="bold-text"><b>{icon}{title}</b></h5> 
-              	<div className="row">        
+          		<div className={ (view) ? "row hidden" : "row" }>
+              		<Col xs={12} md={12}>  
+              			<canvas id="chart_view"></canvas> 
+          			</Col>            			
+              	</div>
+              	<div className={ (view) ? "row" : "row hidden" }>        
               		<Col xs={12} md={4}>                     		
                 		<table className="map-legend pull-left">
                 			<tbody> 
@@ -330,7 +403,7 @@ export default class Map extends PureComponent {
 		            				<td><span className="dot-symbol" style={{border: `2px solid ${geojsonMarkerColor_2}`}}></span></td>
 		            			</tr>
 	            			</tbody>
-                		</table>                		
+                		</table>                 		      	
                 	</Col>   
               		<Col xs={12} md={8}>                        
                 		<div id="map-canvas"></div> 
