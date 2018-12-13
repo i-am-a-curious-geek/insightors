@@ -8,7 +8,7 @@
   box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
   padding-top: 60px;
   transition: transform 0.3s, width 0.3s;
-  transform: translateX(calc(-100% - 20px));
+  transform: translateX(calc(-100% - 20px));  
 }
 .sidebar {
   background: white;
@@ -313,6 +313,7 @@
     display: block;
   }  
 }
+
 @media screen and (min-width: 992px) {
   .sidebar.sidebar--no-desktop {
     transform: translateX(0);

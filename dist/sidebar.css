@@ -6611,10 +6611,19 @@ table.actionTable .btn {
   background: #FFFFFF;
 }
 
+#filter-box div.card-body {
+  opacity: 0.95;    
+}
+
+#filter-box div.card {
+  border: 2px solid #eee;
+  border-left: none;
+}
+
 table.filter-table td {
   vertical-align: top;  
   font-size: 12px;  
-  padding-right: 5px;
+  padding-right: 5px;  
 }
 
 table.filter-table td svg {
@@ -6954,10 +6963,7 @@ input:checked + .toggle-slider:before {
 
 #filter-box div.card {
   padding-bottom: 0;
-}
-
-#filter-box div.card-body {
-  opacity: 0.95;
+  box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
 }
 
 table.map-legend {
@@ -6986,16 +6992,35 @@ span.square-symbol {
   display: inline-block;
 }
 
-.btn.btn-default.view-switcher {
-    z-index: 5000;
-    position: relative;
+
+tbody.datatable-facilities th,
+tbody.datatable-facilities td {
+  border-collapse: collapse;
+  border: 2px solid #a30032;
+  width: 50%;
+}
+
+.btn.btn-default.view-switcher {  
+  right: 15px;
+  position: fixed;
+  z-index: 5000;
+}
+
+#filter-box div.card-body {
+    opacity: 0.95;
+}
+
+.sidebar.sidebar--collapse {
+    opacity: 0.85;
 }
 
 ::selection {  
   color: #FFFFFF;
   background: #a30032;
   outline: #a30032;
-}.topbar {
+}
+
+.topbar {
   width: 100%;
   position: fixed;
   top: 0;
@@ -7673,7 +7698,7 @@ a.topbar__button {
   box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
   padding-top: 60px;
   transition: transform 0.3s, width 0.3s;
-  transform: translateX(calc(-100% - 20px));
+  transform: translateX(calc(-100% - 20px));  
 }
 .sidebar {
   background: white;
@@ -7978,6 +8003,7 @@ a.topbar__button {
     display: block;
   }  
 }
+
 @media screen and (min-width: 992px) {
   .sidebar.sidebar--no-desktop {
     transform: translateX(0);
