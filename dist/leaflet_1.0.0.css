@@ -7014,6 +7014,28 @@ tbody.datatable-facilities td {
     opacity: 0.85;
 }
 
+.menu-icon {
+  color: #a30032;
+  background: #fff;  
+  min-width: 60px; 
+  min-height: 60px; 
+  max-width: 60px; 
+  max-height: 60px;   
+  margin: 1px 5px;
+  padding: 0;
+  cursor: pointer;
+  display: inline-block;
+  box-shadow: 0 1px 30px 1px rgba(0, 0, 0, 0.11);
+}
+
+.menu-icon svg {
+  margin: 20px;
+}
+.menu-icon:hover {
+  color: #fff;
+  background: #a30032;
+}
+
 ::selection {  
   color: #FFFFFF;
   background: #a30032;

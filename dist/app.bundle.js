@@ -67405,6 +67405,8 @@ var PageNotFound_mapDispatchToProps = function mapDispatchToProps(dispatch) {
 
 /* harmony default export */ var views_PageNotFound = (connect_connect(PageNotFound_mapStateToProps, PageNotFound_mapDispatchToProps)(PageNotFound_PageNotFound));
 // CONCATENATED MODULE: ./src/app/views/WelcomePage.js
+var WelcomePage__extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var WelcomePage__createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function WelcomePage__classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -67422,13 +67424,29 @@ function WelcomePage__inherits(subClass, superClass) { if (typeof superClass !==
 
 
 
+
 var WelcomePage_WelcomePage = function (_PureComponent) {
   WelcomePage__inherits(WelcomePage, _PureComponent);
 
   function WelcomePage() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     WelcomePage__classCallCheck(this, WelcomePage);
 
-    return WelcomePage__possibleConstructorReturn(this, (WelcomePage.__proto__ || Object.getPrototypeOf(WelcomePage)).apply(this, arguments));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return _ret = (_temp = (_this = WelcomePage__possibleConstructorReturn(this, (_ref = WelcomePage.__proto__ || Object.getPrototypeOf(WelcomePage)).call.apply(_ref, [this].concat(args))), _this), _this.handlesToggleSidebarClick = function (event) {
+      if (event) {
+        event.preventDefault();
+      }
+      var toggleSidebar = _this.props.actions.toggleSidebar;
+
+      toggleSidebar();
+    }, _temp), WelcomePage__possibleConstructorReturn(_this, _ret);
   }
 
   WelcomePage__createClass(WelcomePage, [{
@@ -67448,7 +67466,6 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
   }, {
     key: 'render',
     value: function render() {
-
       return react_default.a.createElement(
         reactstrap_es_Card,
         { className: 'page-not-found' },
@@ -67488,8 +67505,17 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
           ),
           react_default.a.createElement(
             'small',
-            { className: 'card__title' },
-            'Select the menu on the left to start exploring!'
+            { className: 'card__title', style: { whiteSpace: "nowrap", textAlign: "center" } },
+            'To start exploring, select the left menu',
+            react_default.a.createElement(
+              'span',
+              { className: 'menu-icon', onClick: this.handlesToggleSidebarClick },
+              react_default.a.createElement(
+                'svg',
+                { className: 'icon icon-bars', style: { width: 20, height: 20 } },
+                react_default.a.createElement('use', { xlinkHref: '#icon-bars' })
+              )
+            )
           )
         )
       );
@@ -67502,23 +67528,26 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
 WelcomePage_WelcomePage.propTypes = {
   actions: prop_types_default.a.shape({
     enterWelcomePage: prop_types_default.a.func.isRequired,
-    leaveWelcomePage: prop_types_default.a.func.isRequired
+    leaveWelcomePage: prop_types_default.a.func.isRequired,
+
+    toggleSidebar: prop_types_default.a.func
   })
 };
 
 
 var WelcomePage_mapStateToProps = function mapStateToProps(state) {
   return {
-    currentView: state.views.currentView
+    currentView: state.views.currentView,
+    sidebarIsOpen: state.sidebar.isOpen
   };
 };
 
 var WelcomePage_mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    actions: Object(es["bindActionCreators"])({
+    actions: Object(es["bindActionCreators"])(WelcomePage__extends({
       enterWelcomePage: enterWelcomePage,
       leaveWelcomePage: leaveWelcomePage
-    }, dispatch)
+    }, sidebar_namespaceObject), dispatch)
   };
 };
 
