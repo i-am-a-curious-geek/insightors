@@ -49,7 +49,7 @@ class WelcomePage extends PureComponent {
               </b>
             </h3>
             <small className="card__title" style={{whiteSpace: "nowrap", textAlign: "center"}}>
-              To start exploring, select the left menu 
+              Start exploring by selecting <br />the left menu 
                 <span className="menu-icon" onClick={this.handlesToggleSidebarClick}>
                   <svg className="icon icon-bars" style={{width: 20, height: 20}}>
                     <use xlinkHref="#icon-bars"></use>
@@ -83,6 +83,7 @@ const mapDispatchToProps = (dispatch) => {
       {        
         enterWelcomePage: actions.enterWelcomePage,
         leaveWelcomePage: actions.leaveWelcomePage,
+
         ...sidebarActions   
       },
       dispatch)

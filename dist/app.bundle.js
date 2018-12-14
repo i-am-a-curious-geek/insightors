@@ -67506,7 +67506,9 @@ var WelcomePage_WelcomePage = function (_PureComponent) {
           react_default.a.createElement(
             'small',
             { className: 'card__title', style: { whiteSpace: "nowrap", textAlign: "center" } },
-            'To start exploring, select the left menu',
+            'Start exploring by selecting ',
+            react_default.a.createElement('br', null),
+            'the left menu',
             react_default.a.createElement(
               'span',
               { className: 'menu-icon', onClick: this.handlesToggleSidebarClick },
@@ -67547,6 +67549,7 @@ var WelcomePage_mapDispatchToProps = function mapDispatchToProps(dispatch) {
     actions: Object(es["bindActionCreators"])(WelcomePage__extends({
       enterWelcomePage: enterWelcomePage,
       leaveWelcomePage: leaveWelcomePage
+
     }, sidebar_namespaceObject), dispatch)
   };
 };
