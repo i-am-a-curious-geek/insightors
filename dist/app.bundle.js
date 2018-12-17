@@ -60054,6 +60054,7 @@ var Map_Map = function (_PureComponent) {
 					}]
 				},
 				options: {
+					"maintainAspectRatio": false,
 					"scales": {
 						"xAxes": [{
 							"ticks": {
@@ -60365,7 +60366,11 @@ var Map_Map = function (_PureComponent) {
 							react_default.a.createElement(
 								reactstrap_es_Col,
 								{ xs: 12, md: 12 },
-								react_default.a.createElement('canvas', { id: 'chart_view' })
+								react_default.a.createElement(
+									'div',
+									{ className: 'chart-container', style: { position: "relative", height: "100vh", width: "100%" } },
+									react_default.a.createElement('canvas', { id: 'chart_view' })
+								)
 							)
 						),
 						react_default.a.createElement(

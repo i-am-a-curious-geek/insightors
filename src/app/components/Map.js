@@ -65,6 +65,7 @@ export default class Map extends PureComponent {
 	        ]
 	    },
         options: {
+        	"maintainAspectRatio": false,
 			"scales":{
 				"xAxes":[
 					{
@@ -362,7 +363,9 @@ export default class Map extends PureComponent {
               <h5 className="bold-text"><b>{icon}{title}</b></h5> 
           		<div className={ (view) ? "row hidden" : "row" }>
               		<Col xs={12} md={12}>  
-              			<canvas id="chart_view"></canvas> 
+              			<div className="chart-container" style={{position: "relative", height: "100vh", width:"100%"}}>
+              				<canvas id="chart_view"></canvas> 
+          				</div>
           			</Col>            			
               	</div>
               	<div className={ (view) ? "row" : "row hidden" }>        
