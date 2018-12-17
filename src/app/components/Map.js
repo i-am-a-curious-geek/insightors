@@ -50,16 +50,16 @@ export default class Map extends PureComponent {
   	var data = graphData;
 
   	var myChart = new Chart(ctx,{
-        type: 'bar',
+        type: 'line',
         data: {
 	        labels: labels,
 	        datasets: [
 	            {
-	                label: "COUNT",
-	                fill: false,                
-	                backgroundColor: graphColor,
-	                borderColor: borderColor,                              
-	                borderWidth: 1,
+	                label: "COUNT",	                         
+	                backgroundColor: graphColor, // "rgba(54, 162, 235, 0.2)"
+	                borderColor: borderColor, // "rgb(54, 162, 235)"    
+	                pointBackgroundColor: "#ffffff",                          
+	                borderWidth: 2,
 	                data: data
 	            }
 	        ]
@@ -115,7 +115,7 @@ export default class Map extends PureComponent {
 
 	this.addGeojsonLayer();
 	this.addGeojsonMarkers();
-	this.addGeojsonMarkers_2();
+	this.addGeojsonMarkers_2();	
   }
 
   addGeojsonMarkers() {

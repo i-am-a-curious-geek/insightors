@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 345);
+/******/ 	return __webpack_require__(__webpack_require__.s = 351);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -1328,7 +1328,7 @@
 
     var defaultLocaleWeek = {
         dow : 0, // Sunday is the first day of the week.
-        doy : 6  // The week that contains Jan 1st is the first week of the year.
+        doy : 6  // The week that contains Jan 6th is the first week of the year.
     };
 
     function localeFirstDayOfWeek () {
@@ -1902,7 +1902,7 @@
             try {
                 oldLocale = globalLocale._abbr;
                 var aliasedRequire = require;
-                __webpack_require__(581)("./" + name);
+                __webpack_require__(586)("./" + name);
                 getSetGlobalLocale(oldLocale);
             } catch (e) {}
         }
@@ -2204,13 +2204,13 @@
                     weekdayOverflow = true;
                 }
             } else if (w.e != null) {
-                // local weekday -- counting starts from begining of week
+                // local weekday -- counting starts from beginning of week
                 weekday = w.e + dow;
                 if (w.e < 0 || w.e > 6) {
                     weekdayOverflow = true;
                 }
             } else {
-                // default to begining of week
+                // default to beginning of week
                 weekday = dow;
             }
         }
@@ -2804,7 +2804,7 @@
             years = normalizedInput.year || 0,
             quarters = normalizedInput.quarter || 0,
             months = normalizedInput.month || 0,
-            weeks = normalizedInput.week || 0,
+            weeks = normalizedInput.week || normalizedInput.isoWeek || 0,
             days = normalizedInput.day || 0,
             hours = normalizedInput.hour || 0,
             minutes = normalizedInput.minute || 0,
@@ -3108,7 +3108,7 @@
                 ms : toInt(absRound(match[MILLISECOND] * 1000)) * sign // the millisecond decimal point is included in the match
             };
         } else if (!!(match = isoRegex.exec(input))) {
-            sign = (match[1] === '-') ? -1 : (match[1] === '+') ? 1 : 1;
+            sign = (match[1] === '-') ? -1 : 1;
             duration = {
                 y : parseIso(match[2], sign),
                 M : parseIso(match[3], sign),
@@ -3259,7 +3259,7 @@
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() > localInput.valueOf();
         } else {
@@ -3272,7 +3272,7 @@
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(!isUndefined(units) ? units : 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() < localInput.valueOf();
         } else {
@@ -3281,9 +3281,14 @@
     }
 
     function isBetween (from, to, units, inclusivity) {
+        var localFrom = isMoment(from) ? from : createLocal(from),
+            localTo = isMoment(to) ? to : createLocal(to);
+        if (!(this.isValid() && localFrom.isValid() && localTo.isValid())) {
+            return false;
+        }
         inclusivity = inclusivity || '()';
-        return (inclusivity[0] === '(' ? this.isAfter(from, units) : !this.isBefore(from, units)) &&
-            (inclusivity[1] === ')' ? this.isBefore(to, units) : !this.isAfter(to, units));
+        return (inclusivity[0] === '(' ? this.isAfter(localFrom, units) : !this.isBefore(localFrom, units)) &&
+            (inclusivity[1] === ')' ? this.isBefore(localTo, units) : !this.isAfter(localTo, units));
     }
 
     function isSame (input, units) {
@@ -3292,7 +3297,7 @@
         if (!(this.isValid() && localInput.isValid())) {
             return false;
         }
-        units = normalizeUnits(units || 'millisecond');
+        units = normalizeUnits(units) || 'millisecond';
         if (units === 'millisecond') {
             return this.valueOf() === localInput.valueOf();
         } else {
@@ -3302,11 +3307,11 @@
     }
 
     function isSameOrAfter (input, units) {
-        return this.isSame(input, units) || this.isAfter(input,units);
+        return this.isSame(input, units) || this.isAfter(input, units);
     }
 
     function isSameOrBefore (input, units) {
-        return this.isSame(input, units) || this.isBefore(input,units);
+        return this.isSame(input, units) || this.isBefore(input, units);
     }
 
     function diff (input, units, asFloat) {
@@ -4525,7 +4530,7 @@
     // Side effect imports
 
 
-    hooks.version = '2.22.2';
+    hooks.version = '2.23.0';
 
     setHookCallback(createLocal);
 
@@ -4566,7 +4571,7 @@
         TIME: 'HH:mm',                                  // <input type="time" />
         TIME_SECONDS: 'HH:mm:ss',                       // <input type="time" step="1" />
         TIME_MS: 'HH:mm:ss.SSS',                        // <input type="time" step="0.001" />
-        WEEK: 'YYYY-[W]WW',                             // <input type="week" />
+        WEEK: 'GGGG-[W]WW',                             // <input type="week" />
         MONTH: 'YYYY-MM'                                // <input type="month" />
     };
 
@@ -4574,7 +4579,7 @@
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(580)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(585)(module)))
 
 /***/ }),
 /* 1 */
@@ -4633,7 +4638,7 @@ module.exports = $export;
 
 
 if (true) {
-  module.exports = __webpack_require__(549);
+  module.exports = __webpack_require__(554);
 } else {
   module.exports = require('./cjs/react.development.js');
 }
@@ -4669,7 +4674,7 @@ if (false) {
 } else {
   // By explicitly using `prop-types` you are opting into new production behavior.
   // http://fb.me/prop-types-in-prod
-  module.exports = __webpack_require__(564)();
+  module.exports = __webpack_require__(569)();
 }
 
 
@@ -4703,10 +4708,10 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 "use strict";
 
 
-module.exports = __webpack_require__(104);
-module.exports.easing = __webpack_require__(605);
-module.exports.canvas = __webpack_require__(606);
-module.exports.options = __webpack_require__(607);
+module.exports = __webpack_require__(106);
+module.exports.easing = __webpack_require__(610);
+module.exports.canvas = __webpack_require__(611);
+module.exports.options = __webpack_require__(612);
 
 
 /***/ }),
@@ -4754,7 +4759,7 @@ module.exports = {
 /* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store = __webpack_require__(88)('wks');
+var store = __webpack_require__(90)('wks');
 var uid = __webpack_require__(57);
 var Symbol = __webpack_require__(5).Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
@@ -4771,6 +4776,18 @@ $exports.store = store;
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// 7.1.15 ToLength
+var toInteger = __webpack_require__(31);
+var min = Math.min;
+module.exports = function (it) {
+  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
+};
+
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // Thank's IE8 for his funny defineProperty
 module.exports = !__webpack_require__(7)(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
@@ -4778,15 +4795,15 @@ module.exports = !__webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(4);
-var IE8_DOM_DEFINE = __webpack_require__(158);
-var toPrimitive = __webpack_require__(33);
+var IE8_DOM_DEFINE = __webpack_require__(161);
+var toPrimitive = __webpack_require__(34);
 var dP = Object.defineProperty;
 
-exports.f = __webpack_require__(11) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
+exports.f = __webpack_require__(12) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
   anObject(O);
   P = toPrimitive(P, true);
   anObject(Attributes);
@@ -4800,23 +4817,11 @@ exports.f = __webpack_require__(11) ? Object.defineProperty : function definePro
 
 
 /***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.1.15 ToLength
-var toInteger = __webpack_require__(35);
-var min = Math.min;
-module.exports = function (it) {
-  return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
-};
-
-
-/***/ }),
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.13 ToObject(argument)
-var defined = __webpack_require__(34);
+var defined = __webpack_require__(35);
 module.exports = function (it) {
   return Object(defined(it));
 };
@@ -4846,7 +4851,7 @@ exports.default = function (instance, Constructor) {
 
 exports.__esModule = true;
 
-var _typeof2 = __webpack_require__(152);
+var _typeof2 = __webpack_require__(155);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -4869,15 +4874,15 @@ exports.default = function (self, call) {
 
 exports.__esModule = true;
 
-var _setPrototypeOf = __webpack_require__(674);
+var _setPrototypeOf = __webpack_require__(679);
 
 var _setPrototypeOf2 = _interopRequireDefault(_setPrototypeOf);
 
-var _create = __webpack_require__(678);
+var _create = __webpack_require__(683);
 
 var _create2 = _interopRequireDefault(_create);
 
-var _typeof2 = __webpack_require__(152);
+var _typeof2 = __webpack_require__(155);
 
 var _typeof3 = _interopRequireDefault(_typeof2);
 
@@ -4913,9 +4918,9 @@ module.exports = function (it) {
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(12);
+var dP = __webpack_require__(13);
 var createDesc = __webpack_require__(56);
-module.exports = __webpack_require__(11) ? function (object, key, value) {
+module.exports = __webpack_require__(12) ? function (object, key, value) {
   return dP.f(object, key, createDesc(1, value));
 } : function (object, key, value) {
   object[key] = value;
@@ -4966,7 +4971,7 @@ __webpack_require__(28).inspectSource = function (it) {
 
 var $export = __webpack_require__(1);
 var fails = __webpack_require__(7);
-var defined = __webpack_require__(34);
+var defined = __webpack_require__(35);
 var quot = /"/g;
 // B.2.3.2.1 CreateHTML(string, tag, attribute, value)
 var createHTML = function (string, tag, attribute, value) {
@@ -4994,7 +4999,7 @@ module.exports = function (NAME, exec) {
 
 exports.__esModule = true;
 
-var _assign = __webpack_require__(645);
+var _assign = __webpack_require__(650);
 
 var _assign2 = _interopRequireDefault(_assign);
 
@@ -5018,7 +5023,7 @@ exports.default = _assign2.default || function (target) {
 /* 23 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.5.7' };
+var core = module.exports = { version: '2.6.0' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -5037,8 +5042,8 @@ module.exports = function (it, key) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(79);
-var defined = __webpack_require__(34);
+var IObject = __webpack_require__(80);
+var defined = __webpack_require__(35);
 module.exports = function (it) {
   return IObject(defined(it));
 };
@@ -5048,15 +5053,15 @@ module.exports = function (it) {
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var pIE = __webpack_require__(80);
+var pIE = __webpack_require__(81);
 var createDesc = __webpack_require__(56);
 var toIObject = __webpack_require__(25);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 var has = __webpack_require__(24);
-var IE8_DOM_DEFINE = __webpack_require__(158);
+var IE8_DOM_DEFINE = __webpack_require__(161);
 var gOPD = Object.getOwnPropertyDescriptor;
 
-exports.f = __webpack_require__(11) ? gOPD : function getOwnPropertyDescriptor(O, P) {
+exports.f = __webpack_require__(12) ? gOPD : function getOwnPropertyDescriptor(O, P) {
   O = toIObject(O);
   P = toPrimitive(P, true);
   if (IE8_DOM_DEFINE) try {
@@ -5073,7 +5078,7 @@ exports.f = __webpack_require__(11) ? gOPD : function getOwnPropertyDescriptor(O
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 var has = __webpack_require__(24);
 var toObject = __webpack_require__(14);
-var IE_PROTO = __webpack_require__(112)('IE_PROTO');
+var IE_PROTO = __webpack_require__(114)('IE_PROTO');
 var ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function (O) {
@@ -5089,7 +5094,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 /* 28 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.5.7' };
+var core = module.exports = { version: '2.6.0' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -5132,6 +5137,18 @@ module.exports = function (it) {
 
 /***/ }),
 /* 31 */
+/***/ (function(module, exports) {
+
+// 7.1.4 ToInteger
+var ceil = Math.ceil;
+var floor = Math.floor;
+module.exports = function (it) {
+  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
+};
+
+
+/***/ }),
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5147,7 +5164,7 @@ module.exports = function (method, arg) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5203,7 +5220,7 @@ module.exports = invariant;
 
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
@@ -5221,25 +5238,13 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, exports) {
 
 // 7.2.1 RequireObjectCoercible(argument)
 module.exports = function (it) {
   if (it == undefined) throw TypeError("Can't call method on  " + it);
   return it;
-};
-
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports) {
-
-// 7.1.4 ToInteger
-var ceil = Math.ceil;
-var floor = Math.floor;
-module.exports = function (it) {
-  return isNaN(it = +it) ? 0 : (it > 0 ? floor : ceil)(it);
 };
 
 
@@ -5271,10 +5276,10 @@ module.exports = function (KEY, exec) {
 // 5 -> Array#find
 // 6 -> Array#findIndex
 var ctx = __webpack_require__(29);
-var IObject = __webpack_require__(79);
+var IObject = __webpack_require__(80);
 var toObject = __webpack_require__(14);
-var toLength = __webpack_require__(13);
-var asc = __webpack_require__(129);
+var toLength = __webpack_require__(11);
+var asc = __webpack_require__(130);
 module.exports = function (TYPE, $create) {
   var IS_MAP = TYPE == 1;
   var IS_FILTER = TYPE == 2;
@@ -5348,7 +5353,7 @@ if (true) {
   // DCE check should happen before ReactDOM bundle executes so that
   // DevTools can report bad minification during injection.
   checkDCE();
-  module.exports = __webpack_require__(550);
+  module.exports = __webpack_require__(555);
 } else {
   module.exports = require('./cjs/react-dom.development.js');
 }
@@ -5361,7 +5366,7 @@ if (true) {
 "use strict";
 
 
-var color = __webpack_require__(323);
+var color = __webpack_require__(329);
 var helpers = __webpack_require__(6);
 
 function interpolate(start, view, model, ease) {
@@ -5480,8 +5485,8 @@ module.exports = Element;
 /* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var store = __webpack_require__(149)('wks');
-var uid = __webpack_require__(107);
+var store = __webpack_require__(152)('wks');
+var uid = __webpack_require__(109);
 var Symbol = __webpack_require__(54).Symbol;
 var USE_SYMBOL = typeof Symbol == 'function';
 
@@ -5526,44 +5531,44 @@ module.exports = g;
 
 "use strict";
 
-if (__webpack_require__(11)) {
+if (__webpack_require__(12)) {
   var LIBRARY = __webpack_require__(49);
   var global = __webpack_require__(5);
   var fails = __webpack_require__(7);
   var $export = __webpack_require__(1);
-  var $typed = __webpack_require__(99);
-  var $buffer = __webpack_require__(135);
+  var $typed = __webpack_require__(101);
+  var $buffer = __webpack_require__(138);
   var ctx = __webpack_require__(29);
   var anInstance = __webpack_require__(63);
   var propertyDesc = __webpack_require__(56);
   var hide = __webpack_require__(19);
   var redefineAll = __webpack_require__(65);
-  var toInteger = __webpack_require__(35);
-  var toLength = __webpack_require__(13);
-  var toIndex = __webpack_require__(184);
+  var toInteger = __webpack_require__(31);
+  var toLength = __webpack_require__(11);
+  var toIndex = __webpack_require__(189);
   var toAbsoluteIndex = __webpack_require__(59);
-  var toPrimitive = __webpack_require__(33);
+  var toPrimitive = __webpack_require__(34);
   var has = __webpack_require__(24);
-  var classof = __webpack_require__(81);
+  var classof = __webpack_require__(71);
   var isObject = __webpack_require__(8);
   var toObject = __webpack_require__(14);
-  var isArrayIter = __webpack_require__(126);
+  var isArrayIter = __webpack_require__(127);
   var create = __webpack_require__(60);
   var getPrototypeOf = __webpack_require__(27);
   var gOPN = __webpack_require__(61).f;
-  var getIterFn = __webpack_require__(128);
+  var getIterFn = __webpack_require__(129);
   var uid = __webpack_require__(57);
   var wks = __webpack_require__(10);
   var createArrayMethod = __webpack_require__(37);
-  var createArrayIncludes = __webpack_require__(89);
-  var speciesConstructor = __webpack_require__(96);
-  var ArrayIterators = __webpack_require__(131);
-  var Iterators = __webpack_require__(72);
-  var $iterDetect = __webpack_require__(93);
+  var createArrayIncludes = __webpack_require__(91);
+  var speciesConstructor = __webpack_require__(83);
+  var ArrayIterators = __webpack_require__(132);
+  var Iterators = __webpack_require__(73);
+  var $iterDetect = __webpack_require__(96);
   var setSpecies = __webpack_require__(62);
-  var arrayFill = __webpack_require__(130);
-  var arrayCopyWithin = __webpack_require__(174);
-  var $DP = __webpack_require__(12);
+  var arrayFill = __webpack_require__(131);
+  var arrayCopyWithin = __webpack_require__(178);
+  var $DP = __webpack_require__(13);
   var $GOPD = __webpack_require__(26);
   var dP = $DP.f;
   var gOPD = $GOPD.f;
@@ -6011,10 +6016,10 @@ if (__webpack_require__(11)) {
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Map = __webpack_require__(179);
+var Map = __webpack_require__(184);
 var $export = __webpack_require__(1);
-var shared = __webpack_require__(88)('metadata');
-var store = shared.store || (shared.store = new (__webpack_require__(182))());
+var shared = __webpack_require__(90)('metadata');
+var store = shared.store || (shared.store = new (__webpack_require__(187))());
 
 var getOrCreateMetadataMap = function (target, targetKey, create) {
   var targetMetadata = store.get(target);
@@ -6139,7 +6144,7 @@ module.exports = warning;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // EXTERNAL MODULE: ./node_modules/lodash-es/_freeGlobal.js
-var _freeGlobal = __webpack_require__(570);
+var _freeGlobal = __webpack_require__(575);
 
 // CONCATENATED MODULE: ./node_modules/lodash-es/_root.js
 
@@ -6383,7 +6388,7 @@ function isPlainObject(value) {
 /* harmony default export */ var lodash_es_isPlainObject = (isPlainObject);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
-var es = __webpack_require__(571);
+var es = __webpack_require__(576);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/createStore.js
 
@@ -7010,7 +7015,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 exports.__esModule = true;
 
-var _defineProperty = __webpack_require__(335);
+var _defineProperty = __webpack_require__(341);
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -7041,7 +7046,7 @@ exports.default = function () {
 var META = __webpack_require__(57)('meta');
 var isObject = __webpack_require__(8);
 var has = __webpack_require__(24);
-var setDesc = __webpack_require__(12).f;
+var setDesc = __webpack_require__(13).f;
 var id = 0;
 var isExtensible = Object.isExtensible || function () {
   return true;
@@ -7122,7 +7127,7 @@ module.exports = function (key) {
 
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
-var layouts = __webpack_require__(82);
+var layouts = __webpack_require__(84);
 
 module.exports = {
 	// Scale registration object. Extensions can register new scale types (such as log or DB scales) and then
@@ -7171,10 +7176,10 @@ module.exports = {
 
 
 module.exports = {};
-module.exports.Arc = __webpack_require__(613);
-module.exports.Line = __webpack_require__(614);
-module.exports.Point = __webpack_require__(615);
-module.exports.Rectangle = __webpack_require__(616);
+module.exports.Arc = __webpack_require__(618);
+module.exports.Line = __webpack_require__(619);
+module.exports.Point = __webpack_require__(620);
+module.exports.Rectangle = __webpack_require__(621);
 
 
 /***/ }),
@@ -7183,8 +7188,8 @@ module.exports.Rectangle = __webpack_require__(616);
 
 var global = __webpack_require__(54);
 var core = __webpack_require__(23);
-var ctx = __webpack_require__(143);
-var hide = __webpack_require__(75);
+var ctx = __webpack_require__(146);
+var hide = __webpack_require__(76);
 var has = __webpack_require__(67);
 var PROTOTYPE = 'prototype';
 
@@ -7261,9 +7266,9 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var anObject = __webpack_require__(76);
-var IE8_DOM_DEFINE = __webpack_require__(330);
-var toPrimitive = __webpack_require__(144);
+var anObject = __webpack_require__(77);
+var IE8_DOM_DEFINE = __webpack_require__(336);
+var toPrimitive = __webpack_require__(147);
 var dP = Object.defineProperty;
 
 exports.f = __webpack_require__(66) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
@@ -7309,8 +7314,8 @@ module.exports = function (key) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(160);
-var enumBugKeys = __webpack_require__(113);
+var $keys = __webpack_require__(163);
+var enumBugKeys = __webpack_require__(115);
 
 module.exports = Object.keys || function keys(O) {
   return $keys(O, enumBugKeys);
@@ -7321,7 +7326,7 @@ module.exports = Object.keys || function keys(O) {
 /* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(35);
+var toInteger = __webpack_require__(31);
 var max = Math.max;
 var min = Math.min;
 module.exports = function (index, length) {
@@ -7336,22 +7341,22 @@ module.exports = function (index, length) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject = __webpack_require__(4);
-var dPs = __webpack_require__(161);
-var enumBugKeys = __webpack_require__(113);
-var IE_PROTO = __webpack_require__(112)('IE_PROTO');
+var dPs = __webpack_require__(164);
+var enumBugKeys = __webpack_require__(115);
+var IE_PROTO = __webpack_require__(114)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(110)('iframe');
+  var iframe = __webpack_require__(112)('iframe');
   var i = enumBugKeys.length;
   var lt = '<';
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(114).appendChild(iframe);
+  __webpack_require__(116).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -7382,8 +7387,8 @@ module.exports = Object.create || function create(O, Properties) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-var $keys = __webpack_require__(160);
-var hiddenKeys = __webpack_require__(113).concat('length', 'prototype');
+var $keys = __webpack_require__(163);
+var hiddenKeys = __webpack_require__(115).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
   return $keys(O, hiddenKeys);
@@ -7397,8 +7402,8 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 "use strict";
 
 var global = __webpack_require__(5);
-var dP = __webpack_require__(12);
-var DESCRIPTORS = __webpack_require__(11);
+var dP = __webpack_require__(13);
+var DESCRIPTORS = __webpack_require__(12);
 var SPECIES = __webpack_require__(10)('species');
 
 module.exports = function (KEY) {
@@ -7426,11 +7431,11 @@ module.exports = function (it, Constructor, name, forbiddenField) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var ctx = __webpack_require__(29);
-var call = __webpack_require__(172);
-var isArrayIter = __webpack_require__(126);
+var call = __webpack_require__(176);
+var isArrayIter = __webpack_require__(127);
 var anObject = __webpack_require__(4);
-var toLength = __webpack_require__(13);
-var getIterFn = __webpack_require__(128);
+var toLength = __webpack_require__(11);
+var getIterFn = __webpack_require__(129);
 var BREAK = {};
 var RETURN = {};
 var exports = module.exports = function (iterable, entries, fn, that, ITERATOR) {
@@ -7468,7 +7473,7 @@ module.exports = function (target, src, safe) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // Thank's IE8 for his funny defineProperty
-module.exports = !__webpack_require__(78)(function () {
+module.exports = !__webpack_require__(79)(function () {
   return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a != 7;
 });
 
@@ -7488,8 +7493,8 @@ module.exports = function (it, key) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(333);
-var defined = __webpack_require__(146);
+var IObject = __webpack_require__(339);
+var defined = __webpack_require__(149);
 module.exports = function (it) {
   return IObject(defined(it));
 };
@@ -7504,7 +7509,7 @@ module.exports = function (it) {
 
 exports.__esModule = true;
 
-var _defineProperty = __webpack_require__(335);
+var _defineProperty = __webpack_require__(341);
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
 
@@ -7529,7 +7534,7 @@ exports.default = function (obj, key, value) {
 /* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var def = __webpack_require__(12).f;
+var def = __webpack_require__(13).f;
 var has = __webpack_require__(24);
 var TAG = __webpack_require__(10)('toStringTag');
 
@@ -7542,10 +7547,39 @@ module.exports = function (it, tag, stat) {
 /* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
+// getting tag from 19.1.3.6 Object.prototype.toString()
+var cof = __webpack_require__(30);
+var TAG = __webpack_require__(10)('toStringTag');
+// ES3 wrong here
+var ARG = cof(function () { return arguments; }()) == 'Arguments';
+
+// fallback for IE11 Script Access Denied error
+var tryGet = function (it, key) {
+  try {
+    return it[key];
+  } catch (e) { /* empty */ }
+};
+
+module.exports = function (it) {
+  var O, T, B;
+  return it === undefined ? 'Undefined' : it === null ? 'Null'
+    // @@toStringTag case
+    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
+    // builtinTag case
+    : ARG ? cof(O)
+    // ES3 arguments fallback
+    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+};
+
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var $export = __webpack_require__(1);
-var defined = __webpack_require__(34);
+var defined = __webpack_require__(35);
 var fails = __webpack_require__(7);
-var spaces = __webpack_require__(116);
+var spaces = __webpack_require__(118);
 var space = '[' + spaces + ']';
 var non = '\u200b\u0085';
 var ltrim = RegExp('^' + space + space + '*');
@@ -7575,14 +7609,14 @@ module.exports = exporter;
 
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(8);
@@ -7593,7 +7627,7 @@ module.exports = function (it, TYPE) {
 
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7662,11 +7696,11 @@ module.exports = warning;
 
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP = __webpack_require__(55);
-var createDesc = __webpack_require__(85);
+var createDesc = __webpack_require__(87);
 module.exports = __webpack_require__(66) ? function (object, key, value) {
   return dP.f(object, key, createDesc(1, value));
 } : function (object, key, value) {
@@ -7676,10 +7710,10 @@ module.exports = __webpack_require__(66) ? function (object, key, value) {
 
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(77);
+var isObject = __webpack_require__(78);
 module.exports = function (it) {
   if (!isObject(it)) throw TypeError(it + ' is not an object!');
   return it;
@@ -7687,7 +7721,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -7696,7 +7730,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports) {
 
 module.exports = function (exec) {
@@ -7709,7 +7743,7 @@ module.exports = function (exec) {
 
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -7721,43 +7755,49 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports) {
 
 exports.f = {}.propertyIsEnumerable;
 
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(30);
-var TAG = __webpack_require__(10)('toStringTag');
-// ES3 wrong here
-var ARG = cof(function () { return arguments; }()) == 'Arguments';
+"use strict";
 
-// fallback for IE11 Script Access Denied error
-var tryGet = function (it, key) {
-  try {
-    return it[key];
-  } catch (e) { /* empty */ }
-};
-
-module.exports = function (it) {
-  var O, T, B;
-  return it === undefined ? 'Undefined' : it === null ? 'Null'
-    // @@toStringTag case
-    : typeof (T = tryGet(O = Object(it), TAG)) == 'string' ? T
-    // builtinTag case
-    : ARG ? cof(O)
-    // ES3 arguments fallback
-    : (B = cof(O)) == 'Object' && typeof O.callee == 'function' ? 'Arguments' : B;
+// 21.2.5.3 get RegExp.prototype.flags
+var anObject = __webpack_require__(4);
+module.exports = function () {
+  var that = anObject(this);
+  var result = '';
+  if (that.global) result += 'g';
+  if (that.ignoreCase) result += 'i';
+  if (that.multiline) result += 'm';
+  if (that.unicode) result += 'u';
+  if (that.sticky) result += 'y';
+  return result;
 };
 
 
 /***/ }),
-/* 82 */
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 7.3.20 SpeciesConstructor(O, defaultConstructor)
+var anObject = __webpack_require__(4);
+var aFunction = __webpack_require__(18);
+var SPECIES = __webpack_require__(10)('species');
+module.exports = function (O, D) {
+  var C = anObject(O).constructor;
+  var S;
+  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
+};
+
+
+/***/ }),
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8183,7 +8223,7 @@ module.exports = {
 
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -8192,7 +8232,7 @@ module.exports = {
 var defaults = __webpack_require__(9);
 var Element = __webpack_require__(39);
 var helpers = __webpack_require__(6);
-var Ticks = __webpack_require__(84);
+var Ticks = __webpack_require__(86);
 
 defaults._set('scale', {
 	display: true,
@@ -9124,7 +9164,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9207,7 +9247,7 @@ module.exports = {
 
 
 /***/ }),
-/* 85 */
+/* 87 */
 /***/ (function(module, exports) {
 
 module.exports = function (bitmap, value) {
@@ -9221,14 +9261,14 @@ module.exports = function (bitmap, value) {
 
 
 /***/ }),
-/* 86 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = {};
 
 
 /***/ }),
-/* 87 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9249,7 +9289,7 @@ exports.default = function (obj, keys) {
 };
 
 /***/ }),
-/* 88 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core = __webpack_require__(28);
@@ -9267,13 +9307,13 @@ var store = global[SHARED] || (global[SHARED] = {});
 
 
 /***/ }),
-/* 89 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(25);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 var toAbsoluteIndex = __webpack_require__(59);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
@@ -9296,14 +9336,14 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 90 */
+/* 92 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
 
 /***/ }),
-/* 91 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.2 IsArray(argument)
@@ -9314,7 +9354,30 @@ module.exports = Array.isArray || function isArray(arg) {
 
 
 /***/ }),
-/* 92 */
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var toInteger = __webpack_require__(31);
+var defined = __webpack_require__(35);
+// true  -> String#at
+// false -> String#codePointAt
+module.exports = function (TO_STRING) {
+  return function (that, pos) {
+    var s = String(defined(that));
+    var i = toInteger(pos);
+    var l = s.length;
+    var a, b;
+    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
+    a = s.charCodeAt(i);
+    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
+      ? TO_STRING ? s.charAt(i) : a
+      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
+  };
+};
+
+
+/***/ }),
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.8 IsRegExp(argument)
@@ -9328,7 +9391,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 93 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ITERATOR = __webpack_require__(10)('iterator');
@@ -9356,47 +9419,123 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 94 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-// 21.2.5.3 get RegExp.prototype.flags
-var anObject = __webpack_require__(4);
-module.exports = function () {
-  var that = anObject(this);
-  var result = '';
-  if (that.global) result += 'g';
-  if (that.ignoreCase) result += 'i';
-  if (that.multiline) result += 'm';
-  if (that.unicode) result += 'u';
-  if (that.sticky) result += 'y';
-  return result;
+
+var classof = __webpack_require__(71);
+var builtinExec = RegExp.prototype.exec;
+
+ // `RegExpExec` abstract operation
+// https://tc39.github.io/ecma262/#sec-regexpexec
+module.exports = function (R, S) {
+  var exec = R.exec;
+  if (typeof exec === 'function') {
+    var result = exec.call(R, S);
+    if (typeof result !== 'object') {
+      throw new TypeError('RegExp exec method returned something other than an Object or null');
+    }
+    return result;
+  }
+  if (classof(R) !== 'RegExp') {
+    throw new TypeError('RegExp#exec called on incompatible receiver');
+  }
+  return builtinExec.call(R, S);
 };
 
 
 /***/ }),
-/* 95 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var hide = __webpack_require__(19);
+__webpack_require__(180);
 var redefine = __webpack_require__(20);
+var hide = __webpack_require__(19);
 var fails = __webpack_require__(7);
-var defined = __webpack_require__(34);
+var defined = __webpack_require__(35);
 var wks = __webpack_require__(10);
+var regexpExec = __webpack_require__(133);
+
+var SPECIES = wks('species');
+
+var REPLACE_SUPPORTS_NAMED_GROUPS = !fails(function () {
+  // #replace needs built-in support for named groups.
+  // #match works fine because it just return the exec results, even if it has
+  // a "grops" property.
+  var re = /./;
+  re.exec = function () {
+    var result = [];
+    result.groups = { a: '7' };
+    return result;
+  };
+  return ''.replace(re, '$<a>') !== '7';
+});
+
+var SPLIT_WORKS_WITH_OVERWRITTEN_EXEC = (function () {
+  // Chrome 51 has a buggy "split" implementation when RegExp#exec !== nativeExec
+  var re = /(?:)/;
+  var originalExec = re.exec;
+  re.exec = function () { return originalExec.apply(this, arguments); };
+  var result = 'ab'.split(re);
+  return result.length === 2 && result[0] === 'a' && result[1] === 'b';
+})();
 
 module.exports = function (KEY, length, exec) {
   var SYMBOL = wks(KEY);
-  var fns = exec(defined, SYMBOL, ''[KEY]);
-  var strfn = fns[0];
-  var rxfn = fns[1];
-  if (fails(function () {
+
+  var DELEGATES_TO_SYMBOL = !fails(function () {
+    // String methods call symbol-named RegEp methods
     var O = {};
     O[SYMBOL] = function () { return 7; };
     return ''[KEY](O) != 7;
-  })) {
+  });
+
+  var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL ? !fails(function () {
+    // Symbol-named RegExp methods call .exec
+    var execCalled = false;
+    var re = /a/;
+    re.exec = function () { execCalled = true; return null; };
+    if (KEY === 'split') {
+      // RegExp[@@split] doesn't call the regex's exec method, but first creates
+      // a new one. We need to return the patched regex when creating the new one.
+      re.constructor = {};
+      re.constructor[SPECIES] = function () { return re; };
+    }
+    re[SYMBOL]('');
+    return !execCalled;
+  }) : undefined;
+
+  if (
+    !DELEGATES_TO_SYMBOL ||
+    !DELEGATES_TO_EXEC ||
+    (KEY === 'replace' && !REPLACE_SUPPORTS_NAMED_GROUPS) ||
+    (KEY === 'split' && !SPLIT_WORKS_WITH_OVERWRITTEN_EXEC)
+  ) {
+    var nativeRegExpMethod = /./[SYMBOL];
+    var fns = exec(
+      defined,
+      SYMBOL,
+      ''[KEY],
+      function maybeCallNative(nativeMethod, regexp, str, arg2, forceStringMethod) {
+        if (regexp.exec === regexpExec) {
+          if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
+            // The native String method already delegates to @@method (this
+            // polyfilled function), leasing to infinite recursion.
+            // We avoid it by directly calling the native @@method method.
+            return { done: true, value: nativeRegExpMethod.call(regexp, str, arg2) };
+          }
+          return { done: true, value: nativeMethod.call(str, regexp, arg2) };
+        }
+        return { done: false };
+      }
+    );
+    var strfn = fns[0];
+    var rxfn = fns[1];
+
     redefine(String.prototype, KEY, strfn);
     hide(RegExp.prototype, SYMBOL, length == 2
       // 21.2.5.8 RegExp.prototype[@@replace](string, replaceValue)
@@ -9411,22 +9550,7 @@ module.exports = function (KEY, length, exec) {
 
 
 /***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 7.3.20 SpeciesConstructor(O, defaultConstructor)
-var anObject = __webpack_require__(4);
-var aFunction = __webpack_require__(18);
-var SPECIES = __webpack_require__(10)('species');
-module.exports = function (O, D) {
-  var C = anObject(O).constructor;
-  var S;
-  return C === undefined || (S = anObject(C)[SPECIES]) == undefined ? D : aFunction(S);
-};
-
-
-/***/ }),
-/* 97 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(5);
@@ -9436,7 +9560,7 @@ module.exports = navigator && navigator.userAgent || '';
 
 
 /***/ }),
-/* 98 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9450,9 +9574,9 @@ var forOf = __webpack_require__(64);
 var anInstance = __webpack_require__(63);
 var isObject = __webpack_require__(8);
 var fails = __webpack_require__(7);
-var $iterDetect = __webpack_require__(93);
+var $iterDetect = __webpack_require__(96);
 var setToStringTag = __webpack_require__(70);
-var inheritIfRequired = __webpack_require__(117);
+var inheritIfRequired = __webpack_require__(119);
 
 module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
   var Base = global[NAME];
@@ -9528,7 +9652,7 @@ module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
 
 
 /***/ }),
-/* 99 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(5);
@@ -9562,7 +9686,7 @@ module.exports = {
 
 
 /***/ }),
-/* 100 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9578,7 +9702,7 @@ module.exports = __webpack_require__(49) || !__webpack_require__(7)(function () 
 
 
 /***/ }),
-/* 101 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9597,7 +9721,7 @@ module.exports = function (COLLECTION) {
 
 
 /***/ }),
-/* 102 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9632,7 +9756,7 @@ module.exports = function (COLLECTION) {
 
 
 /***/ }),
-/* 103 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -9659,7 +9783,7 @@ function stripStyle(style) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 104 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10005,12 +10129,12 @@ helpers.getValueAtIndexOrDefault = helpers.valueAtIndexOrDefault;
 
 
 /***/ }),
-/* 105 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(332);
-var enumBugKeys = __webpack_require__(150);
+var $keys = __webpack_require__(338);
+var enumBugKeys = __webpack_require__(153);
 
 module.exports = Object.keys || function keys(O) {
   return $keys(O, enumBugKeys);
@@ -10018,14 +10142,14 @@ module.exports = Object.keys || function keys(O) {
 
 
 /***/ }),
-/* 106 */
+/* 108 */
 /***/ (function(module, exports) {
 
 module.exports = true;
 
 
 /***/ }),
-/* 107 */
+/* 109 */
 /***/ (function(module, exports) {
 
 var id = 0;
@@ -10036,25 +10160,25 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 108 */
+/* 110 */
 /***/ (function(module, exports) {
 
 exports.f = {}.propertyIsEnumerable;
 
 
 /***/ }),
-/* 109 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.13 ToObject(argument)
-var defined = __webpack_require__(146);
+var defined = __webpack_require__(149);
 module.exports = function (it) {
   return Object(defined(it));
 };
 
 
 /***/ }),
-/* 110 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(8);
@@ -10067,14 +10191,14 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 111 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(5);
 var core = __webpack_require__(28);
 var LIBRARY = __webpack_require__(49);
-var wksExt = __webpack_require__(159);
-var defineProperty = __webpack_require__(12).f;
+var wksExt = __webpack_require__(162);
+var defineProperty = __webpack_require__(13).f;
 module.exports = function (name) {
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
   if (name.charAt(0) != '_' && !(name in $Symbol)) defineProperty($Symbol, name, { value: wksExt.f(name) });
@@ -10082,10 +10206,10 @@ module.exports = function (name) {
 
 
 /***/ }),
-/* 112 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(88)('keys');
+var shared = __webpack_require__(90)('keys');
 var uid = __webpack_require__(57);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
@@ -10093,7 +10217,7 @@ module.exports = function (key) {
 
 
 /***/ }),
-/* 113 */
+/* 115 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -10103,7 +10227,7 @@ module.exports = (
 
 
 /***/ }),
-/* 114 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var document = __webpack_require__(5).document;
@@ -10111,7 +10235,7 @@ module.exports = document && document.documentElement;
 
 
 /***/ }),
-/* 115 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Works with __proto__ only. Old v8 can't work with null proto objects.
@@ -10142,7 +10266,7 @@ module.exports = {
 
 
 /***/ }),
-/* 116 */
+/* 118 */
 /***/ (function(module, exports) {
 
 module.exports = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u2003' +
@@ -10150,11 +10274,11 @@ module.exports = '\x09\x0A\x0B\x0C\x0D\x20\xA0\u1680\u180E\u2000\u2001\u2002\u20
 
 
 /***/ }),
-/* 117 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(8);
-var setPrototypeOf = __webpack_require__(115).set;
+var setPrototypeOf = __webpack_require__(117).set;
 module.exports = function (that, target, C) {
   var S = target.constructor;
   var P;
@@ -10165,13 +10289,13 @@ module.exports = function (that, target, C) {
 
 
 /***/ }),
-/* 118 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var toInteger = __webpack_require__(35);
-var defined = __webpack_require__(34);
+var toInteger = __webpack_require__(31);
+var defined = __webpack_require__(35);
 
 module.exports = function repeat(count) {
   var str = String(defined(this));
@@ -10184,7 +10308,7 @@ module.exports = function repeat(count) {
 
 
 /***/ }),
-/* 119 */
+/* 121 */
 /***/ (function(module, exports) {
 
 // 20.2.2.28 Math.sign(x)
@@ -10195,7 +10319,7 @@ module.exports = Math.sign || function sign(x) {
 
 
 /***/ }),
-/* 120 */
+/* 122 */
 /***/ (function(module, exports) {
 
 // 20.2.2.14 Math.expm1(x)
@@ -10211,30 +10335,7 @@ module.exports = (!$expm1
 
 
 /***/ }),
-/* 121 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var toInteger = __webpack_require__(35);
-var defined = __webpack_require__(34);
-// true  -> String#at
-// false -> String#codePointAt
-module.exports = function (TO_STRING) {
-  return function (that, pos) {
-    var s = String(defined(that));
-    var i = toInteger(pos);
-    var l = s.length;
-    var a, b;
-    if (i < 0 || i >= l) return TO_STRING ? '' : undefined;
-    a = s.charCodeAt(i);
-    return a < 0xd800 || a > 0xdbff || i + 1 === l || (b = s.charCodeAt(i + 1)) < 0xdc00 || b > 0xdfff
-      ? TO_STRING ? s.charAt(i) : a
-      : TO_STRING ? s.slice(i, i + 2) : (a - 0xd800 << 10) + (b - 0xdc00) + 0x10000;
-  };
-};
-
-
-/***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10243,8 +10344,8 @@ var LIBRARY = __webpack_require__(49);
 var $export = __webpack_require__(1);
 var redefine = __webpack_require__(20);
 var hide = __webpack_require__(19);
-var Iterators = __webpack_require__(72);
-var $iterCreate = __webpack_require__(123);
+var Iterators = __webpack_require__(73);
+var $iterCreate = __webpack_require__(124);
 var setToStringTag = __webpack_require__(70);
 var getPrototypeOf = __webpack_require__(27);
 var ITERATOR = __webpack_require__(10)('iterator');
@@ -10310,7 +10411,7 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10330,12 +10431,12 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // helper for String#{startsWith, endsWith, includes}
-var isRegExp = __webpack_require__(92);
-var defined = __webpack_require__(34);
+var isRegExp = __webpack_require__(95);
+var defined = __webpack_require__(35);
 
 module.exports = function (that, searchString, NAME) {
   if (isRegExp(searchString)) throw TypeError('String#' + NAME + " doesn't accept regex!");
@@ -10344,7 +10445,7 @@ module.exports = function (that, searchString, NAME) {
 
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var MATCH = __webpack_require__(10)('match');
@@ -10362,11 +10463,11 @@ module.exports = function (KEY) {
 
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators = __webpack_require__(72);
+var Iterators = __webpack_require__(73);
 var ITERATOR = __webpack_require__(10)('iterator');
 var ArrayProto = Array.prototype;
 
@@ -10376,12 +10477,12 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $defineProperty = __webpack_require__(12);
+var $defineProperty = __webpack_require__(13);
 var createDesc = __webpack_require__(56);
 
 module.exports = function (object, index, value) {
@@ -10391,12 +10492,12 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(81);
+var classof = __webpack_require__(71);
 var ITERATOR = __webpack_require__(10)('iterator');
-var Iterators = __webpack_require__(72);
+var Iterators = __webpack_require__(73);
 module.exports = __webpack_require__(28).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
@@ -10405,11 +10506,11 @@ module.exports = __webpack_require__(28).getIteratorMethod = function (it) {
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 9.4.2.3 ArraySpeciesCreate(originalArray, length)
-var speciesConstructor = __webpack_require__(438);
+var speciesConstructor = __webpack_require__(443);
 
 module.exports = function (original, length) {
   return new (speciesConstructor(original))(length);
@@ -10417,7 +10518,7 @@ module.exports = function (original, length) {
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10425,7 +10526,7 @@ module.exports = function (original, length) {
 
 var toObject = __webpack_require__(14);
 var toAbsoluteIndex = __webpack_require__(59);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 module.exports = function fill(value /* , start = 0, end = @length */) {
   var O = toObject(this);
   var length = toLength(O.length);
@@ -10439,21 +10540,21 @@ module.exports = function fill(value /* , start = 0, end = @length */) {
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var addToUnscopables = __webpack_require__(50);
-var step = __webpack_require__(175);
-var Iterators = __webpack_require__(72);
+var step = __webpack_require__(179);
+var Iterators = __webpack_require__(73);
 var toIObject = __webpack_require__(25);
 
 // 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = __webpack_require__(122)(Array, 'Array', function (iterated, kind) {
+module.exports = __webpack_require__(123)(Array, 'Array', function (iterated, kind) {
   this._t = toIObject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
@@ -10480,13 +10581,93 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 132 */
+/* 133 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var regexpFlags = __webpack_require__(82);
+
+var nativeExec = RegExp.prototype.exec;
+// This always refers to the native implementation, because the
+// String#replace polyfill uses ./fix-regexp-well-known-symbol-logic.js,
+// which loads this file before patching the method.
+var nativeReplace = String.prototype.replace;
+
+var patchedExec = nativeExec;
+
+var LAST_INDEX = 'lastIndex';
+
+var UPDATES_LAST_INDEX_WRONG = (function () {
+  var re1 = /a/,
+      re2 = /b*/g;
+  nativeExec.call(re1, 'a');
+  nativeExec.call(re2, 'a');
+  return re1[LAST_INDEX] !== 0 || re2[LAST_INDEX] !== 0;
+})();
+
+// nonparticipating capturing group, copied from es5-shim's String#split patch.
+var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
+
+var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED;
+
+if (PATCH) {
+  patchedExec = function exec(str) {
+    var re = this;
+    var lastIndex, reCopy, match, i;
+
+    if (NPCG_INCLUDED) {
+      reCopy = new RegExp('^' + re.source + '$(?!\\s)', regexpFlags.call(re));
+    }
+    if (UPDATES_LAST_INDEX_WRONG) lastIndex = re[LAST_INDEX];
+
+    match = nativeExec.call(re, str);
+
+    if (UPDATES_LAST_INDEX_WRONG && match) {
+      re[LAST_INDEX] = re.global ? match.index + match[0].length : lastIndex;
+    }
+    if (NPCG_INCLUDED && match && match.length > 1) {
+      // Fix browsers whose `exec` methods don't consistently return `undefined`
+      // for NPCG, like IE8. NOTE: This doesn' work for /(.?)?/
+      // eslint-disable-next-line no-loop-func
+      nativeReplace.call(match[0], reCopy, function () {
+        for (i = 1; i < arguments.length - 2; i++) {
+          if (arguments[i] === undefined) match[i] = undefined;
+        }
+      });
+    }
+
+    return match;
+  };
+}
+
+module.exports = patchedExec;
+
+
+/***/ }),
+/* 134 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var at = __webpack_require__(94)(true);
+
+ // `AdvanceStringIndex` abstract operation
+// https://tc39.github.io/ecma262/#sec-advancestringindex
+module.exports = function (S, index, unicode) {
+  return index + (unicode ? at(S, index).length : 1);
+};
+
+
+/***/ }),
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ctx = __webpack_require__(29);
-var invoke = __webpack_require__(165);
-var html = __webpack_require__(114);
-var cel = __webpack_require__(110);
+var invoke = __webpack_require__(169);
+var html = __webpack_require__(116);
+var cel = __webpack_require__(112);
 var global = __webpack_require__(5);
 var process = global.process;
 var setTask = global.setImmediate;
@@ -10570,11 +10751,11 @@ module.exports = {
 
 
 /***/ }),
-/* 133 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(5);
-var macrotask = __webpack_require__(132).set;
+var macrotask = __webpack_require__(135).set;
 var Observer = global.MutationObserver || global.WebKitMutationObserver;
 var process = global.process;
 var Promise = global.Promise;
@@ -10645,7 +10826,7 @@ module.exports = function () {
 
 
 /***/ }),
-/* 134 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10670,25 +10851,25 @@ module.exports.f = function (C) {
 
 
 /***/ }),
-/* 135 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var global = __webpack_require__(5);
-var DESCRIPTORS = __webpack_require__(11);
+var DESCRIPTORS = __webpack_require__(12);
 var LIBRARY = __webpack_require__(49);
-var $typed = __webpack_require__(99);
+var $typed = __webpack_require__(101);
 var hide = __webpack_require__(19);
 var redefineAll = __webpack_require__(65);
 var fails = __webpack_require__(7);
 var anInstance = __webpack_require__(63);
-var toInteger = __webpack_require__(35);
-var toLength = __webpack_require__(13);
-var toIndex = __webpack_require__(184);
+var toInteger = __webpack_require__(31);
+var toLength = __webpack_require__(11);
+var toIndex = __webpack_require__(189);
 var gOPN = __webpack_require__(61).f;
-var dP = __webpack_require__(12).f;
-var arrayFill = __webpack_require__(130);
+var dP = __webpack_require__(13).f;
+var arrayFill = __webpack_require__(131);
 var setToStringTag = __webpack_require__(70);
 var ARRAY_BUFFER = 'ArrayBuffer';
 var DATA_VIEW = 'DataView';
@@ -10953,7 +11134,7 @@ exports[DATA_VIEW] = $DataView;
 
 
 /***/ }),
-/* 136 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11050,7 +11231,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 
 /***/ }),
-/* 137 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11075,7 +11256,7 @@ function mapToZero(obj) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 138 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11124,7 +11305,7 @@ module.exports = exports["default"];
 // array reference around.
 
 /***/ }),
-/* 139 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.7.1
@@ -11160,13 +11341,13 @@ module.exports = exports["default"];
 
 }).call(this);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(321)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(327)))
 
 /***/ }),
-/* 140 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(596)
+/* WEBPACK VAR INJECTION */(function(global) {var now = __webpack_require__(601)
   , root = typeof window === 'undefined' ? global : window
   , vendors = ['moz', 'webkit']
   , suffix = 'AnimationFrame'
@@ -11245,7 +11426,7 @@ module.exports.polyfill = function(object) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 141 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11282,7 +11463,7 @@ function shouldStopAnimation(currentStyle, style, currentVelocity) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 142 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* @preserve
@@ -25158,11 +25339,11 @@ window.L = exports;
 
 
 /***/ }),
-/* 143 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(648);
+var aFunction = __webpack_require__(653);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -25184,11 +25365,11 @@ module.exports = function (fn, that, length) {
 
 
 /***/ }),
-/* 144 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
-var isObject = __webpack_require__(77);
+var isObject = __webpack_require__(78);
 // instead of the ES6 spec version, we didn't implement @@toPrimitive case
 // and the second argument - flag - preferred type is a string
 module.exports = function (it, S) {
@@ -25202,7 +25383,7 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 145 */
+/* 148 */
 /***/ (function(module, exports) {
 
 var toString = {}.toString;
@@ -25213,7 +25394,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 146 */
+/* 149 */
 /***/ (function(module, exports) {
 
 // 7.2.1 RequireObjectCoercible(argument)
@@ -25224,7 +25405,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 147 */
+/* 150 */
 /***/ (function(module, exports) {
 
 // 7.1.4 ToInteger
@@ -25236,18 +25417,18 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 148 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var shared = __webpack_require__(149)('keys');
-var uid = __webpack_require__(107);
+var shared = __webpack_require__(152)('keys');
+var uid = __webpack_require__(109);
 module.exports = function (key) {
   return shared[key] || (shared[key] = uid(key));
 };
 
 
 /***/ }),
-/* 149 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var core = __webpack_require__(23);
@@ -25259,13 +25440,13 @@ var store = global[SHARED] || (global[SHARED] = {});
   return store[key] || (store[key] = value !== undefined ? value : {});
 })('versions', []).push({
   version: core.version,
-  mode: __webpack_require__(106) ? 'pure' : 'global',
+  mode: __webpack_require__(108) ? 'pure' : 'global',
   copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
 });
 
 
 /***/ }),
-/* 150 */
+/* 153 */
 /***/ (function(module, exports) {
 
 // IE 8- don't enum bug keys
@@ -25275,14 +25456,14 @@ module.exports = (
 
 
 /***/ }),
-/* 151 */
+/* 154 */
 /***/ (function(module, exports) {
 
 exports.f = Object.getOwnPropertySymbols;
 
 
 /***/ }),
-/* 152 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25290,11 +25471,11 @@ exports.f = Object.getOwnPropertySymbols;
 
 exports.__esModule = true;
 
-var _iterator = __webpack_require__(654);
+var _iterator = __webpack_require__(659);
 
 var _iterator2 = _interopRequireDefault(_iterator);
 
-var _symbol = __webpack_require__(664);
+var _symbol = __webpack_require__(669);
 
 var _symbol2 = _interopRequireDefault(_symbol);
 
@@ -25309,27 +25490,27 @@ exports.default = typeof _symbol2.default === "function" && _typeof(_iterator2.d
 };
 
 /***/ }),
-/* 153 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-var anObject = __webpack_require__(76);
-var dPs = __webpack_require__(658);
-var enumBugKeys = __webpack_require__(150);
-var IE_PROTO = __webpack_require__(148)('IE_PROTO');
+var anObject = __webpack_require__(77);
+var dPs = __webpack_require__(663);
+var enumBugKeys = __webpack_require__(153);
+var IE_PROTO = __webpack_require__(151)('IE_PROTO');
 var Empty = function () { /* empty */ };
 var PROTOTYPE = 'prototype';
 
 // Create object with fake `null` prototype: use iframe Object with cleared prototype
 var createDict = function () {
   // Thrash, waste and sodomy: IE GC bug
-  var iframe = __webpack_require__(331)('iframe');
+  var iframe = __webpack_require__(337)('iframe');
   var i = enumBugKeys.length;
   var lt = '<';
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(659).appendChild(iframe);
+  __webpack_require__(664).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -25356,7 +25537,7 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 154 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var def = __webpack_require__(55).f;
@@ -25369,20 +25550,20 @@ module.exports = function (it, tag, stat) {
 
 
 /***/ }),
-/* 155 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.f = __webpack_require__(40);
 
 
 /***/ }),
-/* 156 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(54);
 var core = __webpack_require__(23);
-var LIBRARY = __webpack_require__(106);
-var wksExt = __webpack_require__(155);
+var LIBRARY = __webpack_require__(108);
+var wksExt = __webpack_require__(158);
 var defineProperty = __webpack_require__(55).f;
 module.exports = function (name) {
   var $Symbol = core.Symbol || (core.Symbol = LIBRARY ? {} : global.Symbol || {});
@@ -25391,15 +25572,15 @@ module.exports = function (name) {
 
 
 /***/ }),
-/* 157 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var pIE = __webpack_require__(108);
-var createDesc = __webpack_require__(85);
+var pIE = __webpack_require__(110);
+var createDesc = __webpack_require__(87);
 var toIObject = __webpack_require__(68);
-var toPrimitive = __webpack_require__(144);
+var toPrimitive = __webpack_require__(147);
 var has = __webpack_require__(67);
-var IE8_DOM_DEFINE = __webpack_require__(330);
+var IE8_DOM_DEFINE = __webpack_require__(336);
 var gOPD = Object.getOwnPropertyDescriptor;
 
 exports.f = __webpack_require__(66) ? gOPD : function getOwnPropertyDescriptor(O, P) {
@@ -25413,29 +25594,29 @@ exports.f = __webpack_require__(66) ? gOPD : function getOwnPropertyDescriptor(O
 
 
 /***/ }),
-/* 158 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(11) && !__webpack_require__(7)(function () {
-  return Object.defineProperty(__webpack_require__(110)('div'), 'a', { get: function () { return 7; } }).a != 7;
+module.exports = !__webpack_require__(12) && !__webpack_require__(7)(function () {
+  return Object.defineProperty(__webpack_require__(112)('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
 /***/ }),
-/* 159 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports.f = __webpack_require__(10);
 
 
 /***/ }),
-/* 160 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var has = __webpack_require__(24);
 var toIObject = __webpack_require__(25);
-var arrayIndexOf = __webpack_require__(89)(false);
-var IE_PROTO = __webpack_require__(112)('IE_PROTO');
+var arrayIndexOf = __webpack_require__(91)(false);
+var IE_PROTO = __webpack_require__(114)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -25452,14 +25633,14 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 161 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(12);
+var dP = __webpack_require__(13);
 var anObject = __webpack_require__(4);
 var getKeys = __webpack_require__(58);
 
-module.exports = __webpack_require__(11) ? Object.defineProperties : function defineProperties(O, Properties) {
+module.exports = __webpack_require__(12) ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject(O);
   var keys = getKeys(Properties);
   var length = keys.length;
@@ -25471,7 +25652,7 @@ module.exports = __webpack_require__(11) ? Object.defineProperties : function de
 
 
 /***/ }),
-/* 162 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
@@ -25496,17 +25677,17 @@ module.exports.f = function getOwnPropertyNames(it) {
 
 
 /***/ }),
-/* 163 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
 var getKeys = __webpack_require__(58);
-var gOPS = __webpack_require__(90);
-var pIE = __webpack_require__(80);
+var gOPS = __webpack_require__(92);
+var pIE = __webpack_require__(81);
 var toObject = __webpack_require__(14);
-var IObject = __webpack_require__(79);
+var IObject = __webpack_require__(80);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
@@ -25537,14 +25718,25 @@ module.exports = !$assign || __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 164 */
+/* 167 */
+/***/ (function(module, exports) {
+
+// 7.2.9 SameValue(x, y)
+module.exports = Object.is || function is(x, y) {
+  // eslint-disable-next-line no-self-compare
+  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
+};
+
+
+/***/ }),
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var aFunction = __webpack_require__(18);
 var isObject = __webpack_require__(8);
-var invoke = __webpack_require__(165);
+var invoke = __webpack_require__(169);
 var arraySlice = [].slice;
 var factories = {};
 
@@ -25569,7 +25761,7 @@ module.exports = Function.bind || function bind(that /* , ...args */) {
 
 
 /***/ }),
-/* 165 */
+/* 169 */
 /***/ (function(module, exports) {
 
 // fast apply, http://jsperf.lnkit.com/fast-apply/5
@@ -25591,12 +25783,12 @@ module.exports = function (fn, args, that) {
 
 
 /***/ }),
-/* 166 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $parseInt = __webpack_require__(5).parseInt;
-var $trim = __webpack_require__(71).trim;
-var ws = __webpack_require__(116);
+var $trim = __webpack_require__(72).trim;
+var ws = __webpack_require__(118);
 var hex = /^[-+]?0[xX]/;
 
 module.exports = $parseInt(ws + '08') !== 8 || $parseInt(ws + '0x16') !== 22 ? function parseInt(str, radix) {
@@ -25606,13 +25798,13 @@ module.exports = $parseInt(ws + '08') !== 8 || $parseInt(ws + '0x16') !== 22 ? f
 
 
 /***/ }),
-/* 167 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $parseFloat = __webpack_require__(5).parseFloat;
-var $trim = __webpack_require__(71).trim;
+var $trim = __webpack_require__(72).trim;
 
-module.exports = 1 / $parseFloat(__webpack_require__(116) + '-0') !== -Infinity ? function parseFloat(str) {
+module.exports = 1 / $parseFloat(__webpack_require__(118) + '-0') !== -Infinity ? function parseFloat(str) {
   var string = $trim(String(str), 3);
   var result = $parseFloat(string);
   return result === 0 && string.charAt(0) == '-' ? -0 : result;
@@ -25620,7 +25812,7 @@ module.exports = 1 / $parseFloat(__webpack_require__(116) + '-0') !== -Infinity 
 
 
 /***/ }),
-/* 168 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cof = __webpack_require__(30);
@@ -25631,7 +25823,7 @@ module.exports = function (it, msg) {
 
 
 /***/ }),
-/* 169 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.3 Number.isInteger(number)
@@ -25643,7 +25835,7 @@ module.exports = function isInteger(it) {
 
 
 /***/ }),
-/* 170 */
+/* 174 */
 /***/ (function(module, exports) {
 
 // 20.2.2.20 Math.log1p(x)
@@ -25653,11 +25845,11 @@ module.exports = Math.log1p || function log1p(x) {
 
 
 /***/ }),
-/* 171 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.16 Math.fround(x)
-var sign = __webpack_require__(119);
+var sign = __webpack_require__(121);
 var pow = Math.pow;
 var EPSILON = pow(2, -52);
 var EPSILON32 = pow(2, -23);
@@ -25682,7 +25874,7 @@ module.exports = Math.fround || function fround(x) {
 
 
 /***/ }),
-/* 172 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
@@ -25700,13 +25892,13 @@ module.exports = function (iterator, fn, value, entries) {
 
 
 /***/ }),
-/* 173 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var aFunction = __webpack_require__(18);
 var toObject = __webpack_require__(14);
-var IObject = __webpack_require__(79);
-var toLength = __webpack_require__(13);
+var IObject = __webpack_require__(80);
+var toLength = __webpack_require__(11);
 
 module.exports = function (that, callbackfn, aLen, memo, isRight) {
   aFunction(callbackfn);
@@ -25734,7 +25926,7 @@ module.exports = function (that, callbackfn, aLen, memo, isRight) {
 
 
 /***/ }),
-/* 174 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25742,7 +25934,7 @@ module.exports = function (that, callbackfn, aLen, memo, isRight) {
 
 var toObject = __webpack_require__(14);
 var toAbsoluteIndex = __webpack_require__(59);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 
 module.exports = [].copyWithin || function copyWithin(target /* = 0 */, start /* = 0, end = @length */) {
   var O = toObject(this);
@@ -25767,7 +25959,7 @@ module.exports = [].copyWithin || function copyWithin(target /* = 0 */, start /*
 
 
 /***/ }),
-/* 175 */
+/* 179 */
 /***/ (function(module, exports) {
 
 module.exports = function (done, value) {
@@ -25776,18 +25968,34 @@ module.exports = function (done, value) {
 
 
 /***/ }),
-/* 176 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// 21.2.5.3 get RegExp.prototype.flags()
-if (__webpack_require__(11) && /./g.flags != 'g') __webpack_require__(12).f(RegExp.prototype, 'flags', {
-  configurable: true,
-  get: __webpack_require__(94)
+"use strict";
+
+var regexpExec = __webpack_require__(133);
+__webpack_require__(1)({
+  target: 'RegExp',
+  proto: true,
+  forced: regexpExec !== /./.exec
+}, {
+  exec: regexpExec
 });
 
 
 /***/ }),
-/* 177 */
+/* 181 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 21.2.5.3 get RegExp.prototype.flags()
+if (__webpack_require__(12) && /./g.flags != 'g') __webpack_require__(13).f(RegExp.prototype, 'flags', {
+  configurable: true,
+  get: __webpack_require__(82)
+});
+
+
+/***/ }),
+/* 182 */
 /***/ (function(module, exports) {
 
 module.exports = function (exec) {
@@ -25800,12 +26008,12 @@ module.exports = function (exec) {
 
 
 /***/ }),
-/* 178 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(4);
 var isObject = __webpack_require__(8);
-var newPromiseCapability = __webpack_require__(134);
+var newPromiseCapability = __webpack_require__(137);
 
 module.exports = function (C, x) {
   anObject(C);
@@ -25818,17 +26026,17 @@ module.exports = function (C, x) {
 
 
 /***/ }),
-/* 179 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var strong = __webpack_require__(180);
-var validate = __webpack_require__(73);
+var strong = __webpack_require__(185);
+var validate = __webpack_require__(74);
 var MAP = 'Map';
 
 // 23.1 Map Objects
-module.exports = __webpack_require__(98)(MAP, function (get) {
+module.exports = __webpack_require__(100)(MAP, function (get) {
   return function Map() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.1.3.6 Map.prototype.get(key)
@@ -25844,23 +26052,23 @@ module.exports = __webpack_require__(98)(MAP, function (get) {
 
 
 /***/ }),
-/* 180 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var dP = __webpack_require__(12).f;
+var dP = __webpack_require__(13).f;
 var create = __webpack_require__(60);
 var redefineAll = __webpack_require__(65);
 var ctx = __webpack_require__(29);
 var anInstance = __webpack_require__(63);
 var forOf = __webpack_require__(64);
-var $iterDefine = __webpack_require__(122);
-var step = __webpack_require__(175);
+var $iterDefine = __webpack_require__(123);
+var step = __webpack_require__(179);
 var setSpecies = __webpack_require__(62);
-var DESCRIPTORS = __webpack_require__(11);
+var DESCRIPTORS = __webpack_require__(12);
 var fastKey = __webpack_require__(48).fastKey;
-var validate = __webpack_require__(73);
+var validate = __webpack_require__(74);
 var SIZE = DESCRIPTORS ? '_s' : 'size';
 
 var getEntry = function (that, key) {
@@ -25995,17 +26203,17 @@ module.exports = {
 
 
 /***/ }),
-/* 181 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var strong = __webpack_require__(180);
-var validate = __webpack_require__(73);
+var strong = __webpack_require__(185);
+var validate = __webpack_require__(74);
 var SET = 'Set';
 
 // 23.2 Set Objects
-module.exports = __webpack_require__(98)(SET, function (get) {
+module.exports = __webpack_require__(100)(SET, function (get) {
   return function Set() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.2.3.1 Set.prototype.add(value)
@@ -26016,7 +26224,7 @@ module.exports = __webpack_require__(98)(SET, function (get) {
 
 
 /***/ }),
-/* 182 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26024,11 +26232,11 @@ module.exports = __webpack_require__(98)(SET, function (get) {
 var each = __webpack_require__(37)(0);
 var redefine = __webpack_require__(20);
 var meta = __webpack_require__(48);
-var assign = __webpack_require__(163);
-var weak = __webpack_require__(183);
+var assign = __webpack_require__(166);
+var weak = __webpack_require__(188);
 var isObject = __webpack_require__(8);
 var fails = __webpack_require__(7);
-var validate = __webpack_require__(73);
+var validate = __webpack_require__(74);
 var WEAK_MAP = 'WeakMap';
 var getWeak = meta.getWeak;
 var isExtensible = Object.isExtensible;
@@ -26058,7 +26266,7 @@ var methods = {
 };
 
 // 23.3 WeakMap Objects
-var $WeakMap = module.exports = __webpack_require__(98)(WEAK_MAP, wrapper, methods, weak, true, true);
+var $WeakMap = module.exports = __webpack_require__(100)(WEAK_MAP, wrapper, methods, weak, true, true);
 
 // IE11 WeakMap frozen keys fix
 if (fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp), 7).get(tmp) != 7; })) {
@@ -26082,7 +26290,7 @@ if (fails(function () { return new $WeakMap().set((Object.freeze || Object)(tmp)
 
 
 /***/ }),
-/* 183 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26095,7 +26303,7 @@ var anInstance = __webpack_require__(63);
 var forOf = __webpack_require__(64);
 var createArrayMethod = __webpack_require__(37);
 var $has = __webpack_require__(24);
-var validate = __webpack_require__(73);
+var validate = __webpack_require__(74);
 var arrayFind = createArrayMethod(5);
 var arrayFindIndex = createArrayMethod(6);
 var id = 0;
@@ -26174,12 +26382,12 @@ module.exports = {
 
 
 /***/ }),
-/* 184 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://tc39.github.io/ecma262/#sec-toindex
-var toInteger = __webpack_require__(35);
-var toLength = __webpack_require__(13);
+var toInteger = __webpack_require__(31);
+var toLength = __webpack_require__(11);
 module.exports = function (it) {
   if (it === undefined) return 0;
   var number = toInteger(it);
@@ -26190,12 +26398,12 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 185 */
+/* 190 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all object keys, includes non-enumerable and symbols
 var gOPN = __webpack_require__(61);
-var gOPS = __webpack_require__(90);
+var gOPS = __webpack_require__(92);
 var anObject = __webpack_require__(4);
 var Reflect = __webpack_require__(5).Reflect;
 module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
@@ -26206,15 +26414,15 @@ module.exports = Reflect && Reflect.ownKeys || function ownKeys(it) {
 
 
 /***/ }),
-/* 186 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/proposal-flatMap/#sec-FlattenIntoArray
-var isArray = __webpack_require__(91);
+var isArray = __webpack_require__(93);
 var isObject = __webpack_require__(8);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 var ctx = __webpack_require__(29);
 var IS_CONCAT_SPREADABLE = __webpack_require__(10)('isConcatSpreadable');
 
@@ -26252,13 +26460,13 @@ module.exports = flattenIntoArray;
 
 
 /***/ }),
-/* 187 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-string-pad-start-end
-var toLength = __webpack_require__(13);
-var repeat = __webpack_require__(118);
-var defined = __webpack_require__(34);
+var toLength = __webpack_require__(11);
+var repeat = __webpack_require__(120);
+var defined = __webpack_require__(35);
 
 module.exports = function (that, maxLength, fillString, left) {
   var S = String(defined(that));
@@ -26274,12 +26482,12 @@ module.exports = function (that, maxLength, fillString, left) {
 
 
 /***/ }),
-/* 188 */
+/* 193 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var getKeys = __webpack_require__(58);
 var toIObject = __webpack_require__(25);
-var isEnum = __webpack_require__(80).f;
+var isEnum = __webpack_require__(81).f;
 module.exports = function (isEntries) {
   return function (it) {
     var O = toIObject(it);
@@ -26296,12 +26504,12 @@ module.exports = function (isEntries) {
 
 
 /***/ }),
-/* 189 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var classof = __webpack_require__(81);
-var from = __webpack_require__(190);
+var classof = __webpack_require__(71);
+var from = __webpack_require__(195);
 module.exports = function (NAME) {
   return function toJSON() {
     if (classof(this) != NAME) throw TypeError(NAME + "#toJSON isn't generic");
@@ -26311,7 +26519,7 @@ module.exports = function (NAME) {
 
 
 /***/ }),
-/* 190 */
+/* 195 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var forOf = __webpack_require__(64);
@@ -26324,7 +26532,7 @@ module.exports = function (iter, ITERATOR) {
 
 
 /***/ }),
-/* 191 */
+/* 196 */
 /***/ (function(module, exports) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -26348,7 +26556,7 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 
 
 /***/ }),
-/* 192 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26417,7 +26625,7 @@ module.exports = warning;
 
 
 /***/ }),
-/* 193 */
+/* 198 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26494,7 +26702,7 @@ function resolvePathname(to) {
 /* harmony default export */ __webpack_exports__["default"] = (resolvePathname);
 
 /***/ }),
-/* 194 */
+/* 199 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26539,10 +26747,10 @@ function valueEqual(a, b) {
 /* harmony default export */ __webpack_exports__["default"] = (valueEqual);
 
 /***/ }),
-/* 195 */
+/* 200 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isarray = __webpack_require__(566)
+var isarray = __webpack_require__(571)
 
 /**
  * Expose `pathToRegexp`.
@@ -26971,21 +27179,21 @@ function pathToRegexp (path, keys, options) {
 
 
 /***/ }),
-/* 196 */
+/* 201 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 if (true) {
-  module.exports = __webpack_require__(569);
+  module.exports = __webpack_require__(574);
 } else {
   module.exports = require('./cjs/react-is.development.js');
 }
 
 
 /***/ }),
-/* 197 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27052,7 +27260,7 @@ var createPath = exports.createPath = function createPath(location) {
 };
 
 /***/ }),
-/* 198 */
+/* 203 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27129,7 +27337,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 199 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27258,7 +27466,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -27268,7 +27476,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 200 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27321,7 +27529,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 4  // The week that contains Jan 1st is the first week of the year.
+            doy : 4  // The week that contains Jan 4th is the first week of the year.
         }
     });
 
@@ -27331,7 +27539,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 201 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27384,7 +27592,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -27394,7 +27602,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 202 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27510,7 +27718,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -27520,7 +27728,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 203 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27573,7 +27781,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -27583,7 +27791,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 204 */
+/* 209 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27681,7 +27889,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -27691,7 +27899,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 205 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27754,7 +27962,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 206 */
+/* 211 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27853,7 +28061,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -27863,7 +28071,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 207 */
+/* 212 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -27989,7 +28197,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -27999,7 +28207,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 208 */
+/* 213 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28083,7 +28291,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -28093,7 +28301,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 209 */
+/* 214 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28155,7 +28363,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 210 */
+/* 215 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28268,7 +28476,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -28278,7 +28486,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 211 */
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28391,7 +28599,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -28401,7 +28609,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 212 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28513,7 +28721,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 213 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28658,7 +28866,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -28668,7 +28876,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 214 */
+/* 219 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28760,7 +28968,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 215 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -28943,7 +29151,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 216 */
+/* 221 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29000,7 +29208,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d-мӗш',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -29010,7 +29218,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 217 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29094,7 +29302,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 218 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29158,7 +29366,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 219 */
+/* 224 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29238,7 +29446,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 220 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29318,7 +29526,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 221 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29398,7 +29606,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 222 */
+/* 227 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29491,7 +29699,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 7,  // Sunday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -29501,7 +29709,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 223 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29605,7 +29813,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 224 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29676,7 +29884,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 225 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29743,7 +29951,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 226 */
+/* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29814,7 +30022,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 227 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29885,7 +30093,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 228 */
+/* 233 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -29951,7 +30159,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 229 */
+/* 234 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30022,7 +30230,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 230 */
+/* 235 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30087,7 +30295,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%da',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -30097,7 +30305,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 231 */
+/* 236 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30193,7 +30401,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 232 */
+/* 237 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30289,7 +30497,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 233 */
+/* 238 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30366,7 +30574,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%dº',
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -30376,7 +30584,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 234 */
+/* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30460,7 +30668,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 235 */
+/* 240 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30520,7 +30728,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -30530,7 +30738,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 236 */
+/* 241 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30630,7 +30838,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%dم',
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12 // The week that contains Jan 1st is the first week of the year.
+            doy : 12 // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -30640,7 +30848,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 237 */
+/* 242 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30753,7 +30961,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 238 */
+/* 243 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30817,7 +31025,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 239 */
+/* 244 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30904,7 +31112,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 240 */
+/* 245 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -30982,7 +31190,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 241 */
+/* 246 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31064,7 +31272,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 242 */
+/* 247 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31143,7 +31351,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 243 */
+/* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31223,7 +31431,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 244 */
+/* 249 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31304,7 +31512,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 245 */
+/* 250 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31431,7 +31639,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 246 */
+/* 251 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31549,7 +31757,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week: {
             dow: 0, // Sunday is the first day of the week.
-            doy: 6 // The week that contains Jan 1st is the first week of the year.
+            doy: 6 // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -31559,7 +31767,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 247 */
+/* 252 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31660,7 +31868,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 248 */
+/* 253 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31778,7 +31986,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -31788,7 +31996,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 249 */
+/* 254 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -31936,7 +32144,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -31946,7 +32154,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 250 */
+/* 255 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32060,7 +32268,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 251 */
+/* 256 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32149,7 +32357,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -32159,7 +32367,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 252 */
+/* 257 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32235,7 +32443,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -32245,7 +32453,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 253 */
+/* 258 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32381,7 +32589,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 254 */
+/* 259 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32454,7 +32662,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 255 */
+/* 260 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32550,7 +32758,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 256 */
+/* 261 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32626,7 +32834,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -32636,7 +32844,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 257 */
+/* 262 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32729,7 +32937,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 258 */
+/* 263 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32810,7 +33018,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -32820,7 +33028,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 259 */
+/* 264 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -32934,7 +33142,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 260 */
+/* 265 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33054,7 +33262,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -33064,7 +33272,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 261 */
+/* 266 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33149,7 +33357,130 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 262 */
+/* 267 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//! moment.js locale configuration
+
+;(function (global, factory) {
+    true ? factory(__webpack_require__(0)) :
+   typeof define === 'function' && define.amd ? define(['../moment'], factory) :
+   factory(global.moment)
+}(this, (function (moment) { 'use strict';
+
+
+    var symbolMap = {
+        '1': '١',
+        '2': '٢',
+        '3': '٣',
+        '4': '٤',
+        '5': '٥',
+        '6': '٦',
+        '7': '٧',
+        '8': '٨',
+        '9': '٩',
+        '0': '٠'
+    }, numberMap = {
+        '١': '1',
+        '٢': '2',
+        '٣': '3',
+        '٤': '4',
+        '٥': '5',
+        '٦': '6',
+        '٧': '7',
+        '٨': '8',
+        '٩': '9',
+        '٠': '0'
+    },
+    months = [
+        'کانونی دووەم',
+        'شوبات',
+        'ئازار',
+        'نیسان',
+        'ئایار',
+        'حوزەیران',
+        'تەمموز',
+        'ئاب',
+        'ئەیلوول',
+        'تشرینی یەكەم',
+        'تشرینی دووەم',
+        'كانونی یەکەم'
+    ];
+
+
+    var ku = moment.defineLocale('ku', {
+        months : months,
+        monthsShort : months,
+        weekdays : 'یه‌كشه‌ممه‌_دووشه‌ممه‌_سێشه‌ممه‌_چوارشه‌ممه‌_پێنجشه‌ممه‌_هه‌ینی_شه‌ممه‌'.split('_'),
+        weekdaysShort : 'یه‌كشه‌م_دووشه‌م_سێشه‌م_چوارشه‌م_پێنجشه‌م_هه‌ینی_شه‌ممه‌'.split('_'),
+        weekdaysMin : 'ی_د_س_چ_پ_ه_ش'.split('_'),
+        weekdaysParseExact : true,
+        longDateFormat : {
+            LT : 'HH:mm',
+            LTS : 'HH:mm:ss',
+            L : 'DD/MM/YYYY',
+            LL : 'D MMMM YYYY',
+            LLL : 'D MMMM YYYY HH:mm',
+            LLLL : 'dddd, D MMMM YYYY HH:mm'
+        },
+        meridiemParse: /ئێواره‌|به‌یانی/,
+        isPM: function (input) {
+            return /ئێواره‌/.test(input);
+        },
+        meridiem : function (hour, minute, isLower) {
+            if (hour < 12) {
+                return 'به‌یانی';
+            } else {
+                return 'ئێواره‌';
+            }
+        },
+        calendar : {
+            sameDay : '[ئه‌مرۆ كاتژمێر] LT',
+            nextDay : '[به‌یانی كاتژمێر] LT',
+            nextWeek : 'dddd [كاتژمێر] LT',
+            lastDay : '[دوێنێ كاتژمێر] LT',
+            lastWeek : 'dddd [كاتژمێر] LT',
+            sameElse : 'L'
+        },
+        relativeTime : {
+            future : 'له‌ %s',
+            past : '%s',
+            s : 'چه‌ند چركه‌یه‌ك',
+            ss : 'چركه‌ %d',
+            m : 'یه‌ك خوله‌ك',
+            mm : '%d خوله‌ك',
+            h : 'یه‌ك كاتژمێر',
+            hh : '%d كاتژمێر',
+            d : 'یه‌ك ڕۆژ',
+            dd : '%d ڕۆژ',
+            M : 'یه‌ك مانگ',
+            MM : '%d مانگ',
+            y : 'یه‌ك ساڵ',
+            yy : '%d ساڵ'
+        },
+        preparse: function (string) {
+            return string.replace(/[١٢٣٤٥٦٧٨٩٠]/g, function (match) {
+                return numberMap[match];
+            }).replace(/،/g, ',');
+        },
+        postformat: function (string) {
+            return string.replace(/\d/g, function (match) {
+                return symbolMap[match];
+            }).replace(/,/g, '،');
+        },
+        week : {
+            dow : 6, // Saturday is the first day of the week.
+            doy : 12 // The week that contains Jan 12th is the first week of the year.
+        }
+    });
+
+    return ku;
+
+})));
+
+
+/***/ }),
+/* 268 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33202,8 +33533,8 @@ var createPath = exports.createPath = function createPath(location) {
             sameDay : '[Бүгүн саат] LT',
             nextDay : '[Эртең саат] LT',
             nextWeek : 'dddd [саат] LT',
-            lastDay : '[Кече саат] LT',
-            lastWeek : '[Өткен аптанын] dddd [күнү] [саат] LT',
+            lastDay : '[Кечээ саат] LT',
+            lastWeek : '[Өткөн аптанын] dddd [күнү] [саат] LT',
             sameElse : 'L'
         },
         relativeTime : {
@@ -33230,7 +33561,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -33240,7 +33571,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 263 */
+/* 269 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33380,7 +33711,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 264 */
+/* 270 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33454,7 +33785,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 265 */
+/* 271 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33576,7 +33907,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 266 */
+/* 272 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33677,7 +34008,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 267 */
+/* 273 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33783,7 +34114,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -33793,7 +34124,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 268 */
+/* 274 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33861,7 +34192,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 269 */
+/* 275 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -33945,7 +34276,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -33955,7 +34286,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 270 */
+/* 276 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34040,7 +34371,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 271 */
+/* 277 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34148,7 +34479,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 272 */
+/* 278 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34302,7 +34633,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -34312,7 +34643,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 273 */
+/* 279 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34388,7 +34719,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -34398,7 +34729,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 274 */
+/* 280 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34474,7 +34805,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -34484,7 +34815,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 275 */
+/* 281 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34548,7 +34879,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 276 */
+/* 282 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34635,7 +34966,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week: {
             dow: 1, // Monday is the first day of the week.
-            doy: 4 // The week that contains Jan 1st is the first week of the year.
+            doy: 4 // The week that contains Jan 4th is the first week of the year.
         }
     });
 
@@ -34645,7 +34976,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 277 */
+/* 283 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34711,7 +35042,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 278 */
+/* 284 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34828,7 +35159,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -34838,7 +35169,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 279 */
+/* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34854,7 +35185,7 @@ var createPath = exports.createPath = function createPath(location) {
         monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_');
 
     var monthsParse = [/^jan/i, /^feb/i, /^maart|mrt.?$/i, /^apr/i, /^mei$/i, /^jun[i.]?$/i, /^jul[i.]?$/i, /^aug/i, /^sep/i, /^okt/i, /^nov/i, /^dec/i];
-    var monthsRegex = /^(januari|februari|maart|april|mei|april|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+    var monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
 
     var nl = moment.defineLocale('nl', {
         months : 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split('_'),
@@ -34870,7 +35201,7 @@ var createPath = exports.createPath = function createPath(location) {
 
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(januari|februari|maart|mei|ju[nl]i|april|augustus|september|oktober|november|december)/i,
+        monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
         monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
 
         monthsParse : monthsParse,
@@ -34929,7 +35260,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 280 */
+/* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -34945,7 +35276,7 @@ var createPath = exports.createPath = function createPath(location) {
         monthsShortWithoutDots = 'jan_feb_mrt_apr_mei_jun_jul_aug_sep_okt_nov_dec'.split('_');
 
     var monthsParse = [/^jan/i, /^feb/i, /^maart|mrt.?$/i, /^apr/i, /^mei$/i, /^jun[i.]?$/i, /^jul[i.]?$/i, /^aug/i, /^sep/i, /^okt/i, /^nov/i, /^dec/i];
-    var monthsRegex = /^(januari|februari|maart|april|mei|april|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
+    var monthsRegex = /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december|jan\.?|feb\.?|mrt\.?|apr\.?|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i;
 
     var nlBe = moment.defineLocale('nl-be', {
         months : 'januari_februari_maart_april_mei_juni_juli_augustus_september_oktober_november_december'.split('_'),
@@ -34961,7 +35292,7 @@ var createPath = exports.createPath = function createPath(location) {
 
         monthsRegex: monthsRegex,
         monthsShortRegex: monthsRegex,
-        monthsStrictRegex: /^(januari|februari|maart|mei|ju[nl]i|april|augustus|september|oktober|november|december)/i,
+        monthsStrictRegex: /^(januari|februari|maart|april|mei|ju[nl]i|augustus|september|oktober|november|december)/i,
         monthsShortStrictRegex: /^(jan\.?|feb\.?|mrt\.?|apr\.?|mei|ju[nl]\.?|aug\.?|sep\.?|okt\.?|nov\.?|dec\.?)/i,
 
         monthsParse : monthsParse,
@@ -35020,7 +35351,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 281 */
+/* 287 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35084,7 +35415,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 282 */
+/* 288 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35122,7 +35453,7 @@ var createPath = exports.createPath = function createPath(location) {
     };
 
     var paIn = moment.defineLocale('pa-in', {
-        // There are months name as per Nanakshahi Calender but they are not used as rigidly in modern Punjabi.
+        // There are months name as per Nanakshahi Calendar but they are not used as rigidly in modern Punjabi.
         months : 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
         monthsShort : 'ਜਨਵਰੀ_ਫ਼ਰਵਰੀ_ਮਾਰਚ_ਅਪ੍ਰੈਲ_ਮਈ_ਜੂਨ_ਜੁਲਾਈ_ਅਗਸਤ_ਸਤੰਬਰ_ਅਕਤੂਬਰ_ਨਵੰਬਰ_ਦਸੰਬਰ'.split('_'),
         weekdays : 'ਐਤਵਾਰ_ਸੋਮਵਾਰ_ਮੰਗਲਵਾਰ_ਬੁਧਵਾਰ_ਵੀਰਵਾਰ_ਸ਼ੁੱਕਰਵਾਰ_ਸ਼ਨੀਚਰਵਾਰ'.split('_'),
@@ -35202,7 +35533,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -35212,7 +35543,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 283 */
+/* 289 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35342,7 +35673,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 284 */
+/* 290 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35411,7 +35742,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 285 */
+/* 291 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35476,7 +35807,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 286 */
+/* 292 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35545,7 +35876,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -35555,7 +35886,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 287 */
+/* 293 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35741,7 +36072,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 288 */
+/* 294 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35843,7 +36174,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 289 */
+/* 295 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35907,7 +36238,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 290 */
+/* 296 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -35982,7 +36313,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 291 */
+/* 297 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36142,7 +36473,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 292 */
+/* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36167,7 +36498,7 @@ var createPath = exports.createPath = function createPath(location) {
                 } else if (number < 5) {
                     result += withoutSuffix || isFuture ? 'sekunde' : 'sekundah';
                 } else {
-                    result += withoutSuffix || isFuture ? 'sekund' : 'sekund';
+                    result += 'sekund';
                 }
                 return result;
             case 'm':
@@ -36309,7 +36640,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -36319,7 +36650,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 293 */
+/* 299 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36391,7 +36722,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 294 */
+/* 300 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36496,7 +36827,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -36506,7 +36837,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 295 */
+/* 301 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36611,7 +36942,7 @@ var createPath = exports.createPath = function createPath(location) {
         ordinal : '%d.',
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -36621,7 +36952,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 296 */
+/* 302 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36713,7 +37044,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 297 */
+/* 303 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36786,7 +37117,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 298 */
+/* 304 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36839,7 +37170,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -36849,7 +37180,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 299 */
+/* 305 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -36972,7 +37303,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -36982,7 +37313,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 300 */
+/* 306 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37065,7 +37396,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 0, // Sunday is the first day of the week.
-            doy : 6  // The week that contains Jan 1st is the first week of the year.
+            doy : 6  // The week that contains Jan 6th is the first week of the year.
         }
     });
 
@@ -37075,7 +37406,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 301 */
+/* 307 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37146,7 +37477,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 302 */
+/* 308 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37266,7 +37597,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 303 */
+/* 309 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37337,7 +37668,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 304 */
+/* 310 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37403,7 +37734,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 305 */
+/* 311 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37529,7 +37860,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 306 */
+/* 312 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
@@ -37617,7 +37948,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -37627,7 +37958,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 307 */
+/* 313 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37722,7 +38053,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 308 */
+/* 314 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37774,7 +38105,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -37784,7 +38115,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 309 */
+/* 315 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -37836,7 +38167,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 6, // Saturday is the first day of the week.
-            doy : 12  // The week that contains Jan 1st is the first week of the year.
+            doy : 12  // The week that contains Jan 12th is the first week of the year.
         }
     });
 
@@ -37846,7 +38177,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 310 */
+/* 316 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js language configuration
@@ -37969,7 +38300,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 311 */
+/* 317 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38114,7 +38445,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -38124,7 +38455,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 312 */
+/* 318 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38226,7 +38557,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 313 */
+/* 319 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38288,7 +38619,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 314 */
+/* 320 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38340,7 +38671,7 @@ var createPath = exports.createPath = function createPath(location) {
         },
         week : {
             dow : 1, // Monday is the first day of the week.
-            doy : 7  // The week that contains Jan 1st is the first week of the year.
+            doy : 7  // The week that contains Jan 7th is the first week of the year.
         }
     });
 
@@ -38350,7 +38681,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 315 */
+/* 321 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38433,7 +38764,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 316 */
+/* 322 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38505,7 +38836,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 317 */
+/* 323 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38569,7 +38900,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 318 */
+/* 324 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38683,7 +39014,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 319 */
+/* 325 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38790,7 +39121,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 320 */
+/* 326 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //! moment.js locale configuration
@@ -38897,7 +39228,7 @@ var createPath = exports.createPath = function createPath(location) {
 
 
 /***/ }),
-/* 321 */
+/* 327 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -39087,7 +39418,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 322 */
+/* 328 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39103,12 +39434,12 @@ exports["default"] = {
 module.exports = exports["default"];
 
 /***/ }),
-/* 323 */
+/* 329 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var convert = __webpack_require__(609);
-var string = __webpack_require__(611);
+var convert = __webpack_require__(614);
+var string = __webpack_require__(616);
 
 var Color = function (obj) {
 	if (obj instanceof Color) {
@@ -39594,7 +39925,7 @@ module.exports = Color;
 
 
 /***/ }),
-/* 324 */
+/* 330 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39644,7 +39975,7 @@ Object.defineProperty(exports.prototype, 'chartInstance', {
 
 
 /***/ }),
-/* 325 */
+/* 331 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -39780,7 +40111,7 @@ module.exports = {
 
 
 /***/ }),
-/* 326 */
+/* 332 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40117,15 +40448,15 @@ module.exports = {
 
 
 /***/ }),
-/* 327 */
+/* 333 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var helpers = __webpack_require__(6);
-var basic = __webpack_require__(617);
-var dom = __webpack_require__(618);
+var basic = __webpack_require__(622);
+var dom = __webpack_require__(623);
 
 // @TODO Make possible to select another platform at build time.
 var implementation = dom._enabled ? dom : basic;
@@ -40198,7 +40529,7 @@ module.exports = helpers.extend({
 
 
 /***/ }),
-/* 328 */
+/* 334 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -40587,7 +40918,7 @@ module.exports = {
 
 
 /***/ }),
-/* 329 */
+/* 335 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41567,19 +41898,19 @@ exports.positioners = positioners;
 
 
 /***/ }),
-/* 330 */
+/* 336 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = !__webpack_require__(66) && !__webpack_require__(78)(function () {
-  return Object.defineProperty(__webpack_require__(331)('div'), 'a', { get: function () { return 7; } }).a != 7;
+module.exports = !__webpack_require__(66) && !__webpack_require__(79)(function () {
+  return Object.defineProperty(__webpack_require__(337)('div'), 'a', { get: function () { return 7; } }).a != 7;
 });
 
 
 /***/ }),
-/* 331 */
+/* 337 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var isObject = __webpack_require__(77);
+var isObject = __webpack_require__(78);
 var document = __webpack_require__(54).document;
 // typeof document.createElement is 'object' in old IE
 var is = isObject(document) && isObject(document.createElement);
@@ -41589,13 +41920,13 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 332 */
+/* 338 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var has = __webpack_require__(67);
 var toIObject = __webpack_require__(68);
-var arrayIndexOf = __webpack_require__(650)(false);
-var IE_PROTO = __webpack_require__(148)('IE_PROTO');
+var arrayIndexOf = __webpack_require__(655)(false);
+var IE_PROTO = __webpack_require__(151)('IE_PROTO');
 
 module.exports = function (object, names) {
   var O = toIObject(object);
@@ -41612,11 +41943,11 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 333 */
+/* 339 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
-var cof = __webpack_require__(145);
+var cof = __webpack_require__(148);
 // eslint-disable-next-line no-prototype-builtins
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
@@ -41624,11 +41955,11 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 334 */
+/* 340 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.15 ToLength
-var toInteger = __webpack_require__(147);
+var toInteger = __webpack_require__(150);
 var min = Math.min;
 module.exports = function (it) {
   return it > 0 ? min(toInteger(it), 0x1fffffffffffff) : 0; // pow(2, 53) - 1 == 9007199254740991
@@ -41636,21 +41967,21 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 335 */
+/* 341 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(652), __esModule: true };
+module.exports = { "default": __webpack_require__(657), __esModule: true };
 
 /***/ }),
-/* 336 */
+/* 342 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $at = __webpack_require__(656)(true);
+var $at = __webpack_require__(661)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(337)(String, 'String', function (iterated) {
+__webpack_require__(343)(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -41666,19 +41997,19 @@ __webpack_require__(337)(String, 'String', function (iterated) {
 
 
 /***/ }),
-/* 337 */
+/* 343 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var LIBRARY = __webpack_require__(106);
+var LIBRARY = __webpack_require__(108);
 var $export = __webpack_require__(53);
-var redefine = __webpack_require__(338);
-var hide = __webpack_require__(75);
-var Iterators = __webpack_require__(86);
-var $iterCreate = __webpack_require__(657);
-var setToStringTag = __webpack_require__(154);
-var getPrototypeOf = __webpack_require__(339);
+var redefine = __webpack_require__(344);
+var hide = __webpack_require__(76);
+var Iterators = __webpack_require__(88);
+var $iterCreate = __webpack_require__(662);
+var setToStringTag = __webpack_require__(157);
+var getPrototypeOf = __webpack_require__(345);
 var ITERATOR = __webpack_require__(40)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
@@ -41742,20 +42073,20 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 
 /***/ }),
-/* 338 */
+/* 344 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(75);
+module.exports = __webpack_require__(76);
 
 
 /***/ }),
-/* 339 */
+/* 345 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
 var has = __webpack_require__(67);
-var toObject = __webpack_require__(109);
-var IE_PROTO = __webpack_require__(148)('IE_PROTO');
+var toObject = __webpack_require__(111);
+var IE_PROTO = __webpack_require__(151)('IE_PROTO');
 var ObjectProto = Object.prototype;
 
 module.exports = Object.getPrototypeOf || function (O) {
@@ -41768,12 +42099,12 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 
 /***/ }),
-/* 340 */
+/* 346 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 / 15.2.3.4 Object.getOwnPropertyNames(O)
-var $keys = __webpack_require__(332);
-var hiddenKeys = __webpack_require__(150).concat('length', 'prototype');
+var $keys = __webpack_require__(338);
+var hiddenKeys = __webpack_require__(153).concat('length', 'prototype');
 
 exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
   return $keys(O, hiddenKeys);
@@ -41781,13 +42112,13 @@ exports.f = Object.getOwnPropertyNames || function getOwnPropertyNames(O) {
 
 
 /***/ }),
-/* 341 */
+/* 347 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // most Object methods by ES6 should accept primitives
 var $export = __webpack_require__(53);
 var core = __webpack_require__(23);
-var fails = __webpack_require__(78);
+var fails = __webpack_require__(79);
 module.exports = function (KEY, exec) {
   var fn = (core.Object || {})[KEY] || Object[KEY];
   var exp = {};
@@ -41797,7 +42128,7 @@ module.exports = function (KEY, exec) {
 
 
 /***/ }),
-/* 342 */
+/* 348 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -41805,7 +42136,7 @@ module.exports = function (KEY, exec) {
 
 exports.__esModule = true;
 
-var _from = __webpack_require__(691);
+var _from = __webpack_require__(696);
 
 var _from2 = _interopRequireDefault(_from);
 
@@ -41824,7 +42155,7 @@ exports.default = function (arr) {
 };
 
 /***/ }),
-/* 343 */
+/* 349 */
 /***/ (function(module, exports) {
 
 module.exports = function(arr, obj){
@@ -41836,31 +42167,31 @@ module.exports = function(arr, obj){
 };
 
 /***/ }),
-/* 344 */
+/* 350 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/img/loading.gif";
 
 /***/ }),
-/* 345 */
+/* 351 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(346);
-module.exports = __webpack_require__(548);
+__webpack_require__(352);
+module.exports = __webpack_require__(553);
 
 
 /***/ }),
-/* 346 */
+/* 352 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {
 
-__webpack_require__(347);
+__webpack_require__(353);
 
-__webpack_require__(544);
+__webpack_require__(549);
 
-__webpack_require__(545);
+__webpack_require__(550);
 
 if (global._babelPolyfill) {
   throw new Error("only one instance of babel-polyfill is allowed");
@@ -41885,16 +42216,10 @@ define(String.prototype, "padRight", "".padEnd);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 347 */
+/* 353 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(348);
-__webpack_require__(350);
-__webpack_require__(351);
-__webpack_require__(352);
-__webpack_require__(353);
 __webpack_require__(354);
-__webpack_require__(355);
 __webpack_require__(356);
 __webpack_require__(357);
 __webpack_require__(358);
@@ -41904,6 +42229,7 @@ __webpack_require__(361);
 __webpack_require__(362);
 __webpack_require__(363);
 __webpack_require__(364);
+__webpack_require__(365);
 __webpack_require__(366);
 __webpack_require__(367);
 __webpack_require__(368);
@@ -41965,20 +42291,20 @@ __webpack_require__(423);
 __webpack_require__(424);
 __webpack_require__(425);
 __webpack_require__(426);
+__webpack_require__(427);
 __webpack_require__(428);
 __webpack_require__(429);
+__webpack_require__(430);
 __webpack_require__(431);
-__webpack_require__(432);
 __webpack_require__(433);
 __webpack_require__(434);
-__webpack_require__(435);
 __webpack_require__(436);
 __webpack_require__(437);
+__webpack_require__(438);
 __webpack_require__(439);
 __webpack_require__(440);
 __webpack_require__(441);
 __webpack_require__(442);
-__webpack_require__(443);
 __webpack_require__(444);
 __webpack_require__(445);
 __webpack_require__(446);
@@ -41987,23 +42313,24 @@ __webpack_require__(448);
 __webpack_require__(449);
 __webpack_require__(450);
 __webpack_require__(451);
-__webpack_require__(131);
 __webpack_require__(452);
 __webpack_require__(453);
-__webpack_require__(176);
 __webpack_require__(454);
 __webpack_require__(455);
 __webpack_require__(456);
+__webpack_require__(132);
 __webpack_require__(457);
+__webpack_require__(180);
 __webpack_require__(458);
-__webpack_require__(179);
 __webpack_require__(181);
-__webpack_require__(182);
 __webpack_require__(459);
 __webpack_require__(460);
 __webpack_require__(461);
 __webpack_require__(462);
 __webpack_require__(463);
+__webpack_require__(184);
+__webpack_require__(186);
+__webpack_require__(187);
 __webpack_require__(464);
 __webpack_require__(465);
 __webpack_require__(466);
@@ -42084,11 +42411,16 @@ __webpack_require__(540);
 __webpack_require__(541);
 __webpack_require__(542);
 __webpack_require__(543);
+__webpack_require__(544);
+__webpack_require__(545);
+__webpack_require__(546);
+__webpack_require__(547);
+__webpack_require__(548);
 module.exports = __webpack_require__(28);
 
 
 /***/ }),
-/* 348 */
+/* 354 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42096,28 +42428,28 @@ module.exports = __webpack_require__(28);
 // ECMAScript 6 symbols shim
 var global = __webpack_require__(5);
 var has = __webpack_require__(24);
-var DESCRIPTORS = __webpack_require__(11);
+var DESCRIPTORS = __webpack_require__(12);
 var $export = __webpack_require__(1);
 var redefine = __webpack_require__(20);
 var META = __webpack_require__(48).KEY;
 var $fails = __webpack_require__(7);
-var shared = __webpack_require__(88);
+var shared = __webpack_require__(90);
 var setToStringTag = __webpack_require__(70);
 var uid = __webpack_require__(57);
 var wks = __webpack_require__(10);
-var wksExt = __webpack_require__(159);
-var wksDefine = __webpack_require__(111);
-var enumKeys = __webpack_require__(349);
-var isArray = __webpack_require__(91);
+var wksExt = __webpack_require__(162);
+var wksDefine = __webpack_require__(113);
+var enumKeys = __webpack_require__(355);
+var isArray = __webpack_require__(93);
 var anObject = __webpack_require__(4);
 var isObject = __webpack_require__(8);
 var toIObject = __webpack_require__(25);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 var createDesc = __webpack_require__(56);
 var _create = __webpack_require__(60);
-var gOPNExt = __webpack_require__(162);
+var gOPNExt = __webpack_require__(165);
 var $GOPD = __webpack_require__(26);
-var $DP = __webpack_require__(12);
+var $DP = __webpack_require__(13);
 var $keys = __webpack_require__(58);
 var gOPD = $GOPD.f;
 var dP = $DP.f;
@@ -42242,8 +42574,8 @@ if (!USE_NATIVE) {
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
   __webpack_require__(61).f = gOPNExt.f = $getOwnPropertyNames;
-  __webpack_require__(80).f = $propertyIsEnumerable;
-  __webpack_require__(90).f = $getOwnPropertySymbols;
+  __webpack_require__(81).f = $propertyIsEnumerable;
+  __webpack_require__(92).f = $getOwnPropertySymbols;
 
   if (DESCRIPTORS && !__webpack_require__(49)) {
     redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
@@ -42329,13 +42661,13 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 349 */
+/* 355 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
 var getKeys = __webpack_require__(58);
-var gOPS = __webpack_require__(90);
-var pIE = __webpack_require__(80);
+var gOPS = __webpack_require__(92);
+var pIE = __webpack_require__(81);
 module.exports = function (it) {
   var result = getKeys(it);
   var getSymbols = gOPS.f;
@@ -42350,7 +42682,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 350 */
+/* 356 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
@@ -42359,25 +42691,25 @@ $export($export.S, 'Object', { create: __webpack_require__(60) });
 
 
 /***/ }),
-/* 351 */
+/* 357 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
 // 19.1.2.4 / 15.2.3.6 Object.defineProperty(O, P, Attributes)
-$export($export.S + $export.F * !__webpack_require__(11), 'Object', { defineProperty: __webpack_require__(12).f });
+$export($export.S + $export.F * !__webpack_require__(12), 'Object', { defineProperty: __webpack_require__(13).f });
 
 
 /***/ }),
-/* 352 */
+/* 358 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
 // 19.1.2.3 / 15.2.3.7 Object.defineProperties(O, Properties)
-$export($export.S + $export.F * !__webpack_require__(11), 'Object', { defineProperties: __webpack_require__(161) });
+$export($export.S + $export.F * !__webpack_require__(12), 'Object', { defineProperties: __webpack_require__(164) });
 
 
 /***/ }),
-/* 353 */
+/* 359 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
@@ -42392,7 +42724,7 @@ __webpack_require__(36)('getOwnPropertyDescriptor', function () {
 
 
 /***/ }),
-/* 354 */
+/* 360 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 Object.getPrototypeOf(O)
@@ -42407,7 +42739,7 @@ __webpack_require__(36)('getPrototypeOf', function () {
 
 
 /***/ }),
-/* 355 */
+/* 361 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 Object.keys(O)
@@ -42422,17 +42754,17 @@ __webpack_require__(36)('keys', function () {
 
 
 /***/ }),
-/* 356 */
+/* 362 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.7 Object.getOwnPropertyNames(O)
 __webpack_require__(36)('getOwnPropertyNames', function () {
-  return __webpack_require__(162).f;
+  return __webpack_require__(165).f;
 });
 
 
 /***/ }),
-/* 357 */
+/* 363 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.5 Object.freeze(O)
@@ -42447,7 +42779,7 @@ __webpack_require__(36)('freeze', function ($freeze) {
 
 
 /***/ }),
-/* 358 */
+/* 364 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.17 Object.seal(O)
@@ -42462,7 +42794,7 @@ __webpack_require__(36)('seal', function ($seal) {
 
 
 /***/ }),
-/* 359 */
+/* 365 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.15 Object.preventExtensions(O)
@@ -42477,7 +42809,7 @@ __webpack_require__(36)('preventExtensions', function ($preventExtensions) {
 
 
 /***/ }),
-/* 360 */
+/* 366 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.12 Object.isFrozen(O)
@@ -42491,7 +42823,7 @@ __webpack_require__(36)('isFrozen', function ($isFrozen) {
 
 
 /***/ }),
-/* 361 */
+/* 367 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.13 Object.isSealed(O)
@@ -42505,7 +42837,7 @@ __webpack_require__(36)('isSealed', function ($isSealed) {
 
 
 /***/ }),
-/* 362 */
+/* 368 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.11 Object.isExtensible(O)
@@ -42519,52 +42851,41 @@ __webpack_require__(36)('isExtensible', function ($isExtensible) {
 
 
 /***/ }),
-/* 363 */
+/* 369 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
 var $export = __webpack_require__(1);
 
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(163) });
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(166) });
 
 
 /***/ }),
-/* 364 */
+/* 370 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.10 Object.is(value1, value2)
 var $export = __webpack_require__(1);
-$export($export.S, 'Object', { is: __webpack_require__(365) });
+$export($export.S, 'Object', { is: __webpack_require__(167) });
 
 
 /***/ }),
-/* 365 */
-/***/ (function(module, exports) {
-
-// 7.2.9 SameValue(x, y)
-module.exports = Object.is || function is(x, y) {
-  // eslint-disable-next-line no-self-compare
-  return x === y ? x !== 0 || 1 / x === 1 / y : x != x && y != y;
-};
-
-
-/***/ }),
-/* 366 */
+/* 371 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.19 Object.setPrototypeOf(O, proto)
 var $export = __webpack_require__(1);
-$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(115).set });
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(117).set });
 
 
 /***/ }),
-/* 367 */
+/* 372 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.3.6 Object.prototype.toString()
-var classof = __webpack_require__(81);
+var classof = __webpack_require__(71);
 var test = {};
 test[__webpack_require__(10)('toStringTag')] = 'z';
 if (test + '' != '[object z]') {
@@ -42575,26 +42896,26 @@ if (test + '' != '[object z]') {
 
 
 /***/ }),
-/* 368 */
+/* 373 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.2.3.2 / 15.3.4.5 Function.prototype.bind(thisArg, args...)
 var $export = __webpack_require__(1);
 
-$export($export.P, 'Function', { bind: __webpack_require__(164) });
+$export($export.P, 'Function', { bind: __webpack_require__(168) });
 
 
 /***/ }),
-/* 369 */
+/* 374 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var dP = __webpack_require__(12).f;
+var dP = __webpack_require__(13).f;
 var FProto = Function.prototype;
 var nameRE = /^\s*function ([^ (]*)/;
 var NAME = 'name';
 
 // 19.2.4.2 name
-NAME in FProto || __webpack_require__(11) && dP(FProto, NAME, {
+NAME in FProto || __webpack_require__(12) && dP(FProto, NAME, {
   configurable: true,
   get: function () {
     try {
@@ -42607,7 +42928,7 @@ NAME in FProto || __webpack_require__(11) && dP(FProto, NAME, {
 
 
 /***/ }),
-/* 370 */
+/* 375 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42617,7 +42938,7 @@ var getPrototypeOf = __webpack_require__(27);
 var HAS_INSTANCE = __webpack_require__(10)('hasInstance');
 var FunctionProto = Function.prototype;
 // 19.2.3.6 Function.prototype[@@hasInstance](V)
-if (!(HAS_INSTANCE in FunctionProto)) __webpack_require__(12).f(FunctionProto, HAS_INSTANCE, { value: function (O) {
+if (!(HAS_INSTANCE in FunctionProto)) __webpack_require__(13).f(FunctionProto, HAS_INSTANCE, { value: function (O) {
   if (typeof this != 'function' || !isObject(O)) return false;
   if (!isObject(this.prototype)) return O instanceof this;
   // for environment w/o native `@@hasInstance` logic enough `instanceof`, but add this:
@@ -42627,27 +42948,27 @@ if (!(HAS_INSTANCE in FunctionProto)) __webpack_require__(12).f(FunctionProto, H
 
 
 /***/ }),
-/* 371 */
+/* 376 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-var $parseInt = __webpack_require__(166);
+var $parseInt = __webpack_require__(170);
 // 18.2.5 parseInt(string, radix)
 $export($export.G + $export.F * (parseInt != $parseInt), { parseInt: $parseInt });
 
 
 /***/ }),
-/* 372 */
+/* 377 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-var $parseFloat = __webpack_require__(167);
+var $parseFloat = __webpack_require__(171);
 // 18.2.4 parseFloat(string)
 $export($export.G + $export.F * (parseFloat != $parseFloat), { parseFloat: $parseFloat });
 
 
 /***/ }),
-/* 373 */
+/* 378 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -42655,13 +42976,13 @@ $export($export.G + $export.F * (parseFloat != $parseFloat), { parseFloat: $pars
 var global = __webpack_require__(5);
 var has = __webpack_require__(24);
 var cof = __webpack_require__(30);
-var inheritIfRequired = __webpack_require__(117);
-var toPrimitive = __webpack_require__(33);
+var inheritIfRequired = __webpack_require__(119);
+var toPrimitive = __webpack_require__(34);
 var fails = __webpack_require__(7);
 var gOPN = __webpack_require__(61).f;
 var gOPD = __webpack_require__(26).f;
-var dP = __webpack_require__(12).f;
-var $trim = __webpack_require__(71).trim;
+var dP = __webpack_require__(13).f;
+var $trim = __webpack_require__(72).trim;
 var NUMBER = 'Number';
 var $Number = global[NUMBER];
 var Base = $Number;
@@ -42705,7 +43026,7 @@ if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
       && (BROKEN_COF ? fails(function () { proto.valueOf.call(that); }) : cof(that) != NUMBER)
         ? inheritIfRequired(new Base(toNumber(it)), that, $Number) : toNumber(it);
   };
-  for (var keys = __webpack_require__(11) ? gOPN(Base) : (
+  for (var keys = __webpack_require__(12) ? gOPN(Base) : (
     // ES3:
     'MAX_VALUE,MIN_VALUE,NaN,NEGATIVE_INFINITY,POSITIVE_INFINITY,' +
     // ES6 (in case, if modules with ES6 Number statics required before):
@@ -42723,15 +43044,15 @@ if (!$Number(' 0o1') || !$Number('0b1') || $Number('+0x1')) {
 
 
 /***/ }),
-/* 374 */
+/* 379 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
-var toInteger = __webpack_require__(35);
-var aNumberValue = __webpack_require__(168);
-var repeat = __webpack_require__(118);
+var toInteger = __webpack_require__(31);
+var aNumberValue = __webpack_require__(172);
+var repeat = __webpack_require__(120);
 var $toFixed = 1.0.toFixed;
 var floor = Math.floor;
 var data = [0, 0, 0, 0, 0, 0];
@@ -42844,14 +43165,14 @@ $export($export.P + $export.F * (!!$toFixed && (
 
 
 /***/ }),
-/* 375 */
+/* 380 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
 var $fails = __webpack_require__(7);
-var aNumberValue = __webpack_require__(168);
+var aNumberValue = __webpack_require__(172);
 var $toPrecision = 1.0.toPrecision;
 
 $export($export.P + $export.F * ($fails(function () {
@@ -42869,7 +43190,7 @@ $export($export.P + $export.F * ($fails(function () {
 
 
 /***/ }),
-/* 376 */
+/* 381 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.1 Number.EPSILON
@@ -42879,7 +43200,7 @@ $export($export.S, 'Number', { EPSILON: Math.pow(2, -52) });
 
 
 /***/ }),
-/* 377 */
+/* 382 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.2 Number.isFinite(number)
@@ -42894,17 +43215,17 @@ $export($export.S, 'Number', {
 
 
 /***/ }),
-/* 378 */
+/* 383 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.3 Number.isInteger(number)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Number', { isInteger: __webpack_require__(169) });
+$export($export.S, 'Number', { isInteger: __webpack_require__(173) });
 
 
 /***/ }),
-/* 379 */
+/* 384 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.4 Number.isNaN(number)
@@ -42919,12 +43240,12 @@ $export($export.S, 'Number', {
 
 
 /***/ }),
-/* 380 */
+/* 385 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.5 Number.isSafeInteger(number)
 var $export = __webpack_require__(1);
-var isInteger = __webpack_require__(169);
+var isInteger = __webpack_require__(173);
 var abs = Math.abs;
 
 $export($export.S, 'Number', {
@@ -42935,7 +43256,7 @@ $export($export.S, 'Number', {
 
 
 /***/ }),
-/* 381 */
+/* 386 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.6 Number.MAX_SAFE_INTEGER
@@ -42945,7 +43266,7 @@ $export($export.S, 'Number', { MAX_SAFE_INTEGER: 0x1fffffffffffff });
 
 
 /***/ }),
-/* 382 */
+/* 387 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.1.2.10 Number.MIN_SAFE_INTEGER
@@ -42955,32 +43276,32 @@ $export($export.S, 'Number', { MIN_SAFE_INTEGER: -0x1fffffffffffff });
 
 
 /***/ }),
-/* 383 */
+/* 388 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-var $parseFloat = __webpack_require__(167);
+var $parseFloat = __webpack_require__(171);
 // 20.1.2.12 Number.parseFloat(string)
 $export($export.S + $export.F * (Number.parseFloat != $parseFloat), 'Number', { parseFloat: $parseFloat });
 
 
 /***/ }),
-/* 384 */
+/* 389 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-var $parseInt = __webpack_require__(166);
+var $parseInt = __webpack_require__(170);
 // 20.1.2.13 Number.parseInt(string, radix)
 $export($export.S + $export.F * (Number.parseInt != $parseInt), 'Number', { parseInt: $parseInt });
 
 
 /***/ }),
-/* 385 */
+/* 390 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.3 Math.acosh(x)
 var $export = __webpack_require__(1);
-var log1p = __webpack_require__(170);
+var log1p = __webpack_require__(174);
 var sqrt = Math.sqrt;
 var $acosh = Math.acosh;
 
@@ -42999,7 +43320,7 @@ $export($export.S + $export.F * !($acosh
 
 
 /***/ }),
-/* 386 */
+/* 391 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.5 Math.asinh(x)
@@ -43015,7 +43336,7 @@ $export($export.S + $export.F * !($asinh && 1 / $asinh(0) > 0), 'Math', { asinh:
 
 
 /***/ }),
-/* 387 */
+/* 392 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.7 Math.atanh(x)
@@ -43031,12 +43352,12 @@ $export($export.S + $export.F * !($atanh && 1 / $atanh(-0) < 0), 'Math', {
 
 
 /***/ }),
-/* 388 */
+/* 393 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.9 Math.cbrt(x)
 var $export = __webpack_require__(1);
-var sign = __webpack_require__(119);
+var sign = __webpack_require__(121);
 
 $export($export.S, 'Math', {
   cbrt: function cbrt(x) {
@@ -43046,7 +43367,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 389 */
+/* 394 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.11 Math.clz32(x)
@@ -43060,7 +43381,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 390 */
+/* 395 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.12 Math.cosh(x)
@@ -43075,28 +43396,28 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 391 */
+/* 396 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.14 Math.expm1(x)
 var $export = __webpack_require__(1);
-var $expm1 = __webpack_require__(120);
+var $expm1 = __webpack_require__(122);
 
 $export($export.S + $export.F * ($expm1 != Math.expm1), 'Math', { expm1: $expm1 });
 
 
 /***/ }),
-/* 392 */
+/* 397 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.16 Math.fround(x)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Math', { fround: __webpack_require__(171) });
+$export($export.S, 'Math', { fround: __webpack_require__(175) });
 
 
 /***/ }),
-/* 393 */
+/* 398 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.17 Math.hypot([value1[, value2[, … ]]])
@@ -43127,7 +43448,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 394 */
+/* 399 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.18 Math.imul(x, y)
@@ -43150,7 +43471,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 395 */
+/* 400 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.21 Math.log10(x)
@@ -43164,17 +43485,17 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 396 */
+/* 401 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.20 Math.log1p(x)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Math', { log1p: __webpack_require__(170) });
+$export($export.S, 'Math', { log1p: __webpack_require__(174) });
 
 
 /***/ }),
-/* 397 */
+/* 402 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.22 Math.log2(x)
@@ -43188,22 +43509,22 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 398 */
+/* 403 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.28 Math.sign(x)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Math', { sign: __webpack_require__(119) });
+$export($export.S, 'Math', { sign: __webpack_require__(121) });
 
 
 /***/ }),
-/* 399 */
+/* 404 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.30 Math.sinh(x)
 var $export = __webpack_require__(1);
-var expm1 = __webpack_require__(120);
+var expm1 = __webpack_require__(122);
 var exp = Math.exp;
 
 // V8 near Chromium 38 has a problem with very small numbers
@@ -43219,12 +43540,12 @@ $export($export.S + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 400 */
+/* 405 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.33 Math.tanh(x)
 var $export = __webpack_require__(1);
-var expm1 = __webpack_require__(120);
+var expm1 = __webpack_require__(122);
 var exp = Math.exp;
 
 $export($export.S, 'Math', {
@@ -43237,7 +43558,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 401 */
+/* 406 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.2.2.34 Math.trunc(x)
@@ -43251,7 +43572,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 402 */
+/* 407 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
@@ -43280,12 +43601,12 @@ $export($export.S + $export.F * (!!$fromCodePoint && $fromCodePoint.length != 1)
 
 
 /***/ }),
-/* 403 */
+/* 408 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
 var toIObject = __webpack_require__(25);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 
 $export($export.S, 'String', {
   // 21.1.2.4 String.raw(callSite, ...substitutions)
@@ -43304,13 +43625,13 @@ $export($export.S, 'String', {
 
 
 /***/ }),
-/* 404 */
+/* 409 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 21.1.3.25 String.prototype.trim()
-__webpack_require__(71)('trim', function ($trim) {
+__webpack_require__(72)('trim', function ($trim) {
   return function trim() {
     return $trim(this, 3);
   };
@@ -43318,15 +43639,15 @@ __webpack_require__(71)('trim', function ($trim) {
 
 
 /***/ }),
-/* 405 */
+/* 410 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var $at = __webpack_require__(121)(true);
+var $at = __webpack_require__(94)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(122)(String, 'String', function (iterated) {
+__webpack_require__(123)(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -43342,13 +43663,13 @@ __webpack_require__(122)(String, 'String', function (iterated) {
 
 
 /***/ }),
-/* 406 */
+/* 411 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
-var $at = __webpack_require__(121)(false);
+var $at = __webpack_require__(94)(false);
 $export($export.P, 'String', {
   // 21.1.3.3 String.prototype.codePointAt(pos)
   codePointAt: function codePointAt(pos) {
@@ -43358,19 +43679,19 @@ $export($export.P, 'String', {
 
 
 /***/ }),
-/* 407 */
+/* 412 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 // 21.1.3.6 String.prototype.endsWith(searchString [, endPosition])
 
 var $export = __webpack_require__(1);
-var toLength = __webpack_require__(13);
-var context = __webpack_require__(124);
+var toLength = __webpack_require__(11);
+var context = __webpack_require__(125);
 var ENDS_WITH = 'endsWith';
 var $endsWith = ''[ENDS_WITH];
 
-$export($export.P + $export.F * __webpack_require__(125)(ENDS_WITH), 'String', {
+$export($export.P + $export.F * __webpack_require__(126)(ENDS_WITH), 'String', {
   endsWith: function endsWith(searchString /* , endPosition = @length */) {
     var that = context(this, searchString, ENDS_WITH);
     var endPosition = arguments.length > 1 ? arguments[1] : undefined;
@@ -43385,17 +43706,17 @@ $export($export.P + $export.F * __webpack_require__(125)(ENDS_WITH), 'String', {
 
 
 /***/ }),
-/* 408 */
+/* 413 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 // 21.1.3.7 String.prototype.includes(searchString, position = 0)
 
 var $export = __webpack_require__(1);
-var context = __webpack_require__(124);
+var context = __webpack_require__(125);
 var INCLUDES = 'includes';
 
-$export($export.P + $export.F * __webpack_require__(125)(INCLUDES), 'String', {
+$export($export.P + $export.F * __webpack_require__(126)(INCLUDES), 'String', {
   includes: function includes(searchString /* , position = 0 */) {
     return !!~context(this, searchString, INCLUDES)
       .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
@@ -43404,31 +43725,31 @@ $export($export.P + $export.F * __webpack_require__(125)(INCLUDES), 'String', {
 
 
 /***/ }),
-/* 409 */
+/* 414 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
 
 $export($export.P, 'String', {
   // 21.1.3.13 String.prototype.repeat(count)
-  repeat: __webpack_require__(118)
+  repeat: __webpack_require__(120)
 });
 
 
 /***/ }),
-/* 410 */
+/* 415 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 // 21.1.3.18 String.prototype.startsWith(searchString [, position ])
 
 var $export = __webpack_require__(1);
-var toLength = __webpack_require__(13);
-var context = __webpack_require__(124);
+var toLength = __webpack_require__(11);
+var context = __webpack_require__(125);
 var STARTS_WITH = 'startsWith';
 var $startsWith = ''[STARTS_WITH];
 
-$export($export.P + $export.F * __webpack_require__(125)(STARTS_WITH), 'String', {
+$export($export.P + $export.F * __webpack_require__(126)(STARTS_WITH), 'String', {
   startsWith: function startsWith(searchString /* , position = 0 */) {
     var that = context(this, searchString, STARTS_WITH);
     var index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length));
@@ -43441,7 +43762,7 @@ $export($export.P + $export.F * __webpack_require__(125)(STARTS_WITH), 'String',
 
 
 /***/ }),
-/* 411 */
+/* 416 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43455,7 +43776,7 @@ __webpack_require__(21)('anchor', function (createHTML) {
 
 
 /***/ }),
-/* 412 */
+/* 417 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43469,7 +43790,7 @@ __webpack_require__(21)('big', function (createHTML) {
 
 
 /***/ }),
-/* 413 */
+/* 418 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43483,7 +43804,7 @@ __webpack_require__(21)('blink', function (createHTML) {
 
 
 /***/ }),
-/* 414 */
+/* 419 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43497,7 +43818,7 @@ __webpack_require__(21)('bold', function (createHTML) {
 
 
 /***/ }),
-/* 415 */
+/* 420 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43511,7 +43832,7 @@ __webpack_require__(21)('fixed', function (createHTML) {
 
 
 /***/ }),
-/* 416 */
+/* 421 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43525,7 +43846,7 @@ __webpack_require__(21)('fontcolor', function (createHTML) {
 
 
 /***/ }),
-/* 417 */
+/* 422 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43539,7 +43860,7 @@ __webpack_require__(21)('fontsize', function (createHTML) {
 
 
 /***/ }),
-/* 418 */
+/* 423 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43553,7 +43874,7 @@ __webpack_require__(21)('italics', function (createHTML) {
 
 
 /***/ }),
-/* 419 */
+/* 424 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43567,7 +43888,7 @@ __webpack_require__(21)('link', function (createHTML) {
 
 
 /***/ }),
-/* 420 */
+/* 425 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43581,7 +43902,7 @@ __webpack_require__(21)('small', function (createHTML) {
 
 
 /***/ }),
-/* 421 */
+/* 426 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43595,7 +43916,7 @@ __webpack_require__(21)('strike', function (createHTML) {
 
 
 /***/ }),
-/* 422 */
+/* 427 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43609,7 +43930,7 @@ __webpack_require__(21)('sub', function (createHTML) {
 
 
 /***/ }),
-/* 423 */
+/* 428 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43623,7 +43944,7 @@ __webpack_require__(21)('sup', function (createHTML) {
 
 
 /***/ }),
-/* 424 */
+/* 429 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.3.3.1 / 15.9.4.4 Date.now()
@@ -43633,14 +43954,14 @@ $export($export.S, 'Date', { now: function () { return new Date().getTime(); } }
 
 
 /***/ }),
-/* 425 */
+/* 430 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 
 $export($export.P + $export.F * __webpack_require__(7)(function () {
   return new Date(NaN).toJSON() !== null
@@ -43656,12 +43977,12 @@ $export($export.P + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 426 */
+/* 431 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 20.3.4.36 / 15.9.5.43 Date.prototype.toISOString()
 var $export = __webpack_require__(1);
-var toISOString = __webpack_require__(427);
+var toISOString = __webpack_require__(432);
 
 // PhantomJS / old WebKit has a broken implementations
 $export($export.P + $export.F * (Date.prototype.toISOString !== toISOString), 'Date', {
@@ -43670,7 +43991,7 @@ $export($export.P + $export.F * (Date.prototype.toISOString !== toISOString), 'D
 
 
 /***/ }),
-/* 427 */
+/* 432 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43703,7 +44024,7 @@ module.exports = (fails(function () {
 
 
 /***/ }),
-/* 428 */
+/* 433 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var DateProto = Date.prototype;
@@ -43721,23 +44042,23 @@ if (new Date(NaN) + '' != INVALID_DATE) {
 
 
 /***/ }),
-/* 429 */
+/* 434 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var TO_PRIMITIVE = __webpack_require__(10)('toPrimitive');
 var proto = Date.prototype;
 
-if (!(TO_PRIMITIVE in proto)) __webpack_require__(19)(proto, TO_PRIMITIVE, __webpack_require__(430));
+if (!(TO_PRIMITIVE in proto)) __webpack_require__(19)(proto, TO_PRIMITIVE, __webpack_require__(435));
 
 
 /***/ }),
-/* 430 */
+/* 435 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var anObject = __webpack_require__(4);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 var NUMBER = 'number';
 
 module.exports = function (hint) {
@@ -43747,17 +44068,17 @@ module.exports = function (hint) {
 
 
 /***/ }),
-/* 431 */
+/* 436 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.2.2 / 15.4.3.2 Array.isArray(arg)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Array', { isArray: __webpack_require__(91) });
+$export($export.S, 'Array', { isArray: __webpack_require__(93) });
 
 
 /***/ }),
-/* 432 */
+/* 437 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43765,13 +44086,13 @@ $export($export.S, 'Array', { isArray: __webpack_require__(91) });
 var ctx = __webpack_require__(29);
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
-var call = __webpack_require__(172);
-var isArrayIter = __webpack_require__(126);
-var toLength = __webpack_require__(13);
-var createProperty = __webpack_require__(127);
-var getIterFn = __webpack_require__(128);
+var call = __webpack_require__(176);
+var isArrayIter = __webpack_require__(127);
+var toLength = __webpack_require__(11);
+var createProperty = __webpack_require__(128);
+var getIterFn = __webpack_require__(129);
 
-$export($export.S + $export.F * !__webpack_require__(93)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(96)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -43801,13 +44122,13 @@ $export($export.S + $export.F * !__webpack_require__(93)(function (iter) { Array
 
 
 /***/ }),
-/* 433 */
+/* 438 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
-var createProperty = __webpack_require__(127);
+var createProperty = __webpack_require__(128);
 
 // WebKit Array.of isn't generic
 $export($export.S + $export.F * __webpack_require__(7)(function () {
@@ -43827,7 +44148,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 434 */
+/* 439 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43838,7 +44159,7 @@ var toIObject = __webpack_require__(25);
 var arrayJoin = [].join;
 
 // fallback for not array-like strings
-$export($export.P + $export.F * (__webpack_require__(79) != Object || !__webpack_require__(31)(arrayJoin)), 'Array', {
+$export($export.P + $export.F * (__webpack_require__(80) != Object || !__webpack_require__(32)(arrayJoin)), 'Array', {
   join: function join(separator) {
     return arrayJoin.call(toIObject(this), separator === undefined ? ',' : separator);
   }
@@ -43846,16 +44167,16 @@ $export($export.P + $export.F * (__webpack_require__(79) != Object || !__webpack
 
 
 /***/ }),
-/* 435 */
+/* 440 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
-var html = __webpack_require__(114);
+var html = __webpack_require__(116);
 var cof = __webpack_require__(30);
 var toAbsoluteIndex = __webpack_require__(59);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 var arraySlice = [].slice;
 
 // fallback for not array-like ES3 strings and DOM objects
@@ -43881,7 +44202,7 @@ $export($export.P + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 436 */
+/* 441 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43900,7 +44221,7 @@ $export($export.P + $export.F * (fails(function () {
   // V8 bug
   test.sort(null);
   // Old WebKit
-}) || !__webpack_require__(31)($sort)), 'Array', {
+}) || !__webpack_require__(32)($sort)), 'Array', {
   // 22.1.3.25 Array.prototype.sort(comparefn)
   sort: function sort(comparefn) {
     return comparefn === undefined
@@ -43911,14 +44232,14 @@ $export($export.P + $export.F * (fails(function () {
 
 
 /***/ }),
-/* 437 */
+/* 442 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
 var $forEach = __webpack_require__(37)(0);
-var STRICT = __webpack_require__(31)([].forEach, true);
+var STRICT = __webpack_require__(32)([].forEach, true);
 
 $export($export.P + $export.F * !STRICT, 'Array', {
   // 22.1.3.10 / 15.4.4.18 Array.prototype.forEach(callbackfn [, thisArg])
@@ -43929,11 +44250,11 @@ $export($export.P + $export.F * !STRICT, 'Array', {
 
 
 /***/ }),
-/* 438 */
+/* 443 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var isObject = __webpack_require__(8);
-var isArray = __webpack_require__(91);
+var isArray = __webpack_require__(93);
 var SPECIES = __webpack_require__(10)('species');
 
 module.exports = function (original) {
@@ -43951,7 +44272,7 @@ module.exports = function (original) {
 
 
 /***/ }),
-/* 439 */
+/* 444 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43959,95 +44280,10 @@ module.exports = function (original) {
 var $export = __webpack_require__(1);
 var $map = __webpack_require__(37)(1);
 
-$export($export.P + $export.F * !__webpack_require__(31)([].map, true), 'Array', {
+$export($export.P + $export.F * !__webpack_require__(32)([].map, true), 'Array', {
   // 22.1.3.15 / 15.4.4.19 Array.prototype.map(callbackfn [, thisArg])
   map: function map(callbackfn /* , thisArg */) {
     return $map(this, callbackfn, arguments[1]);
-  }
-});
-
-
-/***/ }),
-/* 440 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $export = __webpack_require__(1);
-var $filter = __webpack_require__(37)(2);
-
-$export($export.P + $export.F * !__webpack_require__(31)([].filter, true), 'Array', {
-  // 22.1.3.7 / 15.4.4.20 Array.prototype.filter(callbackfn [, thisArg])
-  filter: function filter(callbackfn /* , thisArg */) {
-    return $filter(this, callbackfn, arguments[1]);
-  }
-});
-
-
-/***/ }),
-/* 441 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $export = __webpack_require__(1);
-var $some = __webpack_require__(37)(3);
-
-$export($export.P + $export.F * !__webpack_require__(31)([].some, true), 'Array', {
-  // 22.1.3.23 / 15.4.4.17 Array.prototype.some(callbackfn [, thisArg])
-  some: function some(callbackfn /* , thisArg */) {
-    return $some(this, callbackfn, arguments[1]);
-  }
-});
-
-
-/***/ }),
-/* 442 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $export = __webpack_require__(1);
-var $every = __webpack_require__(37)(4);
-
-$export($export.P + $export.F * !__webpack_require__(31)([].every, true), 'Array', {
-  // 22.1.3.5 / 15.4.4.16 Array.prototype.every(callbackfn [, thisArg])
-  every: function every(callbackfn /* , thisArg */) {
-    return $every(this, callbackfn, arguments[1]);
-  }
-});
-
-
-/***/ }),
-/* 443 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $export = __webpack_require__(1);
-var $reduce = __webpack_require__(173);
-
-$export($export.P + $export.F * !__webpack_require__(31)([].reduce, true), 'Array', {
-  // 22.1.3.18 / 15.4.4.21 Array.prototype.reduce(callbackfn [, initialValue])
-  reduce: function reduce(callbackfn /* , initialValue */) {
-    return $reduce(this, callbackfn, arguments.length, arguments[1], false);
-  }
-});
-
-
-/***/ }),
-/* 444 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var $export = __webpack_require__(1);
-var $reduce = __webpack_require__(173);
-
-$export($export.P + $export.F * !__webpack_require__(31)([].reduceRight, true), 'Array', {
-  // 22.1.3.19 / 15.4.4.22 Array.prototype.reduceRight(callbackfn [, initialValue])
-  reduceRight: function reduceRight(callbackfn /* , initialValue */) {
-    return $reduce(this, callbackfn, arguments.length, arguments[1], true);
   }
 });
 
@@ -44059,17 +44295,12 @@ $export($export.P + $export.F * !__webpack_require__(31)([].reduceRight, true), 
 "use strict";
 
 var $export = __webpack_require__(1);
-var $indexOf = __webpack_require__(89)(false);
-var $native = [].indexOf;
-var NEGATIVE_ZERO = !!$native && 1 / [1].indexOf(1, -0) < 0;
+var $filter = __webpack_require__(37)(2);
 
-$export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(31)($native)), 'Array', {
-  // 22.1.3.11 / 15.4.4.14 Array.prototype.indexOf(searchElement [, fromIndex])
-  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
-    return NEGATIVE_ZERO
-      // convert -0 to +0
-      ? $native.apply(this, arguments) || 0
-      : $indexOf(this, searchElement, arguments[1]);
+$export($export.P + $export.F * !__webpack_require__(32)([].filter, true), 'Array', {
+  // 22.1.3.7 / 15.4.4.20 Array.prototype.filter(callbackfn [, thisArg])
+  filter: function filter(callbackfn /* , thisArg */) {
+    return $filter(this, callbackfn, arguments[1]);
   }
 });
 
@@ -44081,13 +44312,103 @@ $export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(31)($nati
 "use strict";
 
 var $export = __webpack_require__(1);
+var $some = __webpack_require__(37)(3);
+
+$export($export.P + $export.F * !__webpack_require__(32)([].some, true), 'Array', {
+  // 22.1.3.23 / 15.4.4.17 Array.prototype.some(callbackfn [, thisArg])
+  some: function some(callbackfn /* , thisArg */) {
+    return $some(this, callbackfn, arguments[1]);
+  }
+});
+
+
+/***/ }),
+/* 447 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(1);
+var $every = __webpack_require__(37)(4);
+
+$export($export.P + $export.F * !__webpack_require__(32)([].every, true), 'Array', {
+  // 22.1.3.5 / 15.4.4.16 Array.prototype.every(callbackfn [, thisArg])
+  every: function every(callbackfn /* , thisArg */) {
+    return $every(this, callbackfn, arguments[1]);
+  }
+});
+
+
+/***/ }),
+/* 448 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(1);
+var $reduce = __webpack_require__(177);
+
+$export($export.P + $export.F * !__webpack_require__(32)([].reduce, true), 'Array', {
+  // 22.1.3.18 / 15.4.4.21 Array.prototype.reduce(callbackfn [, initialValue])
+  reduce: function reduce(callbackfn /* , initialValue */) {
+    return $reduce(this, callbackfn, arguments.length, arguments[1], false);
+  }
+});
+
+
+/***/ }),
+/* 449 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(1);
+var $reduce = __webpack_require__(177);
+
+$export($export.P + $export.F * !__webpack_require__(32)([].reduceRight, true), 'Array', {
+  // 22.1.3.19 / 15.4.4.22 Array.prototype.reduceRight(callbackfn [, initialValue])
+  reduceRight: function reduceRight(callbackfn /* , initialValue */) {
+    return $reduce(this, callbackfn, arguments.length, arguments[1], true);
+  }
+});
+
+
+/***/ }),
+/* 450 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(1);
+var $indexOf = __webpack_require__(91)(false);
+var $native = [].indexOf;
+var NEGATIVE_ZERO = !!$native && 1 / [1].indexOf(1, -0) < 0;
+
+$export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(32)($native)), 'Array', {
+  // 22.1.3.11 / 15.4.4.14 Array.prototype.indexOf(searchElement [, fromIndex])
+  indexOf: function indexOf(searchElement /* , fromIndex = 0 */) {
+    return NEGATIVE_ZERO
+      // convert -0 to +0
+      ? $native.apply(this, arguments) || 0
+      : $indexOf(this, searchElement, arguments[1]);
+  }
+});
+
+
+/***/ }),
+/* 451 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var $export = __webpack_require__(1);
 var toIObject = __webpack_require__(25);
-var toInteger = __webpack_require__(35);
-var toLength = __webpack_require__(13);
+var toInteger = __webpack_require__(31);
+var toLength = __webpack_require__(11);
 var $native = [].lastIndexOf;
 var NEGATIVE_ZERO = !!$native && 1 / [1].lastIndexOf(1, -0) < 0;
 
-$export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(31)($native)), 'Array', {
+$export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(32)($native)), 'Array', {
   // 22.1.3.14 / 15.4.4.15 Array.prototype.lastIndexOf(searchElement [, fromIndex])
   lastIndexOf: function lastIndexOf(searchElement /* , fromIndex = @[*-1] */) {
     // convert -0 to +0
@@ -44104,31 +44425,31 @@ $export($export.P + $export.F * (NEGATIVE_ZERO || !__webpack_require__(31)($nati
 
 
 /***/ }),
-/* 447 */
+/* 452 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.3 Array.prototype.copyWithin(target, start, end = this.length)
 var $export = __webpack_require__(1);
 
-$export($export.P, 'Array', { copyWithin: __webpack_require__(174) });
+$export($export.P, 'Array', { copyWithin: __webpack_require__(178) });
 
 __webpack_require__(50)('copyWithin');
 
 
 /***/ }),
-/* 448 */
+/* 453 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 22.1.3.6 Array.prototype.fill(value, start = 0, end = this.length)
 var $export = __webpack_require__(1);
 
-$export($export.P, 'Array', { fill: __webpack_require__(130) });
+$export($export.P, 'Array', { fill: __webpack_require__(131) });
 
 __webpack_require__(50)('fill');
 
 
 /***/ }),
-/* 449 */
+/* 454 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44149,7 +44470,7 @@ __webpack_require__(50)(KEY);
 
 
 /***/ }),
-/* 450 */
+/* 455 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44170,22 +44491,22 @@ __webpack_require__(50)(KEY);
 
 
 /***/ }),
-/* 451 */
+/* 456 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(62)('Array');
 
 
 /***/ }),
-/* 452 */
+/* 457 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var global = __webpack_require__(5);
-var inheritIfRequired = __webpack_require__(117);
-var dP = __webpack_require__(12).f;
+var inheritIfRequired = __webpack_require__(119);
+var dP = __webpack_require__(13).f;
 var gOPN = __webpack_require__(61).f;
-var isRegExp = __webpack_require__(92);
-var $flags = __webpack_require__(94);
+var isRegExp = __webpack_require__(95);
+var $flags = __webpack_require__(82);
 var $RegExp = global.RegExp;
 var Base = $RegExp;
 var proto = $RegExp.prototype;
@@ -44194,7 +44515,7 @@ var re2 = /a/g;
 // "new" creates a new object, old webkit buggy here
 var CORRECT_NEW = new $RegExp(re1) !== re1;
 
-if (__webpack_require__(11) && (!CORRECT_NEW || __webpack_require__(7)(function () {
+if (__webpack_require__(12) && (!CORRECT_NEW || __webpack_require__(7)(function () {
   re2[__webpack_require__(10)('match')] = false;
   // RegExp constructor can alter flags and IsRegExp works correct with @@match
   return $RegExp(re1) != re1 || $RegExp(re2) == re2 || $RegExp(re1, 'i') != '/a/i';
@@ -44226,15 +44547,15 @@ __webpack_require__(62)('RegExp');
 
 
 /***/ }),
-/* 453 */
+/* 458 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-__webpack_require__(176);
+__webpack_require__(181);
 var anObject = __webpack_require__(4);
-var $flags = __webpack_require__(94);
-var DESCRIPTORS = __webpack_require__(11);
+var $flags = __webpack_require__(82);
+var DESCRIPTORS = __webpack_require__(12);
 var TO_STRING = 'toString';
 var $toString = /./[TO_STRING];
 
@@ -44258,68 +44579,241 @@ if (__webpack_require__(7)(function () { return $toString.call({ source: 'a', fl
 
 
 /***/ }),
-/* 454 */
+/* 459 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(4);
+var toLength = __webpack_require__(11);
+var advanceStringIndex = __webpack_require__(134);
+var regExpExec = __webpack_require__(97);
 
 // @@match logic
-__webpack_require__(95)('match', 1, function (defined, MATCH, $match) {
-  // 21.1.3.11 String.prototype.match(regexp)
-  return [function match(regexp) {
-    'use strict';
-    var O = defined(this);
-    var fn = regexp == undefined ? undefined : regexp[MATCH];
-    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
-  }, $match];
+__webpack_require__(98)('match', 1, function (defined, MATCH, $match, maybeCallNative) {
+  return [
+    // `String.prototype.match` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.match
+    function match(regexp) {
+      var O = defined(this);
+      var fn = regexp == undefined ? undefined : regexp[MATCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[MATCH](String(O));
+    },
+    // `RegExp.prototype[@@match]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@match
+    function (regexp) {
+      var res = maybeCallNative($match, regexp, this);
+      if (res.done) return res.value;
+      var rx = anObject(regexp);
+      var S = String(this);
+      if (!rx.global) return regExpExec(rx, S);
+      var fullUnicode = rx.unicode;
+      rx.lastIndex = 0;
+      var A = [];
+      var n = 0;
+      var result;
+      while ((result = regExpExec(rx, S)) !== null) {
+        var matchStr = String(result[0]);
+        A[n] = matchStr;
+        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+        n++;
+      }
+      return n === 0 ? null : A;
+    }
+  ];
 });
 
 
 /***/ }),
-/* 455 */
+/* 460 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(4);
+var toObject = __webpack_require__(14);
+var toLength = __webpack_require__(11);
+var toInteger = __webpack_require__(31);
+var advanceStringIndex = __webpack_require__(134);
+var regExpExec = __webpack_require__(97);
+var max = Math.max;
+var min = Math.min;
+var floor = Math.floor;
+var SUBSTITUTION_SYMBOLS = /\$([$&`']|\d\d?|<[^>]*>)/g;
+var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&`']|\d\d?)/g;
+
+var maybeToString = function (it) {
+  return it === undefined ? it : String(it);
+};
 
 // @@replace logic
-__webpack_require__(95)('replace', 2, function (defined, REPLACE, $replace) {
-  // 21.1.3.14 String.prototype.replace(searchValue, replaceValue)
-  return [function replace(searchValue, replaceValue) {
-    'use strict';
-    var O = defined(this);
-    var fn = searchValue == undefined ? undefined : searchValue[REPLACE];
-    return fn !== undefined
-      ? fn.call(searchValue, O, replaceValue)
-      : $replace.call(String(O), searchValue, replaceValue);
-  }, $replace];
+__webpack_require__(98)('replace', 2, function (defined, REPLACE, $replace, maybeCallNative) {
+  return [
+    // `String.prototype.replace` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.replace
+    function replace(searchValue, replaceValue) {
+      var O = defined(this);
+      var fn = searchValue == undefined ? undefined : searchValue[REPLACE];
+      return fn !== undefined
+        ? fn.call(searchValue, O, replaceValue)
+        : $replace.call(String(O), searchValue, replaceValue);
+    },
+    // `RegExp.prototype[@@replace]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@replace
+    function (regexp, replaceValue) {
+      var res = maybeCallNative($replace, regexp, this, replaceValue);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var functionalReplace = typeof replaceValue === 'function';
+      if (!functionalReplace) replaceValue = String(replaceValue);
+      var global = rx.global;
+      if (global) {
+        var fullUnicode = rx.unicode;
+        rx.lastIndex = 0;
+      }
+      var results = [];
+      while (true) {
+        var result = regExpExec(rx, S);
+        if (result === null) break;
+        results.push(result);
+        if (!global) break;
+        var matchStr = String(result[0]);
+        if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+      }
+      var accumulatedResult = '';
+      var nextSourcePosition = 0;
+      for (var i = 0; i < results.length; i++) {
+        result = results[i];
+        var matched = String(result[0]);
+        var position = max(min(toInteger(result.index), S.length), 0);
+        var captures = [];
+        // NOTE: This is equivalent to
+        //   captures = result.slice(1).map(maybeToString)
+        // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
+        // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
+        // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
+        for (var j = 1; j < result.length; j++) captures.push(maybeToString(result[j]));
+        var namedCaptures = result.groups;
+        if (functionalReplace) {
+          var replacerArgs = [matched].concat(captures, position, S);
+          if (namedCaptures !== undefined) replacerArgs.push(namedCaptures);
+          var replacement = String(replaceValue.apply(undefined, replacerArgs));
+        } else {
+          replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
+        }
+        if (position >= nextSourcePosition) {
+          accumulatedResult += S.slice(nextSourcePosition, position) + replacement;
+          nextSourcePosition = position + matched.length;
+        }
+      }
+      return accumulatedResult + S.slice(nextSourcePosition);
+    }
+  ];
+
+    // https://tc39.github.io/ecma262/#sec-getsubstitution
+  function getSubstitution(matched, str, position, captures, namedCaptures, replacement) {
+    var tailPos = position + matched.length;
+    var m = captures.length;
+    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
+    if (namedCaptures !== undefined) {
+      namedCaptures = toObject(namedCaptures);
+      symbols = SUBSTITUTION_SYMBOLS;
+    }
+    return $replace.call(replacement, symbols, function (match, ch) {
+      var capture;
+      switch (ch.charAt(0)) {
+        case '$': return '$';
+        case '&': return matched;
+        case '`': return str.slice(0, position);
+        case "'": return str.slice(tailPos);
+        case '<':
+          capture = namedCaptures[ch.slice(1, -1)];
+          break;
+        default: // \d\d?
+          var n = +ch;
+          if (n === 0) return ch;
+          if (n > m) {
+            var f = floor(n / 10);
+            if (f === 0) return ch;
+            if (f <= m) return captures[f - 1] === undefined ? ch.charAt(1) : captures[f - 1] + ch.charAt(1);
+            return ch;
+          }
+          capture = captures[n - 1];
+      }
+      return capture === undefined ? '' : capture;
+    });
+  }
 });
 
 
 /***/ }),
-/* 456 */
+/* 461 */
 /***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var anObject = __webpack_require__(4);
+var sameValue = __webpack_require__(167);
+var regExpExec = __webpack_require__(97);
 
 // @@search logic
-__webpack_require__(95)('search', 1, function (defined, SEARCH, $search) {
-  // 21.1.3.15 String.prototype.search(regexp)
-  return [function search(regexp) {
-    'use strict';
-    var O = defined(this);
-    var fn = regexp == undefined ? undefined : regexp[SEARCH];
-    return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
-  }, $search];
+__webpack_require__(98)('search', 1, function (defined, SEARCH, $search, maybeCallNative) {
+  return [
+    // `String.prototype.search` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.search
+    function search(regexp) {
+      var O = defined(this);
+      var fn = regexp == undefined ? undefined : regexp[SEARCH];
+      return fn !== undefined ? fn.call(regexp, O) : new RegExp(regexp)[SEARCH](String(O));
+    },
+    // `RegExp.prototype[@@search]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@search
+    function (regexp) {
+      var res = maybeCallNative($search, regexp, this);
+      if (res.done) return res.value;
+      var rx = anObject(regexp);
+      var S = String(this);
+      var previousLastIndex = rx.lastIndex;
+      if (!sameValue(previousLastIndex, 0)) rx.lastIndex = 0;
+      var result = regExpExec(rx, S);
+      if (!sameValue(rx.lastIndex, previousLastIndex)) rx.lastIndex = previousLastIndex;
+      return result === null ? -1 : result.index;
+    }
+  ];
 });
 
 
 /***/ }),
-/* 457 */
+/* 462 */
 /***/ (function(module, exports, __webpack_require__) {
 
+"use strict";
+
+
+var isRegExp = __webpack_require__(95);
+var anObject = __webpack_require__(4);
+var speciesConstructor = __webpack_require__(83);
+var advanceStringIndex = __webpack_require__(134);
+var toLength = __webpack_require__(11);
+var callRegExpExec = __webpack_require__(97);
+var regexpExec = __webpack_require__(133);
+var $min = Math.min;
+var $push = [].push;
+var $SPLIT = 'split';
+var LENGTH = 'length';
+var LAST_INDEX = 'lastIndex';
+
+// eslint-disable-next-line no-empty
+var SUPPORTS_Y = !!(function () { try { return new RegExp('x', 'y'); } catch (e) {} })();
+
 // @@split logic
-__webpack_require__(95)('split', 2, function (defined, SPLIT, $split) {
-  'use strict';
-  var isRegExp = __webpack_require__(92);
-  var _split = $split;
-  var $push = [].push;
-  var $SPLIT = 'split';
-  var LENGTH = 'length';
-  var LAST_INDEX = 'lastIndex';
+__webpack_require__(98)('split', 2, function (defined, SPLIT, $split, maybeCallNative) {
+  var internalSplit = $split;
   if (
     'abbc'[$SPLIT](/(b)*/)[1] == 'c' ||
     'test'[$SPLIT](/(?:)/, -1)[LENGTH] != 4 ||
@@ -44328,13 +44822,12 @@ __webpack_require__(95)('split', 2, function (defined, SPLIT, $split) {
     '.'[$SPLIT](/()()/)[LENGTH] > 1 ||
     ''[$SPLIT](/.?/)[LENGTH]
   ) {
-    var NPCG = /()??/.exec('')[1] === undefined; // nonparticipating capturing group
     // based on es5-shim implementation, need to rework it
-    $split = function (separator, limit) {
+    internalSplit = function (separator, limit) {
       var string = String(this);
       if (separator === undefined && limit === 0) return [];
       // If `separator` is not a regex, use native split
-      if (!isRegExp(separator)) return _split.call(string, separator, limit);
+      if (!isRegExp(separator)) return $split.call(string, separator, limit);
       var output = [];
       var flags = (separator.ignoreCase ? 'i' : '') +
                   (separator.multiline ? 'm' : '') +
@@ -44344,19 +44837,11 @@ __webpack_require__(95)('split', 2, function (defined, SPLIT, $split) {
       var splitLimit = limit === undefined ? 4294967295 : limit >>> 0;
       // Make `global` and avoid `lastIndex` issues by working with a copy
       var separatorCopy = new RegExp(separator.source, flags + 'g');
-      var separator2, match, lastIndex, lastLength, i;
-      // Doesn't need flags gy, but they don't hurt
-      if (!NPCG) separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
-      while (match = separatorCopy.exec(string)) {
-        // `separatorCopy.lastIndex` is not reliable cross-browser
-        lastIndex = match.index + match[0][LENGTH];
+      var match, lastIndex, lastLength;
+      while (match = regexpExec.call(separatorCopy, string)) {
+        lastIndex = separatorCopy[LAST_INDEX];
         if (lastIndex > lastLastIndex) {
           output.push(string.slice(lastLastIndex, match.index));
-          // Fix browsers whose `exec` methods don't consistently return `undefined` for NPCG
-          // eslint-disable-next-line no-loop-func
-          if (!NPCG && match[LENGTH] > 1) match[0].replace(separator2, function () {
-            for (i = 1; i < arguments[LENGTH] - 2; i++) if (arguments[i] === undefined) match[i] = undefined;
-          });
           if (match[LENGTH] > 1 && match.index < string[LENGTH]) $push.apply(output, match.slice(1));
           lastLength = match[0][LENGTH];
           lastLastIndex = lastIndex;
@@ -44371,21 +44856,77 @@ __webpack_require__(95)('split', 2, function (defined, SPLIT, $split) {
     };
   // Chakra, V8
   } else if ('0'[$SPLIT](undefined, 0)[LENGTH]) {
-    $split = function (separator, limit) {
-      return separator === undefined && limit === 0 ? [] : _split.call(this, separator, limit);
+    internalSplit = function (separator, limit) {
+      return separator === undefined && limit === 0 ? [] : $split.call(this, separator, limit);
     };
   }
-  // 21.1.3.17 String.prototype.split(separator, limit)
-  return [function split(separator, limit) {
-    var O = defined(this);
-    var fn = separator == undefined ? undefined : separator[SPLIT];
-    return fn !== undefined ? fn.call(separator, O, limit) : $split.call(String(O), separator, limit);
-  }, $split];
+
+  return [
+    // `String.prototype.split` method
+    // https://tc39.github.io/ecma262/#sec-string.prototype.split
+    function split(separator, limit) {
+      var O = defined(this);
+      var splitter = separator == undefined ? undefined : separator[SPLIT];
+      return splitter !== undefined
+        ? splitter.call(separator, O, limit)
+        : internalSplit.call(String(O), separator, limit);
+    },
+    // `RegExp.prototype[@@split]` method
+    // https://tc39.github.io/ecma262/#sec-regexp.prototype-@@split
+    //
+    // NOTE: This cannot be properly polyfilled in engines that don't support
+    // the 'y' flag.
+    function (regexp, limit) {
+      var res = maybeCallNative(internalSplit, regexp, this, limit, internalSplit !== $split);
+      if (res.done) return res.value;
+
+      var rx = anObject(regexp);
+      var S = String(this);
+      var C = speciesConstructor(rx, RegExp);
+
+      var unicodeMatching = rx.unicode;
+      var flags = (rx.ignoreCase ? 'i' : '') +
+                    (rx.multiline ? 'm' : '') +
+                    (rx.unicode ? 'u' : '') +
+                    (SUPPORTS_Y ? 'y' : 'g');
+
+      // ^(? + rx + ) is needed, in combination with some S slicing, to
+      // simulate the 'y' flag.
+      var splitter = new C(SUPPORTS_Y ? rx : '^(?:' + rx.source + ')', flags);
+      var lim = limit === undefined ? 0xffffffff : limit >>> 0;
+      if (lim === 0) return [];
+      if (S.length === 0) return callRegExpExec(splitter, S) === null ? [S] : [];
+      var p = 0;
+      var q = 0;
+      var A = [];
+      while (q < S.length) {
+        splitter.lastIndex = SUPPORTS_Y ? q : 0;
+        var z = callRegExpExec(splitter, SUPPORTS_Y ? S : S.slice(q));
+        var e;
+        if (
+          z === null ||
+          (e = $min(toLength(splitter.lastIndex + (SUPPORTS_Y ? 0 : q)), S.length)) === p
+        ) {
+          q = advanceStringIndex(S, q, unicodeMatching);
+        } else {
+          A.push(S.slice(p, q));
+          if (A.length === lim) return A;
+          for (var i = 1; i <= z.length - 1; i++) {
+            A.push(z[i]);
+            if (A.length === lim) return A;
+          }
+          q = p = e;
+        }
+      }
+      A.push(S.slice(p));
+      return A;
+    }
+  ];
 });
 
 
 /***/ }),
-/* 458 */
+/* 463 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44393,19 +44934,19 @@ __webpack_require__(95)('split', 2, function (defined, SPLIT, $split) {
 var LIBRARY = __webpack_require__(49);
 var global = __webpack_require__(5);
 var ctx = __webpack_require__(29);
-var classof = __webpack_require__(81);
+var classof = __webpack_require__(71);
 var $export = __webpack_require__(1);
 var isObject = __webpack_require__(8);
 var aFunction = __webpack_require__(18);
 var anInstance = __webpack_require__(63);
 var forOf = __webpack_require__(64);
-var speciesConstructor = __webpack_require__(96);
-var task = __webpack_require__(132).set;
-var microtask = __webpack_require__(133)();
-var newPromiseCapabilityModule = __webpack_require__(134);
-var perform = __webpack_require__(177);
-var userAgent = __webpack_require__(97);
-var promiseResolve = __webpack_require__(178);
+var speciesConstructor = __webpack_require__(83);
+var task = __webpack_require__(135).set;
+var microtask = __webpack_require__(136)();
+var newPromiseCapabilityModule = __webpack_require__(137);
+var perform = __webpack_require__(182);
+var userAgent = __webpack_require__(99);
+var promiseResolve = __webpack_require__(183);
 var PROMISE = 'Promise';
 var TypeError = global.TypeError;
 var process = global.process;
@@ -44631,7 +45172,7 @@ $export($export.S + $export.F * (LIBRARY || !USE_NATIVE), PROMISE, {
     return promiseResolve(LIBRARY && this === Wrapper ? $Promise : this, x);
   }
 });
-$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(93)(function (iter) {
+$export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(96)(function (iter) {
   $Promise.all(iter)['catch'](empty);
 })), PROMISE, {
   // 25.4.4.1 Promise.all(iterable)
@@ -44678,17 +45219,17 @@ $export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(93)(function
 
 
 /***/ }),
-/* 459 */
+/* 464 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var weak = __webpack_require__(183);
-var validate = __webpack_require__(73);
+var weak = __webpack_require__(188);
+var validate = __webpack_require__(74);
 var WEAK_SET = 'WeakSet';
 
 // 23.4 WeakSet Objects
-__webpack_require__(98)(WEAK_SET, function (get) {
+__webpack_require__(100)(WEAK_SET, function (get) {
   return function WeakSet() { return get(this, arguments.length > 0 ? arguments[0] : undefined); };
 }, {
   // 23.4.3.1 WeakSet.prototype.add(value)
@@ -44699,20 +45240,20 @@ __webpack_require__(98)(WEAK_SET, function (get) {
 
 
 /***/ }),
-/* 460 */
+/* 465 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
-var $typed = __webpack_require__(99);
-var buffer = __webpack_require__(135);
+var $typed = __webpack_require__(101);
+var buffer = __webpack_require__(138);
 var anObject = __webpack_require__(4);
 var toAbsoluteIndex = __webpack_require__(59);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 var isObject = __webpack_require__(8);
 var ArrayBuffer = __webpack_require__(5).ArrayBuffer;
-var speciesConstructor = __webpack_require__(96);
+var speciesConstructor = __webpack_require__(83);
 var $ArrayBuffer = buffer.ArrayBuffer;
 var $DataView = buffer.DataView;
 var $isView = $typed.ABV && ArrayBuffer.isView;
@@ -44752,17 +45293,17 @@ __webpack_require__(62)(ARRAY_BUFFER);
 
 
 /***/ }),
-/* 461 */
+/* 466 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-$export($export.G + $export.W + $export.F * !__webpack_require__(99).ABV, {
-  DataView: __webpack_require__(135).DataView
+$export($export.G + $export.W + $export.F * !__webpack_require__(101).ABV, {
+  DataView: __webpack_require__(138).DataView
 });
 
 
 /***/ }),
-/* 462 */
+/* 467 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Int8', 1, function (init) {
@@ -44773,7 +45314,7 @@ __webpack_require__(42)('Int8', 1, function (init) {
 
 
 /***/ }),
-/* 463 */
+/* 468 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Uint8', 1, function (init) {
@@ -44784,7 +45325,7 @@ __webpack_require__(42)('Uint8', 1, function (init) {
 
 
 /***/ }),
-/* 464 */
+/* 469 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Uint8', 1, function (init) {
@@ -44795,7 +45336,7 @@ __webpack_require__(42)('Uint8', 1, function (init) {
 
 
 /***/ }),
-/* 465 */
+/* 470 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Int16', 2, function (init) {
@@ -44806,7 +45347,7 @@ __webpack_require__(42)('Int16', 2, function (init) {
 
 
 /***/ }),
-/* 466 */
+/* 471 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Uint16', 2, function (init) {
@@ -44817,7 +45358,7 @@ __webpack_require__(42)('Uint16', 2, function (init) {
 
 
 /***/ }),
-/* 467 */
+/* 472 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Int32', 4, function (init) {
@@ -44828,7 +45369,7 @@ __webpack_require__(42)('Int32', 4, function (init) {
 
 
 /***/ }),
-/* 468 */
+/* 473 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Uint32', 4, function (init) {
@@ -44839,7 +45380,7 @@ __webpack_require__(42)('Uint32', 4, function (init) {
 
 
 /***/ }),
-/* 469 */
+/* 474 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Float32', 4, function (init) {
@@ -44850,7 +45391,7 @@ __webpack_require__(42)('Float32', 4, function (init) {
 
 
 /***/ }),
-/* 470 */
+/* 475 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(42)('Float64', 8, function (init) {
@@ -44861,7 +45402,7 @@ __webpack_require__(42)('Float64', 8, function (init) {
 
 
 /***/ }),
-/* 471 */
+/* 476 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.1 Reflect.apply(target, thisArgument, argumentsList)
@@ -44883,7 +45424,7 @@ $export($export.S + $export.F * !__webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 472 */
+/* 477 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.2 Reflect.construct(target, argumentsList [, newTarget])
@@ -44893,7 +45434,7 @@ var aFunction = __webpack_require__(18);
 var anObject = __webpack_require__(4);
 var isObject = __webpack_require__(8);
 var fails = __webpack_require__(7);
-var bind = __webpack_require__(164);
+var bind = __webpack_require__(168);
 var rConstruct = (__webpack_require__(5).Reflect || {}).construct;
 
 // MS Edge supports only 2 arguments and argumentsList argument is optional
@@ -44936,14 +45477,14 @@ $export($export.S + $export.F * (NEW_TARGET_BUG || ARGS_BUG), 'Reflect', {
 
 
 /***/ }),
-/* 473 */
+/* 478 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.3 Reflect.defineProperty(target, propertyKey, attributes)
-var dP = __webpack_require__(12);
+var dP = __webpack_require__(13);
 var $export = __webpack_require__(1);
 var anObject = __webpack_require__(4);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 
 // MS Edge has broken Reflect.defineProperty - throwing instead of returning false
 $export($export.S + $export.F * __webpack_require__(7)(function () {
@@ -44965,7 +45506,7 @@ $export($export.S + $export.F * __webpack_require__(7)(function () {
 
 
 /***/ }),
-/* 474 */
+/* 479 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.4 Reflect.deleteProperty(target, propertyKey)
@@ -44982,7 +45523,7 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 475 */
+/* 480 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44997,7 +45538,7 @@ var Enumerate = function (iterated) {
   var key;
   for (key in iterated) keys.push(key);
 };
-__webpack_require__(123)(Enumerate, 'Object', function () {
+__webpack_require__(124)(Enumerate, 'Object', function () {
   var that = this;
   var keys = that._k;
   var key;
@@ -45015,7 +45556,7 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 476 */
+/* 481 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.6 Reflect.get(target, propertyKey [, receiver])
@@ -45042,7 +45583,7 @@ $export($export.S, 'Reflect', { get: get });
 
 
 /***/ }),
-/* 477 */
+/* 482 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.7 Reflect.getOwnPropertyDescriptor(target, propertyKey)
@@ -45058,7 +45599,7 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 478 */
+/* 483 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.8 Reflect.getPrototypeOf(target)
@@ -45074,7 +45615,7 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 479 */
+/* 484 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.9 Reflect.has(target, propertyKey)
@@ -45088,7 +45629,7 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 480 */
+/* 485 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.10 Reflect.isExtensible(target)
@@ -45105,17 +45646,17 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 481 */
+/* 486 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.11 Reflect.ownKeys(target)
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Reflect', { ownKeys: __webpack_require__(185) });
+$export($export.S, 'Reflect', { ownKeys: __webpack_require__(190) });
 
 
 /***/ }),
-/* 482 */
+/* 487 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.12 Reflect.preventExtensions(target)
@@ -45137,11 +45678,11 @@ $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 483 */
+/* 488 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.13 Reflect.set(target, propertyKey, V [, receiver])
-var dP = __webpack_require__(12);
+var dP = __webpack_require__(13);
 var gOPD = __webpack_require__(26);
 var getPrototypeOf = __webpack_require__(27);
 var has = __webpack_require__(24);
@@ -45176,12 +45717,12 @@ $export($export.S, 'Reflect', { set: set });
 
 
 /***/ }),
-/* 484 */
+/* 489 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 26.1.14 Reflect.setPrototypeOf(target, proto)
 var $export = __webpack_require__(1);
-var setProto = __webpack_require__(115);
+var setProto = __webpack_require__(117);
 
 if (setProto) $export($export.S, 'Reflect', {
   setPrototypeOf: function setPrototypeOf(target, proto) {
@@ -45197,14 +45738,14 @@ if (setProto) $export($export.S, 'Reflect', {
 
 
 /***/ }),
-/* 485 */
+/* 490 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/tc39/Array.prototype.includes
 var $export = __webpack_require__(1);
-var $includes = __webpack_require__(89)(true);
+var $includes = __webpack_require__(91)(true);
 
 $export($export.P, 'Array', {
   includes: function includes(el /* , fromIndex = 0 */) {
@@ -45216,18 +45757,18 @@ __webpack_require__(50)('includes');
 
 
 /***/ }),
-/* 486 */
+/* 491 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatMap
 var $export = __webpack_require__(1);
-var flattenIntoArray = __webpack_require__(186);
+var flattenIntoArray = __webpack_require__(191);
 var toObject = __webpack_require__(14);
-var toLength = __webpack_require__(13);
+var toLength = __webpack_require__(11);
 var aFunction = __webpack_require__(18);
-var arraySpeciesCreate = __webpack_require__(129);
+var arraySpeciesCreate = __webpack_require__(130);
 
 $export($export.P, 'Array', {
   flatMap: function flatMap(callbackfn /* , thisArg */) {
@@ -45245,18 +45786,18 @@ __webpack_require__(50)('flatMap');
 
 
 /***/ }),
-/* 487 */
+/* 492 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatten
 var $export = __webpack_require__(1);
-var flattenIntoArray = __webpack_require__(186);
+var flattenIntoArray = __webpack_require__(191);
 var toObject = __webpack_require__(14);
-var toLength = __webpack_require__(13);
-var toInteger = __webpack_require__(35);
-var arraySpeciesCreate = __webpack_require__(129);
+var toLength = __webpack_require__(11);
+var toInteger = __webpack_require__(31);
+var arraySpeciesCreate = __webpack_require__(130);
 
 $export($export.P, 'Array', {
   flatten: function flatten(/* depthArg = 1 */) {
@@ -45273,14 +45814,14 @@ __webpack_require__(50)('flatten');
 
 
 /***/ }),
-/* 488 */
+/* 493 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/mathiasbynens/String.prototype.at
 var $export = __webpack_require__(1);
-var $at = __webpack_require__(121)(true);
+var $at = __webpack_require__(94)(true);
 
 $export($export.P, 'String', {
   at: function at(pos) {
@@ -45290,15 +45831,15 @@ $export($export.P, 'String', {
 
 
 /***/ }),
-/* 489 */
+/* 494 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/tc39/proposal-string-pad-start-end
 var $export = __webpack_require__(1);
-var $pad = __webpack_require__(187);
-var userAgent = __webpack_require__(97);
+var $pad = __webpack_require__(192);
+var userAgent = __webpack_require__(99);
 
 // https://github.com/zloirock/core-js/issues/280
 $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAgent), 'String', {
@@ -45309,15 +45850,15 @@ $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAge
 
 
 /***/ }),
-/* 490 */
+/* 495 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/tc39/proposal-string-pad-start-end
 var $export = __webpack_require__(1);
-var $pad = __webpack_require__(187);
-var userAgent = __webpack_require__(97);
+var $pad = __webpack_require__(192);
+var userAgent = __webpack_require__(99);
 
 // https://github.com/zloirock/core-js/issues/280
 $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAgent), 'String', {
@@ -45328,13 +45869,13 @@ $export($export.P + $export.F * /Version\/10\.\d+(\.\d+)? Safari\//.test(userAge
 
 
 /***/ }),
-/* 491 */
+/* 496 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-__webpack_require__(71)('trimLeft', function ($trim) {
+__webpack_require__(72)('trimLeft', function ($trim) {
   return function trimLeft() {
     return $trim(this, 1);
   };
@@ -45342,13 +45883,13 @@ __webpack_require__(71)('trimLeft', function ($trim) {
 
 
 /***/ }),
-/* 492 */
+/* 497 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
-__webpack_require__(71)('trimRight', function ($trim) {
+__webpack_require__(72)('trimRight', function ($trim) {
   return function trimRight() {
     return $trim(this, 2);
   };
@@ -45356,17 +45897,17 @@ __webpack_require__(71)('trimRight', function ($trim) {
 
 
 /***/ }),
-/* 493 */
+/* 498 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://tc39.github.io/String.prototype.matchAll/
 var $export = __webpack_require__(1);
-var defined = __webpack_require__(34);
-var toLength = __webpack_require__(13);
-var isRegExp = __webpack_require__(92);
-var getFlags = __webpack_require__(94);
+var defined = __webpack_require__(35);
+var toLength = __webpack_require__(11);
+var isRegExp = __webpack_require__(95);
+var getFlags = __webpack_require__(82);
 var RegExpProto = RegExp.prototype;
 
 var $RegExpStringIterator = function (regexp, string) {
@@ -45374,7 +45915,7 @@ var $RegExpStringIterator = function (regexp, string) {
   this._s = string;
 };
 
-__webpack_require__(123)($RegExpStringIterator, 'RegExp String', function next() {
+__webpack_require__(124)($RegExpStringIterator, 'RegExp String', function next() {
   var match = this._r.exec(this._s);
   return { value: match, done: match === null };
 });
@@ -45393,29 +45934,29 @@ $export($export.P, 'String', {
 
 
 /***/ }),
-/* 494 */
+/* 499 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(111)('asyncIterator');
+__webpack_require__(113)('asyncIterator');
 
 
 /***/ }),
-/* 495 */
+/* 500 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(111)('observable');
+__webpack_require__(113)('observable');
 
 
 /***/ }),
-/* 496 */
+/* 501 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-getownpropertydescriptors
 var $export = __webpack_require__(1);
-var ownKeys = __webpack_require__(185);
+var ownKeys = __webpack_require__(190);
 var toIObject = __webpack_require__(25);
 var gOPD = __webpack_require__(26);
-var createProperty = __webpack_require__(127);
+var createProperty = __webpack_require__(128);
 
 $export($export.S, 'Object', {
   getOwnPropertyDescriptors: function getOwnPropertyDescriptors(object) {
@@ -45435,12 +45976,12 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 497 */
+/* 502 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
 var $export = __webpack_require__(1);
-var $values = __webpack_require__(188)(false);
+var $values = __webpack_require__(193)(false);
 
 $export($export.S, 'Object', {
   values: function values(it) {
@@ -45450,12 +45991,12 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 498 */
+/* 503 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-object-values-entries
 var $export = __webpack_require__(1);
-var $entries = __webpack_require__(188)(true);
+var $entries = __webpack_require__(193)(true);
 
 $export($export.S, 'Object', {
   entries: function entries(it) {
@@ -45465,7 +46006,7 @@ $export($export.S, 'Object', {
 
 
 /***/ }),
-/* 499 */
+/* 504 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45473,10 +46014,10 @@ $export($export.S, 'Object', {
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
 var aFunction = __webpack_require__(18);
-var $defineProperty = __webpack_require__(12);
+var $defineProperty = __webpack_require__(13);
 
 // B.2.2.2 Object.prototype.__defineGetter__(P, getter)
-__webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object', {
+__webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object', {
   __defineGetter__: function __defineGetter__(P, getter) {
     $defineProperty.f(toObject(this), P, { get: aFunction(getter), enumerable: true, configurable: true });
   }
@@ -45484,7 +46025,7 @@ __webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object
 
 
 /***/ }),
-/* 500 */
+/* 505 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45492,10 +46033,10 @@ __webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
 var aFunction = __webpack_require__(18);
-var $defineProperty = __webpack_require__(12);
+var $defineProperty = __webpack_require__(13);
 
 // B.2.2.3 Object.prototype.__defineSetter__(P, setter)
-__webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object', {
+__webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object', {
   __defineSetter__: function __defineSetter__(P, setter) {
     $defineProperty.f(toObject(this), P, { set: aFunction(setter), enumerable: true, configurable: true });
   }
@@ -45503,19 +46044,19 @@ __webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object
 
 
 /***/ }),
-/* 501 */
+/* 506 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 var getPrototypeOf = __webpack_require__(27);
 var getOwnPropertyDescriptor = __webpack_require__(26).f;
 
 // B.2.2.4 Object.prototype.__lookupGetter__(P)
-__webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object', {
+__webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object', {
   __lookupGetter__: function __lookupGetter__(P) {
     var O = toObject(this);
     var K = toPrimitive(P, true);
@@ -45528,19 +46069,19 @@ __webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object
 
 
 /***/ }),
-/* 502 */
+/* 507 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $export = __webpack_require__(1);
 var toObject = __webpack_require__(14);
-var toPrimitive = __webpack_require__(33);
+var toPrimitive = __webpack_require__(34);
 var getPrototypeOf = __webpack_require__(27);
 var getOwnPropertyDescriptor = __webpack_require__(26).f;
 
 // B.2.2.5 Object.prototype.__lookupSetter__(P)
-__webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object', {
+__webpack_require__(12) && $export($export.P + __webpack_require__(102), 'Object', {
   __lookupSetter__: function __lookupSetter__(P) {
     var O = toObject(this);
     var K = toPrimitive(P, true);
@@ -45553,91 +46094,91 @@ __webpack_require__(11) && $export($export.P + __webpack_require__(100), 'Object
 
 
 /***/ }),
-/* 503 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export = __webpack_require__(1);
-
-$export($export.P + $export.R, 'Map', { toJSON: __webpack_require__(189)('Map') });
-
-
-/***/ }),
-/* 504 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://github.com/DavidBruant/Map-Set.prototype.toJSON
-var $export = __webpack_require__(1);
-
-$export($export.P + $export.R, 'Set', { toJSON: __webpack_require__(189)('Set') });
-
-
-/***/ }),
-/* 505 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
-__webpack_require__(101)('Map');
-
-
-/***/ }),
-/* 506 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://tc39.github.io/proposal-setmap-offrom/#sec-set.of
-__webpack_require__(101)('Set');
-
-
-/***/ }),
-/* 507 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.of
-__webpack_require__(101)('WeakMap');
-
-
-/***/ }),
 /* 508 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.of
-__webpack_require__(101)('WeakSet');
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
+var $export = __webpack_require__(1);
+
+$export($export.P + $export.R, 'Map', { toJSON: __webpack_require__(194)('Map') });
 
 
 /***/ }),
 /* 509 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
-__webpack_require__(102)('Map');
+// https://github.com/DavidBruant/Map-Set.prototype.toJSON
+var $export = __webpack_require__(1);
+
+$export($export.P + $export.R, 'Set', { toJSON: __webpack_require__(194)('Set') });
 
 
 /***/ }),
 /* 510 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// https://tc39.github.io/proposal-setmap-offrom/#sec-set.from
-__webpack_require__(102)('Set');
+// https://tc39.github.io/proposal-setmap-offrom/#sec-map.of
+__webpack_require__(103)('Map');
 
 
 /***/ }),
 /* 511 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.from
-__webpack_require__(102)('WeakMap');
+// https://tc39.github.io/proposal-setmap-offrom/#sec-set.of
+__webpack_require__(103)('Set');
 
 
 /***/ }),
 /* 512 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.from
-__webpack_require__(102)('WeakSet');
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.of
+__webpack_require__(103)('WeakMap');
 
 
 /***/ }),
 /* 513 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.of
+__webpack_require__(103)('WeakSet');
+
+
+/***/ }),
+/* 514 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-map.from
+__webpack_require__(104)('Map');
+
+
+/***/ }),
+/* 515 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-set.from
+__webpack_require__(104)('Set');
+
+
+/***/ }),
+/* 516 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakmap.from
+__webpack_require__(104)('WeakMap');
+
+
+/***/ }),
+/* 517 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// https://tc39.github.io/proposal-setmap-offrom/#sec-weakset.from
+__webpack_require__(104)('WeakSet');
+
+
+/***/ }),
+/* 518 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-global
@@ -45647,7 +46188,7 @@ $export($export.G, { global: __webpack_require__(5) });
 
 
 /***/ }),
-/* 514 */
+/* 519 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/tc39/proposal-global
@@ -45657,7 +46198,7 @@ $export($export.S, 'System', { global: __webpack_require__(5) });
 
 
 /***/ }),
-/* 515 */
+/* 520 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/ljharb/proposal-is-error
@@ -45672,7 +46213,7 @@ $export($export.S, 'Error', {
 
 
 /***/ }),
-/* 516 */
+/* 521 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -45686,7 +46227,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 517 */
+/* 522 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -45696,7 +46237,7 @@ $export($export.S, 'Math', { DEG_PER_RAD: Math.PI / 180 });
 
 
 /***/ }),
-/* 518 */
+/* 523 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -45711,13 +46252,13 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 519 */
+/* 524 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
 var $export = __webpack_require__(1);
-var scale = __webpack_require__(191);
-var fround = __webpack_require__(171);
+var scale = __webpack_require__(196);
+var fround = __webpack_require__(175);
 
 $export($export.S, 'Math', {
   fscale: function fscale(x, inLow, inHigh, outLow, outHigh) {
@@ -45727,7 +46268,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 520 */
+/* 525 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
@@ -45744,7 +46285,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 521 */
+/* 526 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
@@ -45761,7 +46302,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 522 */
+/* 527 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
@@ -45783,7 +46324,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 523 */
+/* 528 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -45793,7 +46334,7 @@ $export($export.S, 'Math', { RAD_PER_DEG: 180 / Math.PI });
 
 
 /***/ }),
-/* 524 */
+/* 529 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
@@ -45808,17 +46349,17 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 525 */
+/* 530 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://rwaldron.github.io/proposal-math-extensions/
 var $export = __webpack_require__(1);
 
-$export($export.S, 'Math', { scale: __webpack_require__(191) });
+$export($export.S, 'Math', { scale: __webpack_require__(196) });
 
 
 /***/ }),
-/* 526 */
+/* 531 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://gist.github.com/BrendanEich/4294d5c212a6d2254703
@@ -45840,7 +46381,7 @@ $export($export.S, 'Math', {
 
 
 /***/ }),
-/* 527 */
+/* 532 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // http://jfbastien.github.io/papers/Math.signbit.html
@@ -45853,7 +46394,7 @@ $export($export.S, 'Math', { signbit: function signbit(x) {
 
 
 /***/ }),
-/* 528 */
+/* 533 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -45862,8 +46403,8 @@ $export($export.S, 'Math', { signbit: function signbit(x) {
 var $export = __webpack_require__(1);
 var core = __webpack_require__(28);
 var global = __webpack_require__(5);
-var speciesConstructor = __webpack_require__(96);
-var promiseResolve = __webpack_require__(178);
+var speciesConstructor = __webpack_require__(83);
+var promiseResolve = __webpack_require__(183);
 
 $export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
   var C = speciesConstructor(this, core.Promise || global.Promise);
@@ -45880,15 +46421,15 @@ $export($export.P + $export.R, 'Promise', { 'finally': function (onFinally) {
 
 
 /***/ }),
-/* 529 */
+/* 534 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // https://github.com/tc39/proposal-promise-try
 var $export = __webpack_require__(1);
-var newPromiseCapability = __webpack_require__(134);
-var perform = __webpack_require__(177);
+var newPromiseCapability = __webpack_require__(137);
+var perform = __webpack_require__(182);
 
 $export($export.S, 'Promise', { 'try': function (callbackfn) {
   var promiseCapability = newPromiseCapability.f(this);
@@ -45899,7 +46440,7 @@ $export($export.S, 'Promise', { 'try': function (callbackfn) {
 
 
 /***/ }),
-/* 530 */
+/* 535 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -45913,7 +46454,7 @@ metadata.exp({ defineMetadata: function defineMetadata(metadataKey, metadataValu
 
 
 /***/ }),
-/* 531 */
+/* 536 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -45934,7 +46475,7 @@ metadata.exp({ deleteMetadata: function deleteMetadata(metadataKey, target /* , 
 
 
 /***/ }),
-/* 532 */
+/* 537 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -45957,11 +46498,11 @@ metadata.exp({ getMetadata: function getMetadata(metadataKey, target /* , target
 
 
 /***/ }),
-/* 533 */
+/* 538 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Set = __webpack_require__(181);
-var from = __webpack_require__(190);
+var Set = __webpack_require__(186);
+var from = __webpack_require__(195);
 var metadata = __webpack_require__(43);
 var anObject = __webpack_require__(4);
 var getPrototypeOf = __webpack_require__(27);
@@ -45982,7 +46523,7 @@ metadata.exp({ getMetadataKeys: function getMetadataKeys(target /* , targetKey *
 
 
 /***/ }),
-/* 534 */
+/* 539 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -45997,7 +46538,7 @@ metadata.exp({ getOwnMetadata: function getOwnMetadata(metadataKey, target /* , 
 
 
 /***/ }),
-/* 535 */
+/* 540 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -46011,7 +46552,7 @@ metadata.exp({ getOwnMetadataKeys: function getOwnMetadataKeys(target /* , targe
 
 
 /***/ }),
-/* 536 */
+/* 541 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -46033,7 +46574,7 @@ metadata.exp({ hasMetadata: function hasMetadata(metadataKey, target /* , target
 
 
 /***/ }),
-/* 537 */
+/* 542 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var metadata = __webpack_require__(43);
@@ -46048,7 +46589,7 @@ metadata.exp({ hasOwnMetadata: function hasOwnMetadata(metadataKey, target /* , 
 
 
 /***/ }),
-/* 538 */
+/* 543 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $metadata = __webpack_require__(43);
@@ -46069,12 +46610,12 @@ $metadata.exp({ metadata: function metadata(metadataKey, metadataValue) {
 
 
 /***/ }),
-/* 539 */
+/* 544 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/rwaldron/tc39-notes/blob/master/es6/2014-09/sept-25.md#510-globalasap-for-enqueuing-a-microtask
 var $export = __webpack_require__(1);
-var microtask = __webpack_require__(133)();
+var microtask = __webpack_require__(136)();
 var process = __webpack_require__(5).process;
 var isNode = __webpack_require__(30)(process) == 'process';
 
@@ -46087,7 +46628,7 @@ $export($export.G, {
 
 
 /***/ }),
-/* 540 */
+/* 545 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46096,7 +46637,7 @@ $export($export.G, {
 var $export = __webpack_require__(1);
 var global = __webpack_require__(5);
 var core = __webpack_require__(28);
-var microtask = __webpack_require__(133)();
+var microtask = __webpack_require__(136)();
 var OBSERVABLE = __webpack_require__(10)('observable');
 var aFunction = __webpack_require__(18);
 var anObject = __webpack_require__(4);
@@ -46293,13 +46834,13 @@ __webpack_require__(62)('Observable');
 
 
 /***/ }),
-/* 541 */
+/* 546 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // ie9- setTimeout & setInterval additional parameters fix
 var global = __webpack_require__(5);
 var $export = __webpack_require__(1);
-var userAgent = __webpack_require__(97);
+var userAgent = __webpack_require__(99);
 var slice = [].slice;
 var MSIE = /MSIE .\./.test(userAgent); // <- dirty ie9- check
 var wrap = function (set) {
@@ -46319,11 +46860,11 @@ $export($export.G + $export.B + $export.F * MSIE, {
 
 
 /***/ }),
-/* 542 */
+/* 547 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(1);
-var $task = __webpack_require__(132);
+var $task = __webpack_require__(135);
 $export($export.G + $export.B, {
   setImmediate: $task.set,
   clearImmediate: $task.clear
@@ -46331,15 +46872,15 @@ $export($export.G + $export.B, {
 
 
 /***/ }),
-/* 543 */
+/* 548 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var $iterators = __webpack_require__(131);
+var $iterators = __webpack_require__(132);
 var getKeys = __webpack_require__(58);
 var redefine = __webpack_require__(20);
 var global = __webpack_require__(5);
 var hide = __webpack_require__(19);
-var Iterators = __webpack_require__(72);
+var Iterators = __webpack_require__(73);
 var wks = __webpack_require__(10);
 var ITERATOR = wks('iterator');
 var TO_STRING_TAG = wks('toStringTag');
@@ -46395,7 +46936,7 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 
 
 /***/ }),
-/* 544 */
+/* 549 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -47138,26 +47679,26 @@ for (var collections = getKeys(DOMIterables), i = 0; i < collections.length; i++
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 545 */
+/* 550 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(546);
+__webpack_require__(551);
 module.exports = __webpack_require__(28).RegExp.escape;
 
 
 /***/ }),
-/* 546 */
+/* 551 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // https://github.com/benjamingr/RexExp.escape
 var $export = __webpack_require__(1);
-var $re = __webpack_require__(547)(/[\\^$*+?.()|[\]{}]/g, '\\$&');
+var $re = __webpack_require__(552)(/[\\^$*+?.()|[\]{}]/g, '\\$&');
 
 $export($export.S, 'RegExp', { escape: function escape(it) { return $re(it); } });
 
 
 /***/ }),
-/* 547 */
+/* 552 */
 /***/ (function(module, exports) {
 
 module.exports = function (regExp, replace) {
@@ -47171,7 +47712,7 @@ module.exports = function (regExp, replace) {
 
 
 /***/ }),
-/* 548 */
+/* 553 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -47207,38 +47748,38 @@ var react_dom = __webpack_require__(38);
 var react_dom_default = /*#__PURE__*/__webpack_require__.n(react_dom);
 
 // EXTERNAL MODULE: ./node_modules/react-hot-loader/index.js
-var react_hot_loader = __webpack_require__(553);
+var react_hot_loader = __webpack_require__(558);
 var react_hot_loader_default = /*#__PURE__*/__webpack_require__.n(react_hot_loader);
 
 // EXTERNAL MODULE: ./node_modules/smoothscroll-polyfill/dist/smoothscroll.js
-var smoothscroll = __webpack_require__(558);
+var smoothscroll = __webpack_require__(563);
 var smoothscroll_default = /*#__PURE__*/__webpack_require__.n(smoothscroll);
 
 // EXTERNAL MODULE: ./assets/styles/bootstrap.css
-var bootstrap = __webpack_require__(559);
+var bootstrap = __webpack_require__(564);
 var bootstrap_default = /*#__PURE__*/__webpack_require__.n(bootstrap);
 
 // EXTERNAL MODULE: ./assets/styles/layout.css
-var layout = __webpack_require__(560);
+var layout = __webpack_require__(565);
 var layout_default = /*#__PURE__*/__webpack_require__.n(layout);
 
 // EXTERNAL MODULE: ./assets/styles/topbar.css
-var topbar = __webpack_require__(561);
+var topbar = __webpack_require__(566);
 var topbar_default = /*#__PURE__*/__webpack_require__.n(topbar);
 
 // EXTERNAL MODULE: ./assets/styles/sidebar.css
-var sidebar = __webpack_require__(562);
+var sidebar = __webpack_require__(567);
 var sidebar_default = /*#__PURE__*/__webpack_require__.n(sidebar);
 
 // EXTERNAL MODULE: ./assets/styles/leaflet_1.0.0.css
-var leaflet_1_0_0 = __webpack_require__(563);
+var leaflet_1_0_0 = __webpack_require__(568);
 var leaflet_1_0_0_default = /*#__PURE__*/__webpack_require__.n(leaflet_1_0_0);
 
 // CONCATENATED MODULE: ./assets/img/symbols.txt
 /* harmony default export */ var symbols = ("<svg version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\r\n    <defs>\r\n        <symbol id=\"icon-glass\" viewBox=\"0 0 32 32\">\r\n            <title>glass</title>\r\n            <path d=\"M30.339 3.321q0 0.625-0.768 1.393l-11.286 11.286v13.714h5.714q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-16q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h5.714v-13.714l-11.286-11.286q-0.768-0.768-0.768-1.393 0-0.411 0.321-0.652t0.679-0.313 0.768-0.071h25.143q0.411 0 0.768 0.071t0.679 0.313 0.321 0.652z\"></path>\r\n        </symbol>\r\n       <symbol id=\"icon-old\" viewBox=\"0 0 32 32\">\r\n            <title>old</title>\r\n            <path d=\"M26.153 15.134l-1.265-5.025c0 0-0.077-0.406-0.462-0.635s-4.276-2.544-4.276-2.544c-0.167-0.1-0.348-0.158-0.529-0.181-0.037-0.008-0.074-0.012-0.113-0.012h-0.598c0.004-0.010 0.009-0.019 0.019-0.030 0.478-0.549 0.769-1.266 0.769-2.051 0-1.057-0.525-1.99-1.328-2.555-0.059-0.041-0.097-0.13-0.089-0.202 0.007-0.060 0.010-0.121 0.010-0.182 0-0.949-0.769-1.717-1.717-1.717s-1.717 0.769-1.717 1.717c0 0.062 0.003 0.122 0.010 0.182 0.008 0.071-0.030 0.16-0.089 0.202-0.803 0.565-1.328 1.499-1.328 2.555 0 0.785 0.29 1.502 0.769 2.051 0.010 0.011 0.014 0.021 0.019 0.030h-0.826c-0.1 0-0.192 0.029-0.273 0.075-0.087 0.030-0.171 0.069-0.253 0.117l-2.974 1.77c0 0-1.157 0.676-1.394 0.829-0.274 0.178-0.347 0.486-0.347 0.486l-1.027 4.079c-0.661 0.3-0.964 0.8-0.964 0.8-0.378 0.589-0.374 1.289-0.374 1.289v15.034c0 0 0.018 0.599 0.656 0.599s0.686-0.55 0.686-0.55 0.010-14.715 0.025-14.892c0-0.005 0-0.011 0.001-0.016 0.178 0.208 0.417 0.365 0.703 0.437 0.112 0.028 0.225 0.042 0.336 0.042 0.593 0 1.13-0.389 1.307-0.977 0.052 0.144 0.087 0.378 0.153 0.736 0.098 0.53 1.287 0.708 1.257-0.225s-0.363-1.315-0.785-1.879c-0.055-0.073-0.125-0.141-0.206-0.202-0.005-0.004-0.009-0.010-0.014-0.014l0.709-2.817 0.090-0.054 1.627-0.968-2.222 13.649c0 0.303 0.245 0.548 0.548 0.548h1.963v5.997c0 0.212 0.052 0.409 0.137 0.588 0.22 0.461 0.687 0.781 1.232 0.781 0.619 0 1.135-0.413 1.305-0.976 0.038-0.125 0.064-0.256 0.064-0.394v-5.997h2.225v5.997c0 0.016 0.004 0.030 0.005 0.046 0.025 0.735 0.624 1.324 1.365 1.324 0.462 0 0.867-0.23 1.116-0.58 0.159-0.223 0.254-0.495 0.254-0.79v-5.997h1.974c0.303 0 0.548-0.245 0.548-0.548l-2.292-13.717 1.833 1.091 1.094 4.344c0.096 0.38 0.342 0.681 0.658 0.858 0.201 0.113 0.43 0.177 0.668 0.177 0.111 0 0.223-0.013 0.336-0.042 0.732-0.185 1.177-0.929 0.992-1.663z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-baby\" viewBox=\"0 0 32 32\">\r\n            <title>baby</title>\r\n            <path d=\"M14.537 0.313c-1.875 0.512-3.325 1.837-3.925 3.587-0.2 0.613-0.238 0.65-0.95 0.913-1.912 0.688-2.975 1.95-3.125 3.7-0.063 0.675-0.050 0.75 0.313 1.1 0.362 0.363 0.438 0.387 1.338 0.387 1.325 0 1.488-0.175 1.6-1.7 0.050-0.625 0.15-1.438 0.225-1.813l0.15-0.675 0.225 1.038c0.275 1.275 0.725 2.138 1.55 2.963 3.55 3.537 9.638 1.075 9.7-3.938v-0.688l0.188 0.5c0.1 0.275 0.262 1.175 0.35 2 0.075 0.825 0.2 1.588 0.25 1.675 0.163 0.25 0.887 0.512 1.462 0.512 1.15 0 1.712-0.613 1.575-1.75-0.2-1.688-1.25-2.838-3.25-3.563-0.688-0.25-0.762-0.313-0.962-0.837-1-2.625-3.975-4.15-6.713-3.413z\"></path>\r\n            <path d=\"M7.313 14.813c-1.575 1.413-3.050 2.75-3.275 2.988-0.563 0.613-0.663 1.375-0.275 2.163 0.4 0.8 0.962 1.163 1.8 1.163 0.813 0 1.088-0.175 3.162-2.025 1.338-1.212 1.525-1.337 1.525-1.063 0 0.175-0.787 1.663-1.762 3.363-0.975 1.663-1.8 3.113-1.825 3.188-0.050 0.125 0.35 0.163 1.763 0.163h1.825v2.712c0 2.387 0.037 2.788 0.238 3.238 0.475 1.063 1.7 1.45 2.75 0.9 0.95-0.5 1.012-0.725 1.012-3.938v-2.788h3.5v2.788c0 3.212 0.063 3.438 1.012 3.938 1.050 0.55 2.275 0.163 2.75-0.9 0.2-0.45 0.238-0.85 0.238-3.238v-2.712h1.825c1.425 0 1.813-0.038 1.762-0.163-0.025-0.087-0.85-1.525-1.825-3.212-0.962-1.675-1.762-3.188-1.762-3.35 0-0.25 0.212-0.1 1.538 1.075 2.063 1.85 2.337 2.025 3.15 2.025 0.825 0 1.387-0.363 1.788-1.125 0.325-0.625 0.313-1.425-0.038-1.95-0.1-0.15-1.587-1.525-3.313-3.037l-3.125-2.763-5.775 0.012h-5.787l-2.875 2.55z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cross-face\" viewBox=\"0 0 32 32\">\r\n            <title>cross-face</title>\r\n            <path d=\"M14.438 0.037c-3.931 0.469-7.075 1.969-9.756 4.644-2.469 2.475-3.956 5.394-4.537 8.913-0.163 0.988-0.163 3.825 0 4.813 0.581 3.519 2.069 6.438 4.537 8.913 2.475 2.469 5.394 3.956 8.912 4.538 0.988 0.163 3.825 0.163 4.813 0 3.519-0.581 6.438-2.069 8.913-4.538 2.469-2.475 3.956-5.394 4.538-8.913 0.163-0.988 0.163-3.825 0-4.813-0.581-3.519-2.069-6.438-4.538-8.912-2.431-2.425-5.306-3.913-8.725-4.506-0.6-0.1-1.075-0.131-2.344-0.144-0.875-0.013-1.694-0.006-1.813 0.006zM6.875 7.412c0.088 0.056 0.737 0.681 1.456 1.394l1.294 1.287 1.3-1.287c0.713-0.713 1.363-1.338 1.45-1.394 0.256-0.169 0.544-0.131 0.787 0.112 0.169 0.169 0.213 0.263 0.213 0.456 0 0.344-0.144 0.525-1.556 1.925l-1.194 1.181 1.375 1.387c1.375 1.381 1.412 1.431 1.375 1.806-0.031 0.369-0.481 0.65-0.831 0.537-0.131-0.044-0.675-0.544-1.544-1.412l-1.338-1.344-1.381 1.369c-1.481 1.469-1.575 1.531-1.994 1.356-0.381-0.156-0.531-0.637-0.313-0.975 0.056-0.088 0.681-0.738 1.394-1.45l1.288-1.3-1.394-1.394c-1.35-1.356-1.388-1.4-1.388-1.65 0-0.537 0.575-0.888 1-0.606zM19.625 7.412c0.087 0.056 0.738 0.681 1.45 1.394l1.3 1.281 1.356-1.35c0.75-0.738 1.431-1.369 1.506-1.394 0.438-0.131 0.887 0.213 0.887 0.675 0 0.25-0.031 0.287-1.387 1.65l-1.394 1.394 1.288 1.3c0.712 0.713 1.337 1.363 1.394 1.45 0.219 0.338 0.069 0.819-0.313 0.975-0.419 0.175-0.512 0.113-1.994-1.356l-1.381-1.369-1.337 1.344c-0.869 0.869-1.413 1.369-1.544 1.412-0.35 0.113-0.8-0.169-0.831-0.537-0.038-0.375 0-0.425 1.375-1.806l1.375-1.387-1.194-1.181c-1.413-1.4-1.556-1.581-1.556-1.925 0-0.194 0.044-0.287 0.212-0.456 0.244-0.244 0.531-0.281 0.788-0.112zM23.525 19.025c0.281 0.119 0.413 0.325 0.413 0.637 0 0.219-0.031 0.294-0.219 0.456-0.125 0.106-0.281 0.194-0.344 0.194-0.125 0-0.125 0.056-0.125 2.637 0 2.962-0.025 3.194-0.413 3.981-0.269 0.544-0.881 1.2-1.4 1.488-0.681 0.387-1.113 0.481-2.156 0.481-0.788 0-1.006-0.019-1.375-0.131-1.238-0.387-2.206-1.419-2.5-2.663-0.075-0.306-0.094-0.931-0.094-3.094v-2.7h-4.094c-4.444 0-4.344 0.006-4.531-0.337-0.106-0.206-0.106-0.494 0-0.688 0.194-0.363-0.256-0.35 8.55-0.35 6.769 0 8.113 0.012 8.287 0.087z\"></path>\r\n            <path d=\"M16.688 22.875c0 1.65 0.025 2.675 0.069 2.887 0.131 0.619 0.438 1.063 0.962 1.394 0.469 0.3 0.775 0.356 1.694 0.331 0.719-0.019 0.844-0.038 1.156-0.181 0.669-0.313 1.119-0.925 1.244-1.688 0.031-0.225 0.063-1.469 0.063-2.856v-2.45h-2.019l0.038 0.231c0.025 0.131 0.056 0.9 0.081 1.706 0.038 1.25 0.025 1.5-0.056 1.7-0.225 0.525-0.875 0.594-1.2 0.131-0.063-0.087-0.1-0.456-0.125-1.244-0.019-0.613-0.050-1.438-0.069-1.825l-0.038-0.7h-1.8v2.563z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-urban\" viewBox=\"0 0 32 32\">\r\n            <title>urban</title>\r\n            <path d=\"M7.68 10.112v7.808h-1.92v-3.2h-1.28v3.2h-1.92v11.52h26.88v-19.84h-7.040v-2.398l-1.918-0.632-0.002-2.006v-2.004h-1.28v3.576l-0.64-0.212-0.64-0.214v-3.15h-1.28v1.36c0 0.748-0.002 1.36-0.006 1.36-0.002 0-1.976-0.658-4.384-1.46-2.41-0.804-4.422-1.474-4.474-1.49l-0.096-0.028v7.81zM15.124 6.152l5.996 1.998v20.010h-3.2v-1.994l0.184-0.066c0.836-0.29 1.44-0.942 1.67-1.8 0.068-0.256 0.088-0.774 0.038-1.060-0.184-1.052-1.034-1.906-2.082-2.088-0.234-0.042-0.666-0.042-0.9 0-1.042 0.18-1.898 1.034-2.080 2.076-0.038 0.226-0.040 0.674 0 0.894 0.158 0.91 0.81 1.666 1.706 1.978l0.184 0.066v1.994h-3.2v-10.24h-4.48v-13.818l0.086 0.026c0.046 0.014 2.782 0.924 6.078 2.024zM26.88 13.12v0.96h-2.56v-1.92h2.56v0.96zM26.88 16.32v0.96h-2.56v-1.92h2.56v0.96zM26.88 19.52v0.96h-2.56v-1.92h2.56v0.96zM7.040 21.12v0.64h-1.92v-1.28h1.92v0.64zM10.88 21.12v0.64h-1.92v-1.28h1.92v0.64zM26.88 22.72v0.96h-2.56v-1.92h2.56v0.96zM7.040 23.68v0.64h-1.92v-1.28h1.92v0.64zM10.88 23.68v0.64h-1.92v-1.28h1.92v0.64zM26.88 25.92v0.96h-2.56v-1.92h2.56v0.96zM7.040 26.24v0.64h-1.92v-1.28h1.92v0.64zM10.88 26.24v0.64h-1.92v-1.28h1.92v0.64z\"></path>\r\n            <path d=\"M10.24 8.32v0.64h3.84v-1.28h-3.84v0.64z\"></path>\r\n            <path d=\"M10.24 10.88v0.64h9.6v-1.28h-9.6v0.64z\"></path>\r\n            <path d=\"M10.24 13.44v0.64h5.12v-1.28h-5.12v0.64z\"></path>\r\n            <path d=\"M16.63 13.438c-0.008 0.354-0.012 0.646-0.008 0.65s0.73 0.012 1.61 0.020l1.602 0.012 0.016-0.642c0.008-0.352 0.010-0.644 0.006-0.648-0.004-0.006-0.73-0.016-1.61-0.022l-1.602-0.014-0.014 0.644z\"></path>\r\n            <path d=\"M10.24 16v0.64h9.6v-1.28h-9.6v0.64z\"></path>\r\n            <path d=\"M14.72 18.56v0.64h5.12v-1.28h-5.12v0.64z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-people-flow\" viewBox=\"0 0 35 32\">\r\n            <title>people-flow</title>\r\n            <path d=\"M25.007 0.406c-1.436 0.718-2.139 2.014-2.029 3.731 0.078 1.28 0.687 2.295 1.748 2.966 0.687 0.421 0.905 0.468 2.045 0.468s1.358-0.047 2.045-0.468c0.468-0.297 0.937-0.765 1.233-1.233 0.421-0.687 0.468-0.905 0.468-2.045s-0.047-1.358-0.468-2.045c-0.702-1.124-1.701-1.686-3.106-1.748-0.952-0.047-1.218 0-1.936 0.375z\"></path>\r\n            <path d=\"M11.707 2.732c0 0.047 0.187 0.421 0.421 0.843 0.25 0.421 0.406 0.812 0.359 0.843-0.047 0.047-2.716 1.608-5.932 3.465s-5.916 3.434-5.994 3.512c-0.062 0.062 0.312 0.874 0.843 1.78l0.968 1.655 0.89-0.499c0.484-0.281 3.216-1.858 6.088-3.512s5.229-2.997 5.245-2.981c0.016 0.031 0.25 0.421 0.515 0.874 0.25 0.468 0.499 0.78 0.531 0.702 0.187-0.343 1.405-5.214 1.327-5.292-0.078-0.094-4.995-1.467-5.198-1.467-0.031 0-0.062 0.031-0.062 0.078z\"></path>\r\n            <path d=\"M20.324 8.445c-0.39 0.203-0.859 0.609-1.093 0.968l-0.421 0.64-0.094 12.738h2.981l0.047-4.324c0.016-2.388 0.047-0.593 0.078 3.996l0.031 8.32 0.609 0.609c0.562 0.562 0.671 0.609 1.499 0.609s0.937-0.047 1.499-0.609l0.609-0.609v-5.245c0-5.136 0-5.245 0.312-5.245s0.312 0.109 0.312 5.245v5.245l0.609 0.609c0.562 0.562 0.671 0.609 1.499 0.609s0.937-0.047 1.499-0.609l0.609-0.609v-8.289c0-8.18 0-8.289 0.312-8.289s0.312 0.109 0.312 4.215v4.215h3.122v-6.119c0-5.916-0.016-6.135-0.328-6.806-0.203-0.406-0.593-0.843-0.968-1.093l-0.64-0.421-5.854-0.047c-5.744-0.031-5.885-0.031-6.541 0.297z\"></path>\r\n            <path d=\"M12.8 21.229v10.459h4.527v-20.917h-4.527v10.459z\"></path>\r\n            <path d=\"M6.244 23.259v8.429h5.151v-16.859h-5.151v8.429z\"></path>\r\n            <path d=\"M0 25.99v5.698h5.151v-11.395h-5.151v5.698z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-carpark\" viewBox=\"0 0 32 32\">\r\n            <title>carpark</title>\r\n            <path d=\"M18.481 0.469c-0.363 0.137-0.706 0.438-0.869 0.769l-0.144 0.294v5.656c0 4.6 0.019 5.7 0.087 5.894 0.119 0.344 0.425 0.662 0.788 0.831l0.313 0.15h6.025c4.55 0 6.087-0.019 6.281-0.075 0.163-0.050 0.375-0.194 0.575-0.394 0.269-0.262 0.337-0.381 0.394-0.662 0.056-0.25 0.069-1.819 0.056-5.9l-0.019-5.563-0.156-0.281c-0.181-0.325-0.594-0.656-0.925-0.75-0.15-0.037-2.269-0.063-6.2-0.056-4.956 0-6.006 0.019-6.206 0.088zM25.744 3.656c0.813 0.194 1.438 0.706 1.694 1.394 0.113 0.294 0.131 0.456 0.113 0.956-0.019 0.519-0.050 0.65-0.225 1.006-0.113 0.225-0.319 0.519-0.456 0.644-0.55 0.494-1.637 0.819-2.6 0.769l-0.456-0.019v2.719h-1.625v-7.438l0.15-0.038c0.637-0.156 2.731-0.15 3.406 0.006z\"></path>\r\n            <path d=\"M23.956 4.794c-0.144 0.025-0.144 0.037-0.144 1.175 0 1.294-0.031 1.219 0.544 1.219 0.969 0 1.575-0.469 1.581-1.231 0-0.594-0.25-0.956-0.775-1.112-0.288-0.088-0.887-0.112-1.206-0.050z\"></path>\r\n            <path d=\"M7.356 5.2c-0.15 0.162-1.419 2.294-3.15 5.3l-2.9 5.031-0.294 0.131c-0.325 0.144-0.7 0.525-0.869 0.881-0.106 0.219-0.113 0.556-0.113 4.706v4.469l0.138 0.288c0.181 0.363 0.481 0.669 0.8 0.813 0.206 0.094 0.413 0.119 1.169 0.119h0.919l0.038 4.25 0.206 0.2 0.2 0.206h2.938l0.2-0.206 0.206-0.2 0.037-4.25h15.181v2c0 2.175 0.019 2.294 0.344 2.55 0.169 0.131 0.231 0.137 1.544 0.137 1.531 0 1.644-0.025 1.825-0.4 0.087-0.181 0.1-0.494 0.1-2.25v-2.038h0.925c1.063 0 1.269-0.063 1.65-0.488 0.488-0.538 0.456-0.2 0.456-5.2 0-4.994 0.031-4.663-0.45-5.194-0.462-0.512 0.869-0.456-12.963-0.494l-12.356-0.031 2.513-4.338c1.587-2.744 2.575-4.388 2.688-4.469 0.169-0.125 0.262-0.131 3.369-0.162 3.469-0.031 3.513-0.037 3.756-0.381 0.125-0.181 0.131-0.631 0.006-0.869-0.2-0.381-0.1-0.375-4.162-0.375h-3.7l-0.25 0.263zM6.444 18.788c1.231 0.356 2.044 1.644 1.813 2.875-0.231 1.256-1.275 2.15-2.519 2.15-1.894 0-3.156-1.981-2.331-3.663 0.556-1.131 1.844-1.712 3.037-1.363zM24.006 18.788c1.231 0.356 2.044 1.644 1.813 2.875-0.394 2.137-2.975 2.894-4.444 1.3-0.506-0.55-0.756-1.387-0.631-2.094 0.269-1.544 1.788-2.512 3.262-2.081z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-monument\" viewBox=\"0 0 32 32\">\r\n            <title>monument</title>\r\n            <path d=\"M22.182 9.839l-3.86-5.553h-4.742l-3.858 5.553v1.806h12.46v-1.806zM13.634 5.072h4.62v0.585h-4.62v-0.585zM12.884 6.333h6.12v0.59h-6.12v-0.59zM11.912 7.598h8.062v0.59h-8.062v-0.59zM20.961 9.453h-10.032v-0.59h10.032v0.59zM31.023 25.323c-0.016-0.044-0.031-0.099-0.050-0.147-0.097-0.299-0.19-0.299-0.239-0.435-0.045-0.15 0.239-0.834-0.045-0.931-0.295-0.1-0.295 0.047-0.689 0.047-0.39 0-0.295-0.295-0.341-0.688-0.050-0.388-0.492-0.145-0.633-0.19-0.15-0.050-0.1-1.567-0.247-1.903-0.068-0.162-0.253-0.128-0.437-0.056v-6.004h-4.105v2.344h-0.245v-2.197h-15.98v2.198h-0.243v-2.345h-4.105v6.002c-0.183-0.072-0.373-0.102-0.44 0.056-0.146 0.341-0.096 1.853-0.244 1.901-0.147 0.047-0.587-0.197-0.637 0.19-0.046 0.393 0.050 0.688-0.341 0.688s-0.39-0.147-0.683-0.046c-0.293 0.099 0 0.78-0.050 0.931-0.047 0.141-0.147 0.141-0.243 0.433-0.020 0.053-0.034 0.103-0.052 0.147h-0.976v2.393h32v-2.393h-0.978v0.004zM9.283 25.323h-1.515v-5.568h1.515v5.568zM13.337 25.323h-2.441v-5.568h2.443l-0.002 5.568zM17.197 25.323h-2.247v-5.568h2.247v5.568zM21.105 25.323h-2.301v-5.568h2.301v5.568zM24.233 25.323h-1.517v-5.568h1.517v5.568zM24.283 11.984h-16.612v2.734h16.612v-2.734z\"></path>\r\n            </symbol>\r\n        <symbol id=\"icon-demographics\" viewBox=\"0 0 32 32\">\r\n            <title>demographics</title>\r\n            <path d=\"M5.507 3.193c-0.781 0.164-1.436 0.692-1.779 1.414-0.164 0.342-0.194 0.521-0.186 1.012 0 0.737 0.194 1.176 0.737 1.712 0.484 0.476 0.99 0.67 1.712 0.655 0.64-0.007 1.094-0.194 1.57-0.633 0.514-0.476 0.774-1.064 0.774-1.779 0-0.484-0.037-0.633-0.231-1.020-0.491-0.982-1.607-1.57-2.597-1.362z\"></path>\r\n            <path d=\"M15.479 3.193c-0.752 0.156-1.444 0.707-1.771 1.414-0.156 0.327-0.194 0.536-0.201 0.975 0 0.491 0.030 0.625 0.246 1.064 0.439 0.893 1.168 1.34 2.188 1.34 0.685 0 1.183-0.208 1.674-0.692 0.461-0.461 0.64-0.893 0.677-1.615 0.030-0.536 0.007-0.655-0.179-1.057-0.447-1.012-1.615-1.637-2.634-1.429z\"></path>\r\n            <path d=\"M25.451 3.193c-0.744 0.149-1.407 0.677-1.764 1.399-0.164 0.342-0.201 0.513-0.201 0.99 0 1.012 0.514 1.793 1.436 2.218 0.595 0.275 1.399 0.268 1.972-0.015 0.499-0.246 0.945-0.685 1.176-1.146 0.238-0.484 0.275-1.354 0.089-1.89-0.194-0.551-0.893-1.258-1.407-1.421-0.476-0.149-0.975-0.201-1.302-0.134z\"></path>\r\n            <path d=\"M2.962 8.819c-0.439 0.298-0.655 0.737-0.729 1.503-0.037 0.357-0.119 1.087-0.186 1.622-0.060 0.528-0.127 1.116-0.149 1.302-0.082 0.804-0.275 2.463-0.335 2.962-0.171 1.258-0.037 1.771 0.528 2.151 0.231 0.149 0.424 0.208 0.766 0.231l0.461 0.030 0.171 1.503c0.097 0.819 0.201 1.727 0.238 2.017 0.030 0.283 0.112 0.975 0.179 1.526s0.149 1.273 0.186 1.6c0.335 3.021 0.335 3.029 0.677 3.356 0.216 0.208 0.253 0.216 1.057 0.238 0.685 0.022 0.878 0.007 1.079-0.104 0.469-0.253 0.513-0.417 0.759-2.597 0.045-0.409 0.134-1.131 0.186-1.6 0.060-0.469 0.141-1.191 0.186-1.6 0.052-0.409 0.134-1.116 0.186-1.563 0.060-0.454 0.141-1.154 0.186-1.563 0.149-1.34 0.104-1.228 0.514-1.228 0.201 0 0.476-0.052 0.625-0.112 0.327-0.134 0.781-0.655 0.841-0.975 0.022-0.127-0.007-0.685-0.074-1.228-0.067-0.551-0.156-1.317-0.201-1.704-0.037-0.387-0.119-1.109-0.179-1.6s-0.156-1.399-0.223-2.009c-0.156-1.563-0.231-1.756-0.819-2.151l-0.283-0.194h-5.373l-0.275 0.186z\"></path>\r\n            <path d=\"M12.934 8.819c-0.439 0.298-0.655 0.744-0.729 1.503-0.037 0.357-0.097 0.938-0.141 1.287-0.037 0.35-0.112 0.967-0.156 1.377-0.149 1.362-0.305 2.672-0.372 3.222-0.171 1.258-0.037 1.771 0.528 2.151 0.231 0.149 0.424 0.208 0.774 0.231l0.461 0.030 0.045 0.461c0.030 0.246 0.097 0.871 0.164 1.384 0.119 1.020 0.298 2.508 0.409 3.498 0.037 0.35 0.127 1.049 0.186 1.563s0.149 1.265 0.194 1.674c0.097 0.938 0.164 1.154 0.447 1.421 0.216 0.208 0.246 0.216 1.094 0.238 0.766 0.015 0.9 0 1.109-0.127 0.424-0.268 0.469-0.439 0.729-2.873 0.022-0.208 0.089-0.759 0.149-1.228s0.141-1.161 0.179-1.526c0.045-0.372 0.134-1.109 0.194-1.637 0.38-3.274 0.275-2.865 0.707-2.865 0.447 0 0.819-0.156 1.116-0.461 0.38-0.402 0.417-0.662 0.275-1.831-0.074-0.558-0.179-1.488-0.238-2.061s-0.141-1.31-0.186-1.637c-0.037-0.327-0.127-1.109-0.194-1.741-0.127-1.198-0.208-1.481-0.491-1.793-0.417-0.461-0.327-0.447-3.274-0.447h-2.701l-0.275 0.186z\"></path>\r\n            <path d=\"M22.869 8.848c-0.417 0.298-0.618 0.752-0.692 1.548-0.037 0.357-0.097 0.953-0.141 1.325-0.045 0.365-0.112 0.953-0.156 1.302-0.156 1.429-0.305 2.746-0.372 3.26-0.134 0.975-0.104 1.287 0.156 1.674 0.275 0.424 0.707 0.647 1.235 0.647h0.372l0.045 0.424c0.030 0.238 0.104 0.848 0.164 1.362s0.141 1.213 0.186 1.563c0.060 0.603 0.156 1.384 0.409 3.498 0.060 0.514 0.149 1.265 0.186 1.674 0.104 0.997 0.179 1.235 0.447 1.488l0.231 0.223h0.96c0.848 0 0.967-0.015 1.116-0.149 0.26-0.238 0.372-0.514 0.447-1.168 0.045-0.342 0.104-0.886 0.149-1.213 0.037-0.327 0.127-1.049 0.186-1.6 0.067-0.551 0.164-1.421 0.231-1.935 0.060-0.514 0.141-1.213 0.179-1.563 0.045-0.35 0.127-1.049 0.186-1.548 0.060-0.506 0.112-0.953 0.112-0.99s0.164-0.067 0.365-0.067c0.201 0 0.476-0.052 0.625-0.112 0.342-0.141 0.781-0.662 0.841-0.997 0.030-0.141 0-0.714-0.067-1.273-0.156-1.273-0.417-3.49-0.499-4.316-0.238-2.322-0.26-2.426-0.662-2.85-0.394-0.424-0.372-0.424-3.267-0.424h-2.672l-0.298 0.216z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-music\" viewBox=\"0 0 32 32\">\r\n            <title>music</title>\r\n            <path d=\"M27.429 4v20q0 0.893-0.607 1.589t-1.536 1.080-1.848 0.571-1.723 0.188-1.723-0.188-1.848-0.571-1.536-1.080-0.607-1.589 0.607-1.589 1.536-1.080 1.848-0.571 1.723-0.188q1.875 0 3.429 0.696v-9.589l-13.714 4.232v12.661q0 0.893-0.607 1.589t-1.536 1.080-1.848 0.571-1.723 0.188-1.723-0.188-1.848-0.571-1.536-1.080-0.607-1.589 0.607-1.589 1.536-1.080 1.848-0.571 1.723-0.188q1.875 0 3.429 0.696v-17.268q0-0.554 0.339-1.009t0.875-0.634l14.857-4.571q0.214-0.071 0.5-0.071 0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-3D\" viewBox=\"0 0 32 32\">\r\n            <title>3D</title>\r\n            <path d=\"M31.261 7.263l-6.147-2.019c0 0-0.080-0.029-0.187-0.027s-0.193 0.041-0.193 0.041l-3.979 1.622v-2.668c0-0.238-0.153-0.449-0.379-0.524l-11.143-3.66c0 0-0.102-0.042-0.248-0.022s-0.248 0.099-0.248 0.099l-8.144 5.808c-0.145 0.103-0.232 0.27-0.232 0.449v20.621c0 0.202 0.11 0.387 0.287 0.483l8.147 4.466c0 0 0.078 0.046 0.199 0.063s0.199-0.013 0.199-0.013l22.027-5.559c0.244-0.062 0.416-0.283 0.416-0.535l0.001-18.1c0.001-0.239-0.152-0.45-0.378-0.525zM3.628 24.968c0 0.060-0.029 0.116-0.078 0.151-0.031 0.021-0.069 0.033-0.106 0.033-0.021 0-0.042-0.003-0.063-0.012l-1.605-0.59c-0.072-0.027-0.121-0.095-0.121-0.172v-3.113c0-0.054 0.025-0.106 0.067-0.142s0.098-0.049 0.151-0.040l1.604 0.301c0.087 0.016 0.15 0.093 0.15 0.181v3.402zM3.628 19.865c0 0.052-0.022 0.101-0.061 0.136-0.034 0.031-0.078 0.047-0.124 0.047-0.006 0-0.012 0-0.018-0.001l-1.604-0.156c-0.095-0.009-0.166-0.088-0.166-0.183v-3.112c0-0.096 0.074-0.176 0.169-0.184l1.605-0.132c0.052-0.005 0.101 0.013 0.14 0.048s0.059 0.084 0.059 0.135v3.402zM3.628 14.762c0 0.089-0.065 0.166-0.153 0.181l-1.604 0.276c-0.011 0.002-0.022 0.003-0.031 0.003-0.043 0-0.085-0.014-0.118-0.043-0.042-0.035-0.066-0.086-0.066-0.14v-3.113c0-0.078 0.050-0.148 0.123-0.174l1.605-0.566c0.057-0.020 0.119-0.012 0.167 0.023s0.078 0.091 0.078 0.15v3.402zM3.628 9.659c0 0.073-0.042 0.139-0.11 0.168l-1.604 0.711c-0.024 0.011-0.050 0.016-0.074 0.016-0.035 0-0.071-0.010-0.101-0.030-0.052-0.034-0.084-0.092-0.084-0.154v-3.112c0-0.064 0.033-0.123 0.087-0.157l1.605-1c0.057-0.035 0.128-0.037 0.187-0.005s0.095 0.094 0.095 0.161v3.402zM7.936 26.553c0 0.060-0.029 0.116-0.078 0.15-0.032 0.022-0.069 0.033-0.106 0.033-0.021 0-0.042-0.003-0.063-0.012l-2.375-0.873c-0.073-0.027-0.121-0.095-0.121-0.172v-3.751c0-0.054 0.025-0.106 0.067-0.142s0.098-0.049 0.152-0.040l2.374 0.446c0.087 0.016 0.15 0.092 0.15 0.18v4.179h-0.001zM7.936 20.285c0 0.052-0.022 0.101-0.061 0.136-0.034 0.031-0.078 0.048-0.124 0.048-0.006 0-0.012 0-0.018-0.001l-2.374-0.232c-0.095-0.009-0.166-0.088-0.166-0.183v-3.751c0-0.096 0.074-0.176 0.169-0.182l2.374-0.196c0.052-0.005 0.102 0.012 0.14 0.048s0.059 0.084 0.059 0.135v4.179zM7.936 14.018c0 0.090-0.065 0.166-0.153 0.182l-2.374 0.41c-0.011 0.001-0.021 0.003-0.031 0.003-0.043 0-0.085-0.015-0.119-0.044-0.042-0.035-0.065-0.086-0.065-0.14v-3.751c0-0.078 0.049-0.147 0.123-0.173l2.375-0.838c0.056-0.020 0.119-0.012 0.168 0.023s0.078 0.091 0.078 0.15v4.178h0.001zM7.936 7.751c0 0.073-0.044 0.139-0.11 0.168l-2.374 1.052c-0.024 0.011-0.050 0.016-0.075 0.016-0.035 0-0.070-0.010-0.1-0.030-0.052-0.034-0.084-0.092-0.084-0.155v-3.75c0-0.064 0.033-0.123 0.087-0.156l2.375-1.48c0.056-0.035 0.128-0.037 0.187-0.005s0.095 0.095 0.095 0.161v4.178zM14.268 30.179c0 0.085-0.057 0.158-0.139 0.18l-3.78 0.953c-0.015 0.004-0.030 0.005-0.044 0.005-0.041 0-0.080-0.014-0.113-0.039-0.045-0.035-0.071-0.088-0.071-0.145v-8.621c0-0.096 0.073-0.175 0.168-0.184l3.779-0.326c0.051-0.005 0.102 0.013 0.14 0.048s0.060 0.084 0.060 0.135v7.994h-0.001zM14.268 20.187c0 0.099-0.078 0.179-0.176 0.184l-3.779 0.17c-0.003 0.001-0.005 0.001-0.008 0.001-0.048 0-0.093-0.018-0.128-0.051-0.036-0.035-0.056-0.082-0.056-0.133v-4.31c0-0.050 0.020-0.098 0.056-0.132s0.084-0.053 0.134-0.051l3.78 0.144c0.098 0.003 0.177 0.085 0.177 0.184v3.996h0.001zM14.268 14.192c0 0.052-0.022 0.1-0.059 0.136-0.035 0.031-0.079 0.048-0.125 0.048-0.005 0-0.010 0-0.014-0.001l-3.779-0.3c-0.096-0.008-0.17-0.087-0.17-0.184v-4.31c0-0.054 0.024-0.105 0.065-0.14s0.096-0.050 0.149-0.042l3.779 0.614c0.089 0.014 0.155 0.091 0.155 0.182v3.997h-0.001zM14.268 8.197c0 0.055-0.025 0.108-0.068 0.143-0.033 0.027-0.074 0.042-0.116 0.042-0.012 0-0.025-0.001-0.037-0.004l-3.78-0.771c-0.085-0.018-0.147-0.093-0.147-0.18v-4.311c0-0.057 0.027-0.112 0.073-0.146s0.106-0.046 0.161-0.030l3.779 1.085c0.079 0.022 0.133 0.095 0.133 0.177v3.997h0.001zM19 28.984c0 0.084-0.057 0.158-0.138 0.178l-3.042 0.769c-0.015 0.003-0.030 0.005-0.045 0.005-0.040 0-0.080-0.014-0.113-0.039-0.044-0.036-0.071-0.089-0.071-0.146v-7.712c0-0.096 0.073-0.176 0.168-0.184l3.049-0.264c0.052-0.005 0.102 0.013 0.14 0.047 0.039 0.035 0.060 0.084 0.060 0.136l-0.008 7.209zM19.007 19.974c0 0.098-0.077 0.18-0.176 0.183l-3.049 0.138c-0.002 0-0.005 0-0.008 0-0.047 0-0.093-0.018-0.127-0.051-0.037-0.035-0.057-0.082-0.057-0.133v-3.856c0-0.050 0.020-0.098 0.056-0.132 0.036-0.035 0.084-0.054 0.134-0.051l3.049 0.116c0.099 0.004 0.177 0.085 0.177 0.183v3.604zM19.007 14.568c0 0.052-0.021 0.101-0.059 0.136-0.035 0.031-0.078 0.048-0.125 0.048-0.005 0-0.010 0-0.014-0.001l-3.049-0.243c-0.095-0.008-0.17-0.087-0.17-0.182v-3.857c0-0.054 0.024-0.105 0.065-0.14s0.095-0.050 0.148-0.042l3.049 0.496c0.089 0.014 0.155 0.092 0.155 0.182v3.604h0zM19.007 9.163c0 0.055-0.024 0.108-0.068 0.143-0.033 0.027-0.073 0.042-0.116 0.042-0.012 0-0.025-0.001-0.038-0.003l-3.048-0.622c-0.086-0.017-0.147-0.093-0.147-0.18v-3.856c0-0.058 0.027-0.112 0.074-0.147s0.106-0.046 0.161-0.030l3.049 0.875c0.078 0.022 0.133 0.095 0.133 0.177v3.603h0.001zM24.044 21.34c0 0.096-0.073 0.175-0.169 0.184l-2.363 0.204c-0.006 0.001-0.011 0.001-0.016 0.001-0.045 0-0.090-0.017-0.124-0.048-0.039-0.035-0.060-0.084-0.060-0.135v-5.073c0-0.050 0.020-0.098 0.056-0.132s0.085-0.053 0.136-0.051l2.363 0.090c0.099 0.004 0.177 0.085 0.177 0.183v4.777zM24.044 14.969c0 0.051-0.021 0.101-0.060 0.135-0.033 0.031-0.078 0.048-0.124 0.048-0.005 0-0.011 0-0.014 0l-2.364-0.188c-0.096-0.007-0.169-0.087-0.169-0.183v-5.072c0-0.055 0.025-0.108 0.068-0.143s0.099-0.048 0.153-0.037l2.363 0.482c0.087 0.017 0.148 0.093 0.148 0.18v4.778h-0.001zM28.538 8.4c0-0.058 0.027-0.112 0.073-0.147 0.045-0.035 0.105-0.046 0.161-0.030l1.616 0.464c0.080 0.022 0.134 0.095 0.134 0.176v2.649c0 0.055-0.025 0.108-0.068 0.143-0.033 0.027-0.074 0.041-0.117 0.041-0.012 0-0.024-0.001-0.036-0.004l-1.617-0.33c-0.085-0.017-0.146-0.093-0.146-0.18v-2.782h0.001zM28.538 12.574c0-0.054 0.022-0.106 0.064-0.14s0.096-0.050 0.149-0.041l1.617 0.263c0.088 0.014 0.154 0.091 0.154 0.182v2.648c0 0.051-0.021 0.099-0.060 0.135-0.035 0.031-0.078 0.048-0.125 0.048-0.004 0-0.010 0-0.014-0.001l-1.616-0.128c-0.096-0.008-0.169-0.088-0.169-0.184v-2.782zM28.538 16.747c0-0.050 0.020-0.098 0.056-0.132s0.084-0.053 0.134-0.051l1.617 0.062c0.098 0.003 0.177 0.084 0.177 0.184v2.648c0 0.099-0.078 0.179-0.176 0.184l-1.617 0.072c-0.003 0.001-0.006 0.001-0.008 0.001-0.048 0-0.093-0.018-0.128-0.051-0.036-0.035-0.056-0.082-0.056-0.133v-2.784h0.001zM28.034 26.705c0 0.084-0.057 0.157-0.138 0.178l-1.886 0.476c-0.014 0.004-0.031 0.006-0.045 0.006-0.041 0-0.081-0.014-0.113-0.040-0.046-0.035-0.071-0.088-0.071-0.145v-6.022c0-0.096 0.071-0.175 0.168-0.184l1.886-0.163c0.052-0.006 0.102 0.012 0.14 0.048 0.039 0.035 0.060 0.084 0.060 0.136v5.71zM28.034 19.568c0 0.099-0.077 0.18-0.176 0.184l-1.886 0.085c-0.003 0-0.005 0-0.008 0-0.048 0-0.093-0.018-0.128-0.051-0.036-0.035-0.056-0.082-0.056-0.133v-3.011c0-0.050 0.020-0.098 0.056-0.132 0.036-0.035 0.084-0.054 0.134-0.052l1.886 0.071c0.099 0.004 0.177 0.085 0.177 0.184v2.853h0.001zM28.034 15.286c0 0.051-0.021 0.1-0.059 0.135-0.035 0.031-0.080 0.049-0.125 0.049-0.005 0-0.011-0.001-0.014-0.001l-1.886-0.15c-0.096-0.007-0.169-0.087-0.169-0.184v-3.009c0-0.054 0.022-0.105 0.064-0.14s0.096-0.050 0.149-0.041l1.886 0.306c0.089 0.014 0.154 0.091 0.154 0.182v2.853h-0.001zM28.034 11.005c0 0.055-0.025 0.108-0.068 0.142-0.033 0.027-0.074 0.042-0.116 0.042-0.012 0-0.025-0.001-0.038-0.004l-1.885-0.384c-0.085-0.018-0.146-0.093-0.146-0.181v-3.011c0-0.058 0.027-0.112 0.073-0.147 0.045-0.035 0.105-0.046 0.161-0.030l1.885 0.541c0.078 0.022 0.133 0.095 0.133 0.177v2.855h0.001zM30.438 26.241l-1.671 0.422c-0.015 0.003-0.031 0.005-0.045 0.005-0.042 0-0.081-0.014-0.113-0.039-0.045-0.035-0.071-0.089-0.071-0.146v-5.565c0-0.095 0.071-0.175 0.167-0.183l1.616-0.14c0.052-0.005 0.102 0.013 0.14 0.046 0.039 0.035 0.060 0.083 0.061 0.134l0.056 5.283c-0 0.085-0.057 0.161-0.14 0.181z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-buffer\" viewBox=\"0 0 32 32\">\r\n        <title>buffer</title>\r\n            <path d=\"M19.875 1.85c-1.369 0.25-2.394 0.75-3.288 1.6-1.131 1.075-1.75 2.438-1.819 3.981-0.063 1.394 0.219 2.544 0.975 4.025 0.538 1.044 0.794 1.444 2.031 3.137 2.025 2.781 2.756 3.2 3.962 2.269 0.488-0.381 1-1 2.119-2.6 1.163-1.656 1.331-1.906 1.75-2.7 1.481-2.775 1.425-5.319-0.169-7.431-0.762-1.006-1.819-1.725-3.113-2.106-0.444-0.131-0.7-0.169-1.419-0.181-0.481-0.012-0.944-0.012-1.031 0.006zM21.512 4.681c1.594 0.438 2.6 2.119 2.206 3.662-0.156 0.613-0.4 1.031-0.837 1.475-1.594 1.594-4.169 1.050-5.069-1.069-0.2-0.475-0.244-1.338-0.094-1.844 0.5-1.719 2.144-2.688 3.794-2.225z\"></path>\r\n            <path d=\"M3.656 8.887c-0.294 0.156-0.462 0.387-0.531 0.7-0.050 0.225-0.063 2.831-0.050 8.881 0.019 8.431 0.019 8.569 0.144 8.775 0.069 0.119 0.194 0.262 0.281 0.325 0.119 0.087 7.463 2.619 7.6 2.619 0.012 0 0.025-4.294 0.025-9.55v-9.544l-3.394-1.144c-3.438-1.156-3.756-1.238-4.075-1.063z\"></path>\r\n            <path d=\"M13.175 10.738l-1.050 0.356v19.1l0.144-0.044c0.075-0.025 1.869-0.625 3.981-1.337l3.844-1.294 0.019-4.694 0.012-4.688-0.337-0.163c-0.456-0.225-1.631-1.512-2.913-3.194-1.019-1.338-2.131-3.188-2.469-4.112-0.063-0.162-0.125-0.294-0.15-0.287-0.019 0-0.506 0.162-1.081 0.356z\"></path>\r\n            <path d=\"M27.063 10.519c0 0.194-0.969 2.012-1.494 2.819-0.656 0.994-1.1 1.588-1.95 2.6-1.238 1.481-1.844 2.069-2.244 2.156l-0.188 0.044 0.012 4.688 0.019 4.694 3.406 1.144c2.837 0.962 3.45 1.15 3.681 1.125 0.306-0.025 0.538-0.175 0.744-0.475l0.137-0.206v-8.775c0-9.469 0.019-8.931-0.325-9.25-0.144-0.137-1.475-0.644-1.688-0.644-0.063 0-0.113 0.037-0.113 0.081z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-locate\" viewBox=\"0 0 32 32\">\r\n            <title>locate</title>\r\n            <path d=\"M13.934 0.083c-1.134 0.177-2.314 0.461-3.129 0.732-0.968 0.342-1.948 0.791-1.948 0.909 0 0.059 0.59 1.252 0.649 1.322 0.024 0.024 0.531-0.154 1.122-0.39 2.043-0.803 2.846-0.945 5.432-0.933 2.102 0 2.397 0.024 3.424 0.307 0.614 0.165 1.193 0.331 1.287 0.342 0.094 0.035 0.26-0.213 0.437-0.697l0.283-0.744-0.295-0.106c-0.484-0.189-1.712-0.484-2.716-0.661-0.862-0.153-3.779-0.213-4.546-0.083z\"></path>\r\n            <path d=\"M25.376 3.46c-0.094 0.142-0.307 0.425-0.461 0.638l-0.272 0.378 0.401 0.319c0.838 0.673 2.255 2.232 2.869 3.153 1.145 1.748 1.783 3.259 2.184 5.231 0.13 0.626 0.248 1.145 0.272 1.169 0.059 0.047 1.405-0.153 1.488-0.224 0.13-0.142-0.224-1.889-0.626-3.094-0.933-2.81-2.515-5.196-4.7-7.097-0.472-0.413-0.874-0.744-0.909-0.744-0.035 0.012-0.142 0.13-0.248 0.272z\"></path>\r\n            <path d=\"M4.015 5.337c-1.57 1.807-2.633 3.696-3.294 5.833-0.508 1.63-0.72 3.023-0.72 4.83 0 2.704 0.531 4.924 1.736 7.297 0.638 1.24 1.736 2.846 2.267 3.318l0.26 0.236 1.086-1.086-0.768-1.015c-1.96-2.621-2.94-5.514-2.94-8.75 0-3.613 1.169-6.672 3.625-9.541l0.791-0.933-1.181-1.181-0.862 0.992z\"></path>\r\n            <path d=\"M13.638 5.514c-2.739 0.579-5.337 2.421-6.766 4.806-1.075 1.771-1.559 3.519-1.559 5.621 0 2.858 0.909 5.184 2.822 7.227 1.393 1.488 2.751 2.35 4.735 2.987 1.311 0.425 3.802 0.543 5.219 0.26 4.168-0.862 7.451-4.133 8.289-8.254 0.236-1.169 0.236-3.271 0-4.44-0.366-1.818-1.287-3.566-2.633-5.007-1.641-1.748-3.377-2.728-5.715-3.224-1.027-0.224-3.306-0.213-4.393 0.024z\"></path>\r\n            <path d=\"M29.91 19.649c-0.85 3.271-2.928 6.223-5.821 8.254l-0.26 0.177 0.449 0.661c0.236 0.366 0.472 0.661 0.52 0.661 0.224 0 1.7-1.204 2.657-2.184 1.96-1.984 3.389-4.499 4.074-7.168 0.13-0.496 0.236-0.956 0.236-1.015 0-0.118-0.968-0.378-1.393-0.378-0.154 0-0.26 0.236-0.461 0.992z\"></path>\r\n            <path d=\"M8.277 29.095c-0.201 0.342-0.366 0.673-0.366 0.709 0 0.177 2.492 1.263 3.661 1.594 1.83 0.508 2.976 0.638 5.078 0.567 1.653-0.059 3.46-0.319 3.684-0.531 0.047-0.047 0-0.425-0.118-0.827-0.201-0.744-0.201-0.756-0.555-0.673-2.031 0.437-4.263 0.555-5.904 0.295-1.181-0.177-3.023-0.768-4.097-1.311-0.508-0.248-0.945-0.461-0.968-0.461-0.035 0-0.213 0.283-0.413 0.638z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-search\" viewBox=\"0 0 30 32\">\r\n            <title>search</title>\r\n            <path d=\"M20.571 14.857q0-3.304-2.348-5.652t-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348 5.652-2.348 2.348-5.652zM29.714 29.714q0 0.929-0.679 1.607t-1.607 0.679q-0.964 0-1.607-0.679l-6.125-6.107q-3.196 2.214-7.125 2.214-2.554 0-4.884-0.991t-4.018-2.679-2.679-4.018-0.991-4.884 0.991-4.884 2.679-4.018 4.018-2.679 4.884-0.991 4.884 0.991 4.018 2.679 2.679 4.018 0.991 4.884q0 3.929-2.214 7.125l6.125 6.125q0.661 0.661 0.661 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-envelope-o\" viewBox=\"0 0 32 32\">\r\n            <title>envelope-o</title>\r\n            <path d=\"M29.714 26.857v-13.714q-0.571 0.643-1.232 1.179-4.786 3.679-7.607 6.036-0.911 0.768-1.482 1.196t-1.545 0.866-1.83 0.438h-0.036q-0.857 0-1.83-0.438t-1.545-0.866-1.482-1.196q-2.821-2.357-7.607-6.036-0.661-0.536-1.232-1.179v13.714q0 0.232 0.17 0.402t0.402 0.17h26.286q0.232 0 0.402-0.17t0.17-0.402zM29.714 8.089v-0.438t-0.009-0.232-0.054-0.223-0.098-0.161-0.161-0.134-0.25-0.045h-26.286q-0.232 0-0.402 0.17t-0.17 0.402q0 3 2.625 5.071 3.446 2.714 7.161 5.661 0.107 0.089 0.625 0.527t0.821 0.67 0.795 0.563 0.902 0.491 0.768 0.161h0.036q0.357 0 0.768-0.161t0.902-0.491 0.795-0.563 0.821-0.67 0.625-0.527q3.714-2.946 7.161-5.661 0.964-0.768 1.795-2.063t0.83-2.348zM32 7.429v19.429q0 1.179-0.839 2.018t-2.018 0.839h-26.286q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h26.286q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-heart\" viewBox=\"0 0 32 32\">\r\n            <title>heart</title>\r\n            <path d=\"M16 29.714q-0.464 0-0.786-0.321l-11.143-10.75q-0.179-0.143-0.491-0.464t-0.991-1.17-1.214-1.741-0.955-2.161-0.42-2.464q0-3.929 2.268-6.143t6.268-2.214q1.107 0 2.259 0.384t2.143 1.036 1.705 1.223 1.357 1.214q0.643-0.643 1.357-1.214t1.705-1.223 2.143-1.036 2.259-0.384q4 0 6.268 2.214t2.268 6.143q0 3.946-4.089 8.036l-11.125 10.714q-0.321 0.321-0.786 0.321z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-star\" viewBox=\"0 0 30 32\">\r\n            <title>star</title>\r\n            <path d=\"M29.714 11.554q0 0.393-0.464 0.857l-6.482 6.321 1.536 8.929q0.018 0.125 0.018 0.357 0 0.375-0.188 0.634t-0.545 0.259q-0.339 0-0.714-0.214l-8.018-4.214-8.018 4.214q-0.393 0.214-0.714 0.214-0.375 0-0.563-0.259t-0.188-0.634q0-0.107 0.036-0.357l1.536-8.929-6.5-6.321q-0.446-0.482-0.446-0.857 0-0.661 1-0.821l8.964-1.304 4.018-8.125q0.339-0.732 0.875-0.732t0.875 0.732l4.018 8.125 8.964 1.304q1 0.161 1 0.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-star-o\" viewBox=\"0 0 30 32\">\r\n            <title>star-o</title>\r\n            <path d=\"M20.304 17.929l5.464-5.304-7.536-1.107-3.375-6.821-3.375 6.821-7.536 1.107 5.464 5.304-1.304 7.518 6.75-3.554 6.732 3.554zM29.714 11.554q0 0.393-0.464 0.857l-6.482 6.321 1.536 8.929q0.018 0.125 0.018 0.357 0 0.893-0.732 0.893-0.339 0-0.714-0.214l-8.018-4.214-8.018 4.214q-0.393 0.214-0.714 0.214-0.375 0-0.563-0.259t-0.188-0.634q0-0.107 0.036-0.357l1.536-8.929-6.5-6.321q-0.446-0.482-0.446-0.857 0-0.661 1-0.821l8.964-1.304 4.018-8.125q0.339-0.732 0.875-0.732t0.875 0.732l4.018 8.125 8.964 1.304q1 0.161 1 0.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-user\" viewBox=\"0 0 25 32\">\r\n            <title>user</title>\r\n            <path d=\"M25.143 25.089q0 2.143-1.304 3.384t-3.464 1.241h-15.607q-2.161 0-3.464-1.241t-1.304-3.384q0-0.946 0.063-1.848t0.25-1.946 0.473-1.938 0.768-1.741 1.107-1.446 1.527-0.955 1.991-0.357q0.161 0 0.75 0.384t1.33 0.857 1.929 0.857 2.384 0.384 2.384-0.384 1.929-0.857 1.33-0.857 0.75-0.384q1.089 0 1.991 0.357t1.527 0.955 1.107 1.446 0.768 1.741 0.473 1.938 0.25 1.946 0.063 1.848zM19.429 9.143q0 2.839-2.009 4.848t-4.848 2.009-4.848-2.009-2.009-4.848 2.009-4.848 4.848-2.009 4.848 2.009 2.009 4.848z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-film\" viewBox=\"0 0 34 32\">\r\n            <title>film</title>\r\n            <path d=\"M6.857 28.571v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM6.857 21.714v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM6.857 14.857v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM25.143 28.571v-9.143q0-0.464-0.339-0.804t-0.804-0.339h-13.714q-0.464 0-0.804 0.339t-0.339 0.804v9.143q0 0.464 0.339 0.804t0.804 0.339h13.714q0.464 0 0.804-0.339t0.339-0.804zM6.857 8v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM32 28.571v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM25.143 14.857v-9.143q0-0.464-0.339-0.804t-0.804-0.339h-13.714q-0.464 0-0.804 0.339t-0.339 0.804v9.143q0 0.464 0.339 0.804t0.804 0.339h13.714q0.464 0 0.804-0.339t0.339-0.804zM32 21.714v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM32 14.857v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM32 8v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM34.286 5.143v24q0 1.179-0.839 2.018t-2.018 0.839h-28.571q-1.179 0-2.018-0.839t-0.839-2.018v-24q0-1.179 0.839-2.018t2.018-0.839h28.571q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-th-large\" viewBox=\"0 0 30 32\">\r\n            <title>th-large</title>\r\n            <path d=\"M13.714 18.286v6.857q0 0.929-0.679 1.607t-1.607 0.679h-9.143q-0.929 0-1.607-0.679t-0.679-1.607v-6.857q0-0.929 0.679-1.607t1.607-0.679h9.143q0.929 0 1.607 0.679t0.679 1.607zM13.714 4.571v6.857q0 0.929-0.679 1.607t-1.607 0.679h-9.143q-0.929 0-1.607-0.679t-0.679-1.607v-6.857q0-0.929 0.679-1.607t1.607-0.679h9.143q0.929 0 1.607 0.679t0.679 1.607zM29.714 18.286v6.857q0 0.929-0.679 1.607t-1.607 0.679h-9.143q-0.929 0-1.607-0.679t-0.679-1.607v-6.857q0-0.929 0.679-1.607t1.607-0.679h9.143q0.929 0 1.607 0.679t0.679 1.607zM29.714 4.571v6.857q0 0.929-0.679 1.607t-1.607 0.679h-9.143q-0.929 0-1.607-0.679t-0.679-1.607v-6.857q0-0.929 0.679-1.607t1.607-0.679h9.143q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-th\" viewBox=\"0 0 32 32\">\r\n            <title>th</title>\r\n            <path d=\"M9.143 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM9.143 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM20.571 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM9.143 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM20.571 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM32 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM20.571 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM32 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM32 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-th-list\" viewBox=\"0 0 32 32\">\r\n            <title>th-list</title>\r\n            <path d=\"M9.143 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM9.143 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM32 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h17.143q0.714 0 1.214 0.5t0.5 1.214zM9.143 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214zM32 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h17.143q0.714 0 1.214 0.5t0.5 1.214zM32 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h17.143q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-check\" viewBox=\"0 0 32 32\">\r\n            <title>check</title>\r\n            <path d=\"M29.839 10.107q0 0.714-0.5 1.214l-15.357 15.357q-0.5 0.5-1.214 0.5t-1.214-0.5l-8.893-8.893q-0.5-0.5-0.5-1.214t0.5-1.214l2.429-2.429q0.5-0.5 1.214-0.5t1.214 0.5l5.25 5.268 11.714-11.732q0.5-0.5 1.214-0.5t1.214 0.5l2.429 2.429q0.5 0.5 0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-times\" viewBox=\"0 0 25 32\">\r\n            <title>times</title>\r\n            <path d=\"M23.179 23.607q0 0.714-0.5 1.214l-2.429 2.429q-0.5 0.5-1.214 0.5t-1.214-0.5l-5.25-5.25-5.25 5.25q-0.5 0.5-1.214 0.5t-1.214-0.5l-2.429-2.429q-0.5-0.5-0.5-1.214t0.5-1.214l5.25-5.25-5.25-5.25q-0.5-0.5-0.5-1.214t0.5-1.214l2.429-2.429q0.5-0.5 1.214-0.5t1.214 0.5l5.25 5.25 5.25-5.25q0.5-0.5 1.214-0.5t1.214 0.5l2.429 2.429q0.5 0.5 0.5 1.214t-0.5 1.214l-5.25 5.25 5.25 5.25q0.5 0.5 0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-search-plus\" viewBox=\"0 0 30 32\">\r\n            <title>search-plus</title>\r\n            <path d=\"M18.286 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-4v4q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-4h-4q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h4v-4q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402v4h4q0.232 0 0.402 0.17t0.17 0.402zM20.571 14.857q0-3.304-2.348-5.652t-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348 5.652-2.348 2.348-5.652zM29.714 29.714q0 0.946-0.67 1.616t-1.616 0.67q-0.964 0-1.607-0.679l-6.125-6.107q-3.196 2.214-7.125 2.214-2.554 0-4.884-0.991t-4.018-2.679-2.679-4.018-0.991-4.884 0.991-4.884 2.679-4.018 4.018-2.679 4.884-0.991 4.884 0.991 4.018 2.679 2.679 4.018 0.991 4.884q0 3.929-2.214 7.125l6.125 6.125q0.661 0.661 0.661 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-search-minus\" viewBox=\"0 0 30 32\">\r\n            <title>search-minus</title>\r\n            <path d=\"M18.286 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-10.286q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h10.286q0.232 0 0.402 0.17t0.17 0.402zM20.571 14.857q0-3.304-2.348-5.652t-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348 5.652-2.348 2.348-5.652zM29.714 29.714q0 0.946-0.67 1.616t-1.616 0.67q-0.964 0-1.607-0.679l-6.125-6.107q-3.196 2.214-7.125 2.214-2.554 0-4.884-0.991t-4.018-2.679-2.679-4.018-0.991-4.884 0.991-4.884 2.679-4.018 4.018-2.679 4.884-0.991 4.884 0.991 4.018 2.679 2.679 4.018 0.991 4.884q0 3.929-2.214 7.125l6.125 6.125q0.661 0.661 0.661 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-power-off\" viewBox=\"0 0 32 32\">\r\n            <title>power-off</title>\r\n            <path d=\"M27.429 16q0 2.786-1.089 5.321t-2.929 4.375-4.375 2.929-5.321 1.089-5.321-1.089-4.375-2.929-2.929-4.375-1.089-5.321q0-3.25 1.438-6.125t4.045-4.821q0.768-0.571 1.705-0.446t1.491 0.893q0.571 0.75 0.438 1.688t-0.884 1.509q-1.75 1.321-2.705 3.232t-0.955 4.071q0 1.857 0.723 3.545t1.955 2.92 2.92 1.955 3.545 0.723 3.545-0.723 2.92-1.955 1.955-2.92 0.723-3.545q0-2.161-0.955-4.071t-2.705-3.232q-0.75-0.571-0.884-1.509t0.438-1.688q0.554-0.768 1.5-0.893t1.696 0.446q2.607 1.946 4.045 4.821t1.438 6.125zM16 2.286v11.429q0 0.929-0.679 1.607t-1.607 0.679-1.607-0.679-0.679-1.607v-11.429q0-0.929 0.679-1.607t1.607-0.679 1.607 0.679 0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-signal\" viewBox=\"0 0 32 32\">\r\n            <title>signal</title>\r\n            <path d=\"M4.571 25.714v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM11.429 23.429v5.714q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-5.714q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM18.286 18.857v10.286q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-10.286q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM25.143 12v17.143q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-17.143q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM32 2.857v26.286q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-26.286q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gear\" viewBox=\"0 0 32 32\">\r\n            <title>gear</title>\r\n            <path d=\"M18.286 16q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232 1.339 3.232 3.232 1.339 3.232-1.339 1.339-3.232zM27.429 14.054v3.964q0 0.214-0.143 0.411t-0.357 0.232l-3.304 0.5q-0.339 0.964-0.696 1.625 0.625 0.893 1.911 2.464 0.179 0.214 0.179 0.446t-0.161 0.411q-0.482 0.661-1.768 1.929t-1.679 1.268q-0.214 0-0.464-0.161l-2.464-1.929q-0.786 0.411-1.625 0.679-0.286 2.429-0.518 3.321-0.125 0.5-0.643 0.5h-3.964q-0.25 0-0.438-0.152t-0.205-0.384l-0.5-3.286q-0.875-0.286-1.607-0.661l-2.518 1.911q-0.179 0.161-0.446 0.161-0.25 0-0.446-0.196-2.25-2.036-2.946-3-0.125-0.179-0.125-0.411 0-0.214 0.143-0.411 0.268-0.375 0.911-1.188t0.964-1.259q-0.482-0.893-0.732-1.768l-3.268-0.482q-0.232-0.036-0.375-0.223t-0.143-0.42v-3.964q0-0.214 0.143-0.411t0.339-0.232l3.321-0.5q0.25-0.821 0.696-1.643-0.714-1.018-1.911-2.464-0.179-0.214-0.179-0.429 0-0.179 0.161-0.411 0.464-0.643 1.759-1.92t1.688-1.277q0.232 0 0.464 0.179l2.464 1.911q0.786-0.411 1.625-0.679 0.286-2.429 0.518-3.321 0.125-0.5 0.643-0.5h3.964q0.25 0 0.438 0.152t0.205 0.384l0.5 3.286q0.875 0.286 1.607 0.661l2.536-1.911q0.161-0.161 0.429-0.161 0.232 0 0.446 0.179 2.304 2.125 2.946 3.036 0.125 0.143 0.125 0.393 0 0.214-0.143 0.411-0.268 0.375-0.911 1.188t-0.964 1.259q0.464 0.893 0.732 1.75l3.268 0.5q0.232 0.036 0.375 0.223t0.143 0.42z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-trash-o\" viewBox=\"0 0 25 32\">\r\n            <title>trash-o</title>\r\n            <path d=\"M9.143 13.143v10.286q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-10.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411zM13.714 13.143v10.286q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-10.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411zM18.286 13.143v10.286q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-10.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411zM20.571 26.071v-16.929h-16v16.929q0 0.393 0.125 0.723t0.259 0.482 0.188 0.152h14.857q0.054 0 0.188-0.152t0.259-0.482 0.125-0.723zM8.571 6.857h8l-0.857-2.089q-0.125-0.161-0.304-0.196h-5.661q-0.179 0.036-0.304 0.196zM25.143 7.429v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v16.929q0 1.482-0.839 2.563t-2.018 1.080h-14.857q-1.179 0-2.018-1.045t-0.839-2.527v-17h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h5.518l1.25-2.982q0.268-0.661 0.964-1.125t1.411-0.464h5.714q0.714 0 1.411 0.464t0.964 1.125l1.25 2.982h5.518q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-home\" viewBox=\"0 0 30 32\">\r\n            <title>home</title>\r\n            <path d=\"M25.143 17.714v8.571q0 0.464-0.339 0.804t-0.804 0.339h-6.857v-6.857h-4.571v6.857h-6.857q-0.464 0-0.804-0.339t-0.339-0.804v-8.571q0-0.018 0.009-0.054t0.009-0.054l10.268-8.464 10.268 8.464q0.018 0.036 0.018 0.107zM29.125 16.482l-1.107 1.321q-0.143 0.161-0.375 0.196h-0.054q-0.232 0-0.375-0.125l-12.357-10.304-12.357 10.304q-0.214 0.143-0.429 0.125-0.232-0.036-0.375-0.196l-1.107-1.321q-0.143-0.179-0.125-0.42t0.196-0.384l12.839-10.696q0.571-0.464 1.357-0.464t1.357 0.464l4.357 3.643v-3.482q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v7.286l3.911 3.25q0.179 0.143 0.196 0.384t-0.125 0.42z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-clock-o\" viewBox=\"0 0 32 32\">\r\n            <title>clock-o</title>\r\n            <path d=\"M16 9.714v8q0 0.25-0.161 0.411t-0.411 0.161h-5.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h4v-6.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-road\" viewBox=\"0 0 34 32\">\r\n            <title>road</title>\r\n            <path d=\"M19.839 17.786v-0.071l-0.429-5.714q-0.018-0.232-0.196-0.402t-0.411-0.17h-3.321q-0.232 0-0.411 0.17t-0.196 0.402l-0.429 5.714v0.071q-0.018 0.214 0.143 0.357t0.375 0.143h4.357q0.214 0 0.375-0.143t0.143-0.357zM33.393 26.125q0 1.304-0.821 1.304h-12.571q0.232 0 0.393-0.17t0.143-0.402l-0.357-4.571q-0.018-0.232-0.196-0.402t-0.411-0.17h-4.857q-0.232 0-0.411 0.17t-0.196 0.402l-0.357 4.571q-0.018 0.232 0.143 0.402t0.393 0.17h-12.571q-0.821 0-0.821-1.304 0-0.964 0.464-2.071l7.446-18.643q0.143-0.339 0.464-0.589t0.679-0.25h6.054q-0.232 0-0.411 0.17t-0.196 0.402l-0.268 3.429q-0.018 0.25 0.143 0.411t0.393 0.161h2.964q0.232 0 0.393-0.161t0.143-0.411l-0.268-3.429q-0.018-0.232-0.196-0.402t-0.411-0.17h6.054q0.357 0 0.679 0.25t0.464 0.589l7.446 18.643q0.464 1.107 0.464 2.071z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-download\" viewBox=\"0 0 30 32\">\r\n            <title>download</title>\r\n            <path d=\"M22.857 24q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM27.429 24q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM29.714 20v5.714q0 0.714-0.5 1.214t-1.214 0.5h-26.286q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h8.304l2.411 2.429q1.036 1 2.429 1t2.429-1l2.429-2.429h8.286q0.714 0 1.214 0.5t0.5 1.214zM23.911 9.839q0.304 0.732-0.25 1.25l-8 8q-0.321 0.339-0.804 0.339t-0.804-0.339l-8-8q-0.554-0.518-0.25-1.25 0.304-0.696 1.054-0.696h4.571v-8q0-0.464 0.339-0.804t0.804-0.339h4.571q0.464 0 0.804 0.339t0.339 0.804v8h4.571q0.75 0 1.054 0.696z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-o-down\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-o-down</title>\r\n            <path d=\"M20 16.571q0 0.214-0.179 0.429l-5.696 5.696q-0.196 0.161-0.411 0.161t-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-6.286q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v6.286h3.429q0.25 0 0.411 0.161t0.161 0.411zM13.714 6.286q-2.643 0-4.875 1.304t-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875-1.304-4.875-3.536-3.536-4.875-1.304zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-o-up\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-o-up</title>\r\n            <path d=\"M19.964 15.643q-0.143 0.357-0.536 0.357h-3.429v6.286q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-6.286h-3.429q-0.25 0-0.411-0.161t-0.161-0.411q0-0.214 0.179-0.429l5.696-5.696q0.196-0.161 0.411-0.161t0.411 0.161l5.714 5.714q0.268 0.286 0.125 0.625zM13.714 6.286q-2.643 0-4.875 1.304t-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875-1.304-4.875-3.536-3.536-4.875-1.304zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-inbox\" viewBox=\"0 0 32 32\">\r\n            <title>inbox</title>\r\n            <path d=\"M18.268 17.143h5.643q-0.018-0.054-0.045-0.143t-0.045-0.143l-3.786-8.857h-12.643l-3.786 8.857q-0.018 0.036-0.045 0.143t-0.045 0.143h5.643l1.696 3.429h5.714zM27.429 17.679v8.607q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-8.607q0-1.107 0.446-2.196l4.25-9.857q0.179-0.446 0.652-0.75t0.938-0.304h14.857q0.464 0 0.938 0.304t0.652 0.75l4.25 9.857q0.446 1.089 0.446 2.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-play-circle-o\" viewBox=\"0 0 32 32\">\r\n            <title>play-circle-o</title>\r\n            <path d=\"M21.143 16q0 0.661-0.571 0.982l-9.714 5.714q-0.268 0.161-0.571 0.161-0.286 0-0.571-0.143-0.571-0.339-0.571-1v-11.429q0-0.661 0.571-1 0.589-0.321 1.143 0.018l9.714 5.714q0.571 0.321 0.571 0.982zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-repeat\" viewBox=\"0 0 32 32\">\r\n            <title>repeat</title>\r\n            <path d=\"M27.429 4.571v8q0 0.464-0.339 0.804t-0.804 0.339h-8q-0.75 0-1.054-0.714-0.304-0.696 0.25-1.232l2.464-2.464q-2.643-2.446-6.232-2.446-1.857 0-3.545 0.723t-2.92 1.955-1.955 2.92-0.723 3.545 0.723 3.545 1.955 2.92 2.92 1.955 3.545 0.723q2.125 0 4.018-0.929t3.196-2.625q0.125-0.179 0.411-0.214 0.25 0 0.446 0.161l2.446 2.464q0.161 0.143 0.17 0.366t-0.134 0.402q-1.946 2.357-4.714 3.652t-5.839 1.295q-2.786 0-5.321-1.089t-4.375-2.929-2.929-4.375-1.089-5.321 1.089-5.321 2.929-4.375 4.375-2.929 5.321-1.089q2.625 0 5.080 0.991t4.366 2.795l2.321-2.304q0.518-0.554 1.25-0.25 0.696 0.304 0.696 1.054z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-refresh\" viewBox=\"0 0 32 32\">\r\n            <title>refresh</title>\r\n            <path d=\"M26.982 18.857q0 0.089-0.018 0.125-1.143 4.786-4.786 7.759t-8.536 2.973q-2.607 0-5.045-0.982t-4.348-2.804l-2.304 2.304q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-8q0-0.464 0.339-0.804t0.804-0.339h8q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804l-2.446 2.446q1.268 1.179 2.875 1.821t3.339 0.643q2.393 0 4.464-1.161t3.321-3.196q0.196-0.304 0.946-2.089 0.143-0.411 0.536-0.411h3.429q0.232 0 0.402 0.17t0.17 0.402zM27.429 4.571v8q0 0.464-0.339 0.804t-0.804 0.339h-8q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l2.464-2.464q-2.643-2.446-6.232-2.446-2.393 0-4.464 1.161t-3.321 3.196q-0.196 0.304-0.946 2.089-0.143 0.411-0.536 0.411h-3.554q-0.232 0-0.402-0.17t-0.17-0.402v-0.125q1.161-4.786 4.821-7.759t8.571-2.973q2.607 0 5.071 0.991t4.375 2.795l2.321-2.304q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-list-alt\" viewBox=\"0 0 32 32\">\r\n            <title>list-alt</title>\r\n            <path d=\"M6.857 21.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 16.571v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 12v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM27.429 21.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-17.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h17.143q0.232 0 0.402 0.17t0.17 0.402zM27.429 16.571v1.143q0 0.232-0.17 0.402t-0.402 0.17h-17.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h17.143q0.232 0 0.402 0.17t0.17 0.402zM27.429 12v1.143q0 0.232-0.17 0.402t-0.402 0.17h-17.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h17.143q0.232 0 0.402 0.17t0.17 0.402zM29.714 24.571v-14.857q0-0.232-0.17-0.402t-0.402-0.17h-26.286q-0.232 0-0.402 0.17t-0.17 0.402v14.857q0 0.232 0.17 0.402t0.402 0.17h26.286q0.232 0 0.402-0.17t0.17-0.402zM32 5.143v19.429q0 1.179-0.839 2.018t-2.018 0.839h-26.286q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h26.286q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-lock\" viewBox=\"0 0 21 32\">\r\n            <title>lock</title>\r\n            <path d=\"M5.714 13.714h9.143v-3.429q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232v3.429zM20.571 15.429v10.286q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-10.286q0-0.714 0.5-1.214t1.214-0.5h0.571v-3.429q0-3.286 2.357-5.643t5.643-2.357 5.643 2.357 2.357 5.643v3.429h0.571q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flag\" viewBox=\"0 0 32 32\">\r\n            <title>flag</title>\r\n            <path d=\"M5.714 4.571q0 1.286-1.143 1.964v22.607q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-22.607q-1.143-0.679-1.143-1.964 0-0.946 0.67-1.616t1.616-0.67 1.616 0.67 0.67 1.616zM32 5.714v13.625q0 0.446-0.223 0.688t-0.705 0.491q-3.839 2.071-6.589 2.071-1.089 0-2.205-0.393t-1.938-0.857-2.063-0.857-2.545-0.393q-3.429 0-8.286 2.607-0.304 0.161-0.589 0.161-0.464 0-0.804-0.339t-0.339-0.804v-13.25q0-0.571 0.554-0.982 0.375-0.25 1.411-0.768 4.214-2.143 7.518-2.143 1.911 0 3.571 0.518t3.911 1.571q0.679 0.339 1.571 0.339 0.964 0 2.098-0.375t1.964-0.839 1.571-0.839 0.973-0.375q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-headphones\" viewBox=\"0 0 30 32\">\r\n            <title>headphones</title>\r\n            <path d=\"M29.714 15.821q0 2.964-1.071 5.607l-0.357 0.875-3.304 0.589q-0.393 1.482-1.616 2.438t-2.795 0.955v0.571q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-10.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411v0.571q1.268 0 2.321 0.634t1.661 1.705l1.214-0.214q0.518-1.696 0.518-3.446 0-2.643-1.571-4.982t-4.223-3.732-5.634-1.393-5.634 1.393-4.223 3.732-1.571 4.982q0 1.75 0.518 3.446l1.214 0.214q0.607-1.071 1.661-1.705t2.321-0.634v-0.571q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411v10.286q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-0.571q-1.571 0-2.795-0.955t-1.616-2.438l-3.304-0.589-0.357-0.875q-1.071-2.643-1.071-5.607 0-2.696 1.196-5.196t3.196-4.33 4.75-2.92 5.714-1.089 5.714 1.089 4.75 2.92 3.196 4.33 1.196 5.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-train\" viewBox=\"0 0 32 32\">\r\n            <title>train</title>\r\n            <path d=\"M19.429 0q3.304 0 5.652 1.67t2.348 4.045v16q0 2.321-2.241 3.964t-5.455 1.732l3.804 3.607q0.286 0.268 0.143 0.625t-0.536 0.357h-18.857q-0.393 0-0.536-0.357t0.143-0.625l3.804-3.607q-3.214-0.089-5.455-1.732t-2.241-3.964v-16q0-2.375 2.348-4.045t5.652-1.67h11.429zM5.143 23.429q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839zM12.571 13.714v-9.143h-9.714v9.143h9.714zM22.286 23.429q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839zM25.143 13.714v-9.143h-10.286v9.143h10.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-volume-off\" viewBox=\"0 0 14 32\">\r\n            <title>volume-off</title>\r\n            <path d=\"M13.714 6.286v19.429q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-5.946-5.946h-4.679q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h4.679l5.946-5.946q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-volume-down\" viewBox=\"0 0 21 32\">\r\n            <title>volume-down</title>\r\n            <path d=\"M13.714 6.286v19.429q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-5.946-5.946h-4.679q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h4.679l5.946-5.946q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804zM20.571 16q0 1.357-0.759 2.527t-2.009 1.67q-0.179 0.089-0.446 0.089-0.464 0-0.804-0.33t-0.339-0.813q0-0.375 0.214-0.634t0.518-0.446 0.607-0.411 0.518-0.634 0.214-1.018-0.214-1.018-0.518-0.634-0.607-0.411-0.518-0.446-0.214-0.634q0-0.482 0.339-0.813t0.804-0.33q0.268 0 0.446 0.089 1.25 0.482 2.009 1.661t0.759 2.536z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-volume-up\" viewBox=\"0 0 30 32\">\r\n            <title>volume-up</title>\r\n            <path d=\"M13.714 6.286v19.429q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-5.946-5.946h-4.679q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h4.679l5.946-5.946q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804zM20.571 16q0 1.357-0.759 2.527t-2.009 1.67q-0.179 0.089-0.446 0.089-0.464 0-0.804-0.33t-0.339-0.813q0-0.375 0.214-0.634t0.518-0.446 0.607-0.411 0.518-0.634 0.214-1.018-0.214-1.018-0.518-0.634-0.607-0.411-0.518-0.446-0.214-0.634q0-0.482 0.339-0.813t0.804-0.33q0.268 0 0.446 0.089 1.25 0.482 2.009 1.661t0.759 2.536zM25.143 16q0 2.732-1.518 5.045t-4.018 3.366q-0.232 0.089-0.446 0.089-0.482 0-0.821-0.339t-0.339-0.804q0-0.696 0.696-1.054 1-0.518 1.357-0.786 1.321-0.964 2.063-2.42t0.741-3.098-0.741-3.098-2.063-2.42q-0.357-0.268-1.357-0.786-0.696-0.357-0.696-1.054 0-0.464 0.339-0.804t0.804-0.339q0.232 0 0.464 0.089 2.5 1.054 4.018 3.366t1.518 5.045zM29.714 16q0 4.107-2.268 7.545t-6.036 5.063q-0.232 0.089-0.464 0.089-0.464 0-0.804-0.339t-0.339-0.804q0-0.643 0.696-1.054 0.125-0.071 0.402-0.188t0.402-0.188q0.821-0.446 1.464-0.911 2.196-1.625 3.429-4.054t1.232-5.161-1.232-5.161-3.429-4.054q-0.643-0.464-1.464-0.911-0.125-0.071-0.402-0.188t-0.402-0.188q-0.696-0.411-0.696-1.054 0-0.464 0.339-0.804t0.804-0.339q0.232 0 0.464 0.089 3.768 1.625 6.036 5.063t2.268 7.545z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-qrcode\" viewBox=\"0 0 25 32\">\r\n            <title>qrcode</title>\r\n            <path d=\"M6.857 20.571v2.286h-2.286v-2.286h2.286zM6.857 6.857v2.286h-2.286v-2.286h2.286zM20.571 6.857v2.286h-2.286v-2.286h2.286zM2.286 25.125h6.857v-6.839h-6.857v6.839zM2.286 11.429h6.857v-6.857h-6.857v6.857zM16 11.429h6.857v-6.857h-6.857v6.857zM11.429 16v11.429h-11.429v-11.429h11.429zM20.571 25.143v2.286h-2.286v-2.286h2.286zM25.143 25.143v2.286h-2.286v-2.286h2.286zM25.143 16v6.857h-6.857v-2.286h-2.286v6.857h-2.286v-11.429h6.857v2.286h2.286v-2.286h2.286zM11.429 2.286v11.429h-11.429v-11.429h11.429zM25.143 2.286v11.429h-11.429v-11.429h11.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-barcode\" viewBox=\"0 0 32 32\">\r\n            <title>barcode</title>\r\n            <path d=\"M1.125 27.429h-1.125v-25.143h1.125v25.143zM2.25 27.411h-0.571v-25.125h0.571v25.125zM3.929 27.411h-0.554v-25.125h0.554v25.125zM6.732 27.411h-0.554v-25.125h0.554v25.125zM9.536 27.411h-1.107v-25.125h1.107v25.125zM11.786 27.411h-0.554v-25.125h0.554v25.125zM12.911 27.411h-0.554v-25.125h0.554v25.125zM14.036 27.411h-0.554v-25.125h0.554v25.125zM16.839 27.411h-1.125v-25.125h1.125v25.125zM19.643 27.411h-1.125v-25.125h1.125v25.125zM21.893 27.411h-1.125v-25.125h1.125v25.125zM24.143 27.411h-1.125v-25.125h1.125v25.125zM25.821 27.411h-1.125v-25.125h1.125v25.125zM29.196 27.411h-1.679v-25.125h1.679v25.125zM30.321 27.411h-0.571v-25.125h0.571v25.125zM32 27.429h-1.125v-25.143h1.125v25.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tag\" viewBox=\"0 0 32 32\">\r\n            <title>tag</title>\r\n            <path d=\"M8 8q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM27.054 18.286q0 0.946-0.661 1.607l-8.768 8.786q-0.696 0.661-1.625 0.661-0.946 0-1.607-0.661l-12.768-12.786q-0.679-0.661-1.152-1.804t-0.473-2.089v-7.429q0-0.929 0.679-1.607t1.607-0.679h7.429q0.946 0 2.089 0.473t1.821 1.152l12.768 12.75q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tags\" viewBox=\"0 0 34 32\">\r\n            <title>tags</title>\r\n            <path d=\"M8 8q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM27.054 18.286q0 0.946-0.661 1.607l-8.768 8.786q-0.696 0.661-1.625 0.661-0.946 0-1.607-0.661l-12.768-12.786q-0.679-0.661-1.152-1.804t-0.473-2.089v-7.429q0-0.929 0.679-1.607t1.607-0.679h7.429q0.946 0 2.089 0.473t1.821 1.152l12.768 12.75q0.661 0.696 0.661 1.625zM33.911 18.286q0 0.946-0.661 1.607l-8.768 8.786q-0.696 0.661-1.625 0.661-0.643 0-1.054-0.25t-0.946-0.804l8.393-8.393q0.661-0.661 0.661-1.607 0-0.929-0.661-1.625l-12.768-12.75q-0.679-0.679-1.821-1.152t-2.089-0.473h4q0.946 0 2.089 0.473t1.821 1.152l12.768 12.75q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-book\" viewBox=\"0 0 30 32\">\r\n            <title>book</title>\r\n            <path d=\"M29.268 8.536q0.714 1.018 0.321 2.304l-4.911 16.179q-0.339 1.143-1.366 1.92t-2.188 0.777h-16.482q-1.375 0-2.652-0.955t-1.777-2.348q-0.429-1.196-0.036-2.268 0-0.071 0.054-0.482t0.071-0.661q0.018-0.143-0.054-0.384t-0.054-0.348q0.036-0.196 0.143-0.375t0.295-0.42 0.295-0.42q0.411-0.679 0.804-1.634t0.536-1.634q0.054-0.179 0.009-0.536t-0.009-0.5q0.054-0.196 0.304-0.5t0.304-0.411q0.375-0.643 0.75-1.643t0.446-1.607q0.018-0.161-0.045-0.571t0.009-0.5q0.071-0.232 0.393-0.545t0.393-0.402q0.339-0.464 0.759-1.509t0.491-1.723q0.018-0.143-0.054-0.455t-0.036-0.473q0.036-0.143 0.161-0.321t0.321-0.411 0.304-0.375q0.143-0.214 0.295-0.545t0.268-0.625 0.286-0.643 0.348-0.571 0.473-0.42 0.643-0.205 0.848 0.098l-0.018 0.054q0.679-0.161 0.911-0.161h13.589q1.321 0 2.036 1t0.321 2.321l-4.893 16.179q-0.643 2.125-1.277 2.741t-2.295 0.616h-15.518q-0.482 0-0.679 0.268-0.196 0.286-0.018 0.768 0.429 1.25 2.571 1.25h16.482q0.518 0 1-0.277t0.625-0.741l5.357-17.625q0.125-0.393 0.089-1.018 0.679 0.268 1.054 0.768zM10.268 8.571q-0.071 0.232 0.036 0.402t0.357 0.17h10.857q0.232 0 0.455-0.17t0.295-0.402l0.375-1.143q0.071-0.232-0.036-0.402t-0.357-0.17h-10.857q-0.232 0-0.455 0.17t-0.295 0.402zM8.786 13.143q-0.071 0.232 0.036 0.402t0.357 0.17h10.857q0.232 0 0.455-0.17t0.295-0.402l0.375-1.143q0.071-0.232-0.036-0.402t-0.357-0.17h-10.857q-0.232 0-0.455 0.17t-0.295 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bookmark\" viewBox=\"0 0 23 32\">\r\n            <title>bookmark</title>\r\n            <path d=\"M20.786 2.286q0.411 0 0.786 0.161 0.589 0.232 0.938 0.732t0.348 1.107v23.018q0 0.607-0.348 1.107t-0.938 0.732q-0.339 0.143-0.786 0.143-0.857 0-1.482-0.571l-7.875-7.571-7.875 7.571q-0.643 0.589-1.482 0.589-0.411 0-0.786-0.161-0.589-0.232-0.938-0.732t-0.348-1.107v-23.018q0-0.607 0.348-1.107t0.938-0.732q0.375-0.161 0.786-0.161h18.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-print\" viewBox=\"0 0 30 32\">\r\n            <title>print</title>\r\n            <path d=\"M6.857 27.429h16v-4.571h-16v4.571zM6.857 16h16v-6.857h-2.857q-0.714 0-1.214-0.5t-0.5-1.214v-2.857h-11.429v11.429zM27.429 17.143q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM29.714 17.143v7.429q0 0.232-0.17 0.402t-0.402 0.17h-4v2.857q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-2.857h-4q-0.232 0-0.402-0.17t-0.17-0.402v-7.429q0-1.411 1.009-2.42t2.42-1.009h1.143v-9.714q0-0.714 0.5-1.214t1.214-0.5h12q0.714 0 1.571 0.357t1.357 0.857l2.714 2.714q0.5 0.5 0.857 1.357t0.357 1.571v4.571h1.143q1.411 0 2.42 1.009t1.009 2.42z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-camera\" viewBox=\"0 0 34 32\">\r\n            <title>camera</title>\r\n            <path d=\"M17.143 12q2.125 0 3.634 1.509t1.509 3.634-1.509 3.634-3.634 1.509-3.634-1.509-1.509-3.634 1.509-3.634 3.634-1.509zM29.714 4.571q1.893 0 3.232 1.339t1.339 3.232v16q0 1.893-1.339 3.232t-3.232 1.339h-25.143q-1.893 0-3.232-1.339t-1.339-3.232v-16q0-1.893 1.339-3.232t3.232-1.339h4l0.911-2.429q0.339-0.875 1.241-1.509t1.848-0.634h9.143q0.946 0 1.848 0.634t1.241 1.509l0.911 2.429h4zM17.143 25.143q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-font\" viewBox=\"0 0 30 32\">\r\n            <title>font</title>\r\n            <path d=\"M12.946 9.982l-3.036 8.036q0.589 0 2.438 0.036t2.866 0.036q0.339 0 1.018-0.036-1.554-4.518-3.286-8.071zM0 29.714l0.036-1.411q0.411-0.125 1-0.223t1.018-0.188 0.884-0.259 0.795-0.518 0.554-0.902l4.232-11 5-12.929h2.286q0.143 0.25 0.196 0.375l3.661 8.571q0.589 1.393 1.893 4.598t2.036 4.902q0.268 0.607 1.036 2.58t1.286 3.009q0.357 0.804 0.625 1.018 0.339 0.268 1.571 0.527t1.5 0.366q0.107 0.679 0.107 1.018 0 0.071-0.009 0.232t-0.009 0.232q-1.125 0-3.393-0.143t-3.411-0.143q-1.357 0-3.839 0.125t-3.179 0.143q0-0.768 0.071-1.393l2.339-0.5q0.018 0 0.223-0.045t0.277-0.063 0.259-0.080 0.268-0.116 0.196-0.143 0.161-0.196 0.045-0.25q0-0.286-0.554-1.723t-1.286-3.17-0.75-1.786l-8.036-0.036q-0.464 1.036-1.366 3.491t-0.902 2.902q0 0.393 0.25 0.67t0.777 0.438 0.866 0.241 1.018 0.152 0.732 0.071q0.018 0.339 0.018 1.036 0 0.161-0.036 0.482-1.036 0-3.116-0.179t-3.116-0.179q-0.143 0-0.473 0.071t-0.384 0.071q-1.429 0.25-3.357 0.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bold\" viewBox=\"0 0 25 32\">\r\n            <title>bold</title>\r\n            <path d=\"M9.911 27.161q1.321 0.571 2.5 0.571 6.714 0 6.714-5.982 0-2.036-0.732-3.214-0.482-0.786-1.098-1.321t-1.205-0.83-1.438-0.446-1.5-0.188-1.688-0.036q-1.304 0-1.804 0.179 0 0.946-0.009 2.839t-0.009 2.821q0 0.143-0.018 1.205t-0.009 1.723 0.080 1.491 0.214 1.188zM9.661 13.839q0.75 0.125 1.946 0.125 1.464 0 2.554-0.232t1.964-0.795 1.33-1.598 0.455-2.536q0-1.25-0.518-2.188t-1.411-1.464-1.929-0.777-2.214-0.25q-0.893 0-2.321 0.232 0 0.893 0.071 2.696t0.071 2.714q0 0.482-0.009 1.429t-0.009 1.411q0 0.821 0.018 1.232zM0 29.714l0.036-1.679q0.268-0.071 1.518-0.286t1.893-0.482q0.125-0.214 0.223-0.482t0.152-0.598 0.098-0.58 0.054-0.67 0.009-0.607v-1.17q0-17.536-0.393-18.304-0.071-0.143-0.393-0.259t-0.795-0.196-0.884-0.125-0.866-0.080-0.545-0.054l-0.071-1.482q1.75-0.036 6.071-0.205t6.661-0.17q0.411 0 1.223 0.009t1.205 0.009q1.25 0 2.438 0.232t2.295 0.75 1.929 1.268 1.321 1.866 0.5 2.455q0 0.929-0.295 1.705t-0.696 1.286-1.152 1.027-1.304 0.804-1.5 0.714q2.75 0.625 4.58 2.393t1.83 4.429q0 1.786-0.625 3.205t-1.67 2.33-2.464 1.527-2.92 0.866-3.143 0.25q-0.786 0-2.357-0.054t-2.357-0.054q-1.893 0-5.482 0.196t-4.125 0.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-italic\" viewBox=\"0 0 18 32\">\r\n            <title>italic</title>\r\n            <path d=\"M0 29.679l0.304-1.518q0.107-0.036 1.455-0.384t1.991-0.67q0.5-0.625 0.732-1.804 0.018-0.125 1.107-5.161t2.036-9.705 0.929-5.295v-0.446q-0.429-0.232-0.973-0.33t-1.241-0.143-1.036-0.098l0.339-1.839q0.589 0.036 2.143 0.116t2.67 0.125 2.152 0.045q0.857 0 1.759-0.045t2.161-0.125 1.759-0.116q-0.089 0.696-0.339 1.589-0.536 0.179-1.813 0.509t-1.938 0.598q-0.143 0.339-0.25 0.759t-0.161 0.714-0.134 0.813-0.116 0.75q-0.482 2.643-1.563 7.491t-1.384 6.348q-0.036 0.161-0.232 1.036t-0.357 1.607-0.286 1.491-0.107 1.027l0.018 0.321q0.304 0.071 3.304 0.554-0.054 0.786-0.286 1.768-0.196 0-0.58 0.027t-0.58 0.027q-0.518 0-1.554-0.179t-1.536-0.179q-2.464-0.036-3.679-0.036-0.911 0-2.554 0.161t-2.161 0.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-text-height\" viewBox=\"0 0 32 32\">\r\n            <title>text-height</title>\r\n            <path d=\"M31.143 25.143q0.589 0 0.75 0.33t-0.196 0.795l-2.25 2.893q-0.357 0.464-0.875 0.464t-0.875-0.464l-2.25-2.893q-0.357-0.464-0.196-0.795t0.75-0.33h1.429v-18.286h-1.429q-0.589 0-0.75-0.33t0.196-0.795l2.25-2.893q0.357-0.464 0.875-0.464t0.875 0.464l2.25 2.893q0.357 0.464 0.196 0.795t-0.75 0.33h-1.429v18.286h1.429zM1.446 2.304l0.964 0.482q0.214 0.089 3.768 0.089 0.786 0 2.357-0.036t2.357-0.036q0.643 0 1.92 0.009t1.92 0.009h5.232q0.107 0 0.375 0.009t0.366 0 0.286-0.054 0.313-0.161 0.268-0.313l0.75-0.018q0.071 0 0.25 0.009t0.25 0.009q0.036 2 0.036 6 0 1.429-0.089 1.946-0.696 0.25-1.214 0.321-0.446-0.786-0.964-2.286-0.054-0.161-0.196-0.857t-0.259-1.313-0.134-0.634q-0.107-0.143-0.214-0.223t-0.277-0.107-0.232-0.045-0.321-0.009-0.295 0.009q-0.304 0-1.188-0.009t-1.33-0.009-1.143 0.036-1.268 0.107q-0.161 1.446-0.143 2.429 0 1.679 0.036 6.929t0.036 8.125q0 0.286-0.045 1.277t0 1.634 0.223 1.232q0.714 0.375 2.214 0.759t2.143 0.67q0.089 0.714 0.089 0.893 0 0.25-0.054 0.518l-0.607 0.018q-1.357 0.036-3.893-0.143t-3.696-0.179q-0.893 0-2.696 0.161t-2.714 0.161q-0.054-0.911-0.054-0.929v-0.161q0.304-0.482 1.098-0.768t1.759-0.518 1.393-0.482q0.339-0.75 0.339-6.839 0-1.804-0.054-5.411t-0.054-5.411v-2.089q0-0.036 0.009-0.277t0.009-0.446-0.018-0.455-0.054-0.429-0.089-0.25q-0.196-0.214-2.893-0.214-0.589 0-1.661 0.214t-1.429 0.464q-0.339 0.232-0.607 1.295t-0.563 1.982-0.759 0.955q-0.75-0.464-1-0.786v-6.839z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-text-width\" viewBox=\"0 0 32 32\">\r\n            <title>text-width</title>\r\n            <path d=\"M1.446 2.304l0.964 0.482q0.214 0.089 3.768 0.089 0.786 0 2.357-0.036t2.357-0.036q1.25 0 4.402-0.018t5.438-0.009 4.411 0.080q0.589 0.018 1-0.554l0.75-0.018q0.071 0 0.25 0.009t0.25 0.009q0.036 2 0.036 6 0 1.429-0.089 1.946-0.696 0.25-1.214 0.321-0.446-0.786-0.964-2.286-0.054-0.161-0.196-0.848t-0.268-1.313-0.125-0.643q-0.179-0.232-0.482-0.339-0.089-0.036-1.179-0.036-0.536 0-1.661-0.018t-1.839-0.018-1.679 0.036-1.714 0.125q-0.161 1.446-0.143 2.429l0.018 2.714v-0.929q0 0.982 0.018 2.75t0.027 3.214 0.009 2.732q0 0.286-0.045 1.277t0 1.634 0.223 1.232q0.714 0.375 2.214 0.759t2.143 0.67q0.089 0.714 0.089 0.893 0 0.25-0.054 0.518l-0.607 0.018q-1.357 0.036-3.893-0.143t-3.696-0.179q-0.893 0-2.696 0.161t-2.714 0.161q-0.054-0.911-0.054-0.929v-0.161q0.304-0.482 1.098-0.768t1.759-0.518 1.393-0.482q0.125-0.286 0.205-1.321t0.107-2.598 0.027-2.768-0.009-2.741-0.009-1.589q0-0.125-0.045-0.384t-0.045-0.402q0-0.125 0.009-0.786t0.018-1.304 0-1.366-0.054-1.205-0.116-0.571q-0.196-0.214-2.893-0.214-0.732 0-2.911 0.241t-2.464 0.438q-0.339 0.214-0.607 1.277t-0.563 1.991-0.759 0.964q-0.75-0.464-1-0.786v-6.839zM23.393 25.196q0.214 0 0.75 0.348t1.027 0.741 1.063 0.875 0.643 0.536q0.464 0.375 0.464 0.875t-0.464 0.875q-0.071 0.054-0.643 0.536t-1.063 0.875-1.027 0.741-0.75 0.348q-0.232 0-0.366-0.188t-0.179-0.509-0.045-0.598 0.027-0.589 0.027-0.348h-18.286q0 0.036 0.027 0.348t0.027 0.589-0.045 0.598-0.179 0.509-0.366 0.188q-0.214 0-0.75-0.348t-1.027-0.741-1.063-0.875-0.643-0.536q-0.464-0.375-0.464-0.875t0.464-0.875q0.071-0.054 0.643-0.536t1.063-0.875 1.027-0.741 0.75-0.348q0.232 0 0.366 0.188t0.179 0.509 0.045 0.598-0.027 0.589-0.027 0.348h18.286q0-0.036-0.027-0.348t-0.027-0.589 0.045-0.598 0.179-0.509 0.366-0.188z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-align-left\" viewBox=\"0 0 32 32\">\r\n            <title>align-left</title>\r\n            <path d=\"M32 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM25.143 17.143v2.286q0 0.464-0.339 0.804t-0.804 0.339h-22.857q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h22.857q0.464 0 0.804 0.339t0.339 0.804zM29.714 10.286v2.286q0 0.464-0.339 0.804t-0.804 0.339h-27.429q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h27.429q0.464 0 0.804 0.339t0.339 0.804zM22.857 3.429v2.286q0 0.464-0.339 0.804t-0.804 0.339h-20.571q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h20.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-align-center\" viewBox=\"0 0 32 32\">\r\n            <title>align-center</title>\r\n            <path d=\"M32 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM25.143 17.143v2.286q0 0.464-0.339 0.804t-0.804 0.339h-16q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h16q0.464 0 0.804 0.339t0.339 0.804zM29.714 10.286v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM22.857 3.429v2.286q0 0.464-0.339 0.804t-0.804 0.339h-11.429q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h11.429q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-align-right\" viewBox=\"0 0 32 32\">\r\n            <title>align-right</title>\r\n            <path d=\"M32 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 17.143v2.286q0 0.464-0.339 0.804t-0.804 0.339h-22.857q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h22.857q0.464 0 0.804 0.339t0.339 0.804zM32 10.286v2.286q0 0.464-0.339 0.804t-0.804 0.339h-27.429q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h27.429q0.464 0 0.804 0.339t0.339 0.804zM32 3.429v2.286q0 0.464-0.339 0.804t-0.804 0.339h-20.571q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h20.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-align-justify\" viewBox=\"0 0 32 32\">\r\n            <title>align-justify</title>\r\n            <path d=\"M32 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 17.143v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 10.286v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 3.429v2.286q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-list\" viewBox=\"0 0 32 32\">\r\n            <title>list</title>\r\n            <path d=\"M4.571 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-3.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h3.429q0.232 0 0.402 0.17t0.17 0.402zM4.571 16.571v3.429q0 0.232-0.17 0.402t-0.402 0.17h-3.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h3.429q0.232 0 0.402 0.17t0.17 0.402zM4.571 9.714v3.429q0 0.232-0.17 0.402t-0.402 0.17h-3.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h3.429q0.232 0 0.402 0.17t0.17 0.402zM32 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-24q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h24q0.232 0 0.402 0.17t0.17 0.402zM4.571 2.857v3.429q0 0.232-0.17 0.402t-0.402 0.17h-3.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h3.429q0.232 0 0.402 0.17t0.17 0.402zM32 16.571v3.429q0 0.232-0.17 0.402t-0.402 0.17h-24q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h24q0.232 0 0.402 0.17t0.17 0.402zM32 9.714v3.429q0 0.232-0.17 0.402t-0.402 0.17h-24q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h24q0.232 0 0.402 0.17t0.17 0.402zM32 2.857v3.429q0 0.232-0.17 0.402t-0.402 0.17h-24q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h24q0.232 0 0.402 0.17t0.17 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-outdent\" viewBox=\"0 0 32 32\">\r\n            <title>outdent</title>\r\n            <path d=\"M6.857 9.714v10.286q0 0.232-0.17 0.402t-0.402 0.17q-0.25 0-0.411-0.161l-5.143-5.143q-0.161-0.161-0.161-0.411t0.161-0.411l5.143-5.143q0.161-0.161 0.411-0.161 0.232 0 0.402 0.17t0.17 0.402zM32 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-30.857q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h30.857q0.232 0 0.402 0.17t0.17 0.402zM32 16.571v3.429q0 0.232-0.17 0.402t-0.402 0.17h-19.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h19.429q0.232 0 0.402 0.17t0.17 0.402zM32 9.714v3.429q0 0.232-0.17 0.402t-0.402 0.17h-19.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h19.429q0.232 0 0.402 0.17t0.17 0.402zM32 2.857v3.429q0 0.232-0.17 0.402t-0.402 0.17h-30.857q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h30.857q0.232 0 0.402 0.17t0.17 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-indent\" viewBox=\"0 0 32 32\">\r\n            <title>indent</title>\r\n            <path d=\"M6.286 14.857q0 0.25-0.161 0.411l-5.143 5.143q-0.161 0.161-0.411 0.161-0.232 0-0.402-0.17t-0.17-0.402v-10.286q0-0.232 0.17-0.402t0.402-0.17q0.25 0 0.411 0.161l5.143 5.143q0.161 0.161 0.161 0.411zM32 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-30.857q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h30.857q0.232 0 0.402 0.17t0.17 0.402zM32 16.571v3.429q0 0.232-0.17 0.402t-0.402 0.17h-19.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h19.429q0.232 0 0.402 0.17t0.17 0.402zM32 9.714v3.429q0 0.232-0.17 0.402t-0.402 0.17h-19.429q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h19.429q0.232 0 0.402 0.17t0.17 0.402zM32 2.857v3.429q0 0.232-0.17 0.402t-0.402 0.17h-30.857q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h30.857q0.232 0 0.402 0.17t0.17 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-video-camera\" viewBox=\"0 0 32 32\">\r\n            <title>video-camera</title>\r\n            <path d=\"M32 6.286v19.429q0 0.75-0.696 1.054-0.232 0.089-0.446 0.089-0.482 0-0.804-0.339l-7.196-7.196v2.964q0 2.125-1.509 3.634t-3.634 1.509h-12.571q-2.125 0-3.634-1.509t-1.509-3.634v-12.571q0-2.125 1.509-3.634t3.634-1.509h12.571q2.125 0 3.634 1.509t1.509 3.634v2.946l7.196-7.179q0.321-0.339 0.804-0.339 0.214 0 0.446 0.089 0.696 0.304 0.696 1.054z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-picture-o\" viewBox=\"0 0 34 32\">\r\n            <title>picture-o</title>\r\n            <path d=\"M11.429 10.286q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM29.714 17.143v8h-25.143v-3.429l5.714-5.714 2.857 2.857 9.143-9.143zM31.429 4.571h-28.571q-0.232 0-0.402 0.17t-0.17 0.402v21.714q0 0.232 0.17 0.402t0.402 0.17h28.571q0.232 0 0.402-0.17t0.17-0.402v-21.714q0-0.232-0.17-0.402t-0.402-0.17zM34.286 5.143v21.714q0 1.179-0.839 2.018t-2.018 0.839h-28.571q-1.179 0-2.018-0.839t-0.839-2.018v-21.714q0-1.179 0.839-2.018t2.018-0.839h28.571q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pencil\" viewBox=\"0 0 32 32\">\r\n            <title>pencil</title>\r\n            <path d=\"M6.482 27.429l1.625-1.625-4.196-4.196-1.625 1.625v1.911h2.286v2.286h1.911zM15.821 10.857q0-0.393-0.393-0.393-0.179 0-0.304 0.125l-9.679 9.679q-0.125 0.125-0.125 0.304 0 0.393 0.393 0.393 0.179 0 0.304-0.125l9.679-9.679q0.125-0.125 0.125-0.304zM14.857 7.429l7.429 7.429-14.857 14.857h-7.429v-7.429zM27.054 9.143q0 0.946-0.661 1.607l-2.964 2.964-7.429-7.429 2.964-2.946q0.643-0.679 1.607-0.679 0.946 0 1.625 0.679l4.196 4.179q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-map-marker\" viewBox=\"0 0 18 32\">\r\n            <title>map-marker</title>\r\n            <path d=\"M13.714 11.429q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232 1.339 3.232 3.232 1.339 3.232-1.339 1.339-3.232zM18.286 11.429q0 1.946-0.589 3.196l-6.5 13.821q-0.286 0.589-0.848 0.929t-1.205 0.339-1.205-0.339-0.83-0.929l-6.518-13.821q-0.589-1.25-0.589-3.196 0-3.786 2.679-6.464t6.464-2.679 6.464 2.679 2.679 6.464z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-adjust\" viewBox=\"0 0 32 32\">\r\n            <title>adjust</title>\r\n            <path d=\"M13.714 25.714v-19.429q-2.643 0-4.875 1.304t-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tint\" viewBox=\"0 0 18 32\">\r\n            <title>tint</title>\r\n            <path d=\"M9.143 20.571q0-0.643-0.357-1.232-0.018-0.018-0.277-0.402t-0.455-0.679-0.446-0.786-0.375-0.902q-0.071-0.286-0.375-0.286t-0.375 0.286q-0.125 0.411-0.375 0.902t-0.446 0.786-0.455 0.679-0.277 0.402q-0.357 0.589-0.357 1.232 0 0.946 0.67 1.616t1.616 0.67 1.616-0.67 0.67-1.616zM18.286 18.286q0 3.786-2.679 6.464t-6.464 2.679-6.464-2.679-2.679-6.464q0-2.589 1.446-4.911 0.107-0.161 1.116-1.616t1.804-2.696 1.777-3.179 1.482-3.598q0.161-0.536 0.607-0.839t0.911-0.304 0.92 0.304 0.598 0.839q0.5 1.661 1.482 3.598t1.777 3.179 1.804 2.696 1.116 1.616q1.446 2.268 1.446 4.911z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-edit\" viewBox=\"0 0 32 32\">\r\n            <title>edit</title>\r\n            <path d=\"M15.857 21.143l2.071-2.071-2.714-2.714-2.071 2.071v1h1.714v1.714h1zM23.714 8.286q-0.286-0.286-0.589 0.018l-6.25 6.25q-0.304 0.304-0.018 0.589t0.589-0.018l6.25-6.25q0.304-0.304 0.018-0.589zM25.143 18.893v3.393q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h14.857q1.125 0 2.089 0.446 0.268 0.125 0.321 0.411 0.054 0.304-0.161 0.518l-0.875 0.875q-0.25 0.25-0.571 0.143-0.411-0.107-0.804-0.107h-14.857q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018v-2.25q0-0.232 0.161-0.393l1.143-1.143q0.268-0.268 0.625-0.125t0.357 0.518zM23.429 5.714l5.143 5.143-12 12h-5.143v-5.143zM31.357 8.071l-1.643 1.643-5.143-5.143 1.643-1.643q0.5-0.5 1.214-0.5t1.214 0.5l2.714 2.714q0.5 0.5 0.5 1.214t-0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-share-square-o\" viewBox=\"0 0 30 32\">\r\n            <title>share-square-o</title>\r\n            <path d=\"M25.143 17.661v4.625q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h4.554q0.232 0 0.402 0.17t0.17 0.402q0 0.482-0.464 0.571-1.375 0.464-2.375 1.071-0.179 0.071-0.286 0.071h-2q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018v-3.821q0-0.339 0.321-0.518 0.5-0.232 0.964-0.661 0.286-0.286 0.625-0.143 0.375 0.161 0.375 0.518zM29.375 8.804l-6.857 6.857q-0.321 0.339-0.804 0.339-0.214 0-0.446-0.089-0.696-0.304-0.696-1.054v-3.429h-2.857q-5.768 0-7.821 2.339-2.125 2.446-1.321 8.446 0.054 0.411-0.357 0.607-0.143 0.036-0.214 0.036-0.286 0-0.464-0.232-0.179-0.25-0.375-0.554t-0.705-1.223-0.884-1.777-0.688-2.036-0.313-2.179q0-0.875 0.063-1.625t0.25-1.607 0.5-1.571 0.839-1.455 1.223-1.321 1.687-1.098 2.223-0.866 2.848-0.545 3.509-0.196h2.857v-3.429q0-0.75 0.696-1.054 0.232-0.089 0.446-0.089 0.464 0 0.804 0.339l6.857 6.857q0.339 0.339 0.339 0.804t-0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-check-square-o\" viewBox=\"0 0 30 32\">\r\n            <title>check-square-o</title>\r\n            <path d=\"M25.143 16.607v5.679q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h14.857q1.125 0 2.089 0.446 0.268 0.125 0.321 0.411 0.054 0.304-0.161 0.518l-0.875 0.875q-0.179 0.179-0.411 0.179-0.054 0-0.161-0.036-0.411-0.107-0.804-0.107h-14.857q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018v-4.536q0-0.232 0.161-0.393l1.143-1.143q0.179-0.179 0.411-0.179 0.107 0 0.214 0.054 0.357 0.143 0.357 0.518zM29.268 7.875l-14.536 14.536q-0.429 0.429-1.018 0.429t-1.018-0.429l-7.679-7.679q-0.429-0.429-0.429-1.018t0.429-1.018l1.964-1.964q0.429-0.429 1.018-0.429t1.018 0.429l4.696 4.696 11.554-11.554q0.429-0.429 1.018-0.429t1.018 0.429l1.964 1.964q0.429 0.429 0.429 1.018t-0.429 1.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrows\" viewBox=\"0 0 32 32\">\r\n            <title>arrows</title>\r\n            <path d=\"M32 16q0 0.464-0.339 0.804l-4.571 4.571q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-2.286h-6.857v6.857h2.286q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804l-4.571 4.571q-0.339 0.339-0.804 0.339t-0.804-0.339l-4.571-4.571q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h2.286v-6.857h-6.857v2.286q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-4.571-4.571q-0.339-0.339-0.339-0.804t0.339-0.804l4.571-4.571q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804v2.286h6.857v-6.857h-2.286q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l4.571-4.571q0.339-0.339 0.804-0.339t0.804 0.339l4.571 4.571q0.339 0.339 0.339 0.804t-0.339 0.804-0.804 0.339h-2.286v6.857h6.857v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l4.571 4.571q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-step-backward\" viewBox=\"0 0 18 32\">\r\n            <title>step-backward</title>\r\n            <path d=\"M17.482 2.518q0.339-0.339 0.571-0.232t0.232 0.571v26.286q0 0.464-0.232 0.571t-0.571-0.232l-12.679-12.679q-0.161-0.161-0.232-0.339v12.107q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v12.107q0.071-0.196 0.232-0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fast-backward\" viewBox=\"0 0 32 32\">\r\n            <title>fast-backward</title>\r\n            <path d=\"M31.196 2.518q0.339-0.339 0.571-0.232t0.232 0.571v26.286q0 0.464-0.232 0.571t-0.571-0.232l-12.679-12.679q-0.161-0.161-0.232-0.339v12.679q0 0.464-0.232 0.571t-0.571-0.232l-12.679-12.679q-0.161-0.161-0.232-0.339v12.107q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v12.107q0.071-0.196 0.232-0.339l12.679-12.679q0.339-0.339 0.571-0.232t0.232 0.571v12.679q0.071-0.196 0.232-0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-backward\" viewBox=\"0 0 30 32\">\r\n            <title>backward</title>\r\n            <path d=\"M28.911 2.518q0.339-0.339 0.571-0.232t0.232 0.571v26.286q0 0.464-0.232 0.571t-0.571-0.232l-12.679-12.679q-0.143-0.161-0.232-0.339v12.679q0 0.464-0.232 0.571t-0.571-0.232l-12.679-12.679q-0.339-0.339-0.339-0.804t0.339-0.804l12.679-12.679q0.339-0.339 0.571-0.232t0.232 0.571v12.679q0.089-0.196 0.232-0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-play\" viewBox=\"0 0 25 32\">\r\n            <title>play</title>\r\n            <path d=\"M24.714 16.554l-23.714 13.179q-0.411 0.232-0.705 0.054t-0.295-0.643v-26.286q0-0.464 0.295-0.643t0.705 0.054l23.714 13.179q0.411 0.232 0.411 0.554t-0.411 0.554z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pause\" viewBox=\"0 0 32 32\">\r\n            <title>pause</title>\r\n            <path d=\"M27.429 3.429v25.143q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h9.143q0.464 0 0.804 0.339t0.339 0.804zM11.429 3.429v25.143q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h9.143q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stop\" viewBox=\"0 0 32 32\">\r\n            <title>stop</title>\r\n            <path d=\"M27.429 3.429v25.143q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-forward\" viewBox=\"0 0 30 32\">\r\n            <title>forward</title>\r\n            <path d=\"M0.804 29.482q-0.339 0.339-0.571 0.232t-0.232-0.571v-26.286q0-0.464 0.232-0.571t0.571 0.232l12.679 12.679q0.143 0.143 0.232 0.339v-12.679q0-0.464 0.232-0.571t0.571 0.232l12.679 12.679q0.339 0.339 0.339 0.804t-0.339 0.804l-12.679 12.679q-0.339 0.339-0.571 0.232t-0.232-0.571v-12.679q-0.089 0.179-0.232 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fast-forward\" viewBox=\"0 0 32 32\">\r\n            <title>fast-forward</title>\r\n            <path d=\"M0.804 29.482q-0.339 0.339-0.571 0.232t-0.232-0.571v-26.286q0-0.464 0.232-0.571t0.571 0.232l12.679 12.679q0.143 0.143 0.232 0.339v-12.679q0-0.464 0.232-0.571t0.571 0.232l12.679 12.679q0.143 0.143 0.232 0.339v-12.107q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v25.143q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-12.107q-0.089 0.179-0.232 0.339l-12.679 12.679q-0.339 0.339-0.571 0.232t-0.232-0.571v-12.679q-0.089 0.179-0.232 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-step-forward\" viewBox=\"0 0 18 32\">\r\n            <title>step-forward</title>\r\n            <path d=\"M0.804 29.482q-0.339 0.339-0.571 0.232t-0.232-0.571v-26.286q0-0.464 0.232-0.571t0.571 0.232l12.679 12.679q0.143 0.143 0.232 0.339v-12.107q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v25.143q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-12.107q-0.089 0.179-0.232 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-eject\" viewBox=\"0 0 27 32\">\r\n            <title>eject</title>\r\n            <path d=\"M0.25 17.482l12.679-12.679q0.339-0.339 0.804-0.339t0.804 0.339l12.679 12.679q0.339 0.339 0.232 0.571t-0.571 0.232h-26.286q-0.464 0-0.571-0.232t0.232-0.571zM26.304 27.429h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804v4.571q0 0.464-0.339 0.804t-0.804 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-left\" viewBox=\"0 0 23 32\">\r\n            <title>chevron-left</title>\r\n            <path d=\"M20.911 5.375l-9.482 9.482 9.482 9.482q0.339 0.339 0.339 0.804t-0.339 0.804l-2.964 2.964q-0.339 0.339-0.804 0.339t-0.804-0.339l-13.25-13.25q-0.339-0.339-0.339-0.804t0.339-0.804l13.25-13.25q0.339-0.339 0.804-0.339t0.804 0.339l2.964 2.964q0.339 0.339 0.339 0.804t-0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-right\" viewBox=\"0 0 23 32\">\r\n            <title>chevron-right</title>\r\n            <path d=\"M19.768 15.661l-13.25 13.25q-0.339 0.339-0.804 0.339t-0.804-0.339l-2.964-2.964q-0.339-0.339-0.339-0.804t0.339-0.804l9.482-9.482-9.482-9.482q-0.339-0.339-0.339-0.804t0.339-0.804l2.964-2.964q0.339-0.339 0.804-0.339t0.804 0.339l13.25 13.25q0.339 0.339 0.339 0.804t-0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plus-circle\" viewBox=\"0 0 32 32\">\r\n            <title>plus-circle</title>\r\n            <path d=\"M21.714 17.143v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-4.571v-4.571q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v4.571h-4.571q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h4.571v4.571q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804v-4.571h4.571q0.464 0 0.804-0.339t0.339-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-minus-circle\" viewBox=\"0 0 32 32\">\r\n            <title>minus-circle</title>\r\n            <path d=\"M21.714 17.143v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-13.714q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h13.714q0.464 0 0.804-0.339t0.339-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-times-circle\" viewBox=\"0 0 32 32\">\r\n            <title>times-circle</title>\r\n            <path d=\"M20.518 20.036q0-0.464-0.339-0.804l-3.232-3.232 3.232-3.232q0.339-0.339 0.339-0.804 0-0.482-0.339-0.821l-1.607-1.607q-0.339-0.339-0.821-0.339-0.464 0-0.804 0.339l-3.232 3.232-3.232-3.232q-0.339-0.339-0.804-0.339-0.482 0-0.821 0.339l-1.607 1.607q-0.339 0.339-0.339 0.821 0 0.464 0.339 0.804l3.232 3.232-3.232 3.232q-0.339 0.339-0.339 0.804 0 0.482 0.339 0.821l1.607 1.607q0.339 0.339 0.821 0.339 0.464 0 0.804-0.339l3.232-3.232 3.232 3.232q0.339 0.339 0.804 0.339 0.482 0 0.821-0.339l1.607-1.607q0.339-0.339 0.339-0.821zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-check-circle\" viewBox=\"0 0 32 32\">\r\n            <title>check-circle</title>\r\n            <path d=\"M22.929 13.107q0-0.5-0.321-0.821l-1.625-1.607q-0.339-0.339-0.804-0.339t-0.804 0.339l-7.286 7.268-4.036-4.036q-0.339-0.339-0.804-0.339t-0.804 0.339l-1.625 1.607q-0.321 0.321-0.321 0.821 0 0.482 0.321 0.804l6.464 6.464q0.339 0.339 0.804 0.339 0.482 0 0.821-0.339l9.696-9.696q0.321-0.321 0.321-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-question-circle\" viewBox=\"0 0 32 32\">\r\n            <title>question-circle</title>\r\n            <path d=\"M16 24.571v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-3.429q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h3.429q0.25 0 0.411-0.161t0.161-0.411zM20.571 12.571q0-1.571-0.991-2.911t-2.473-2.071-3.036-0.732q-4.339 0-6.625 3.804-0.268 0.429 0.143 0.75l2.357 1.786q0.125 0.107 0.339 0.107 0.286 0 0.446-0.214 0.946-1.214 1.536-1.643 0.607-0.429 1.536-0.429 0.857 0 1.527 0.464t0.67 1.054q0 0.679-0.357 1.089t-1.214 0.804q-1.125 0.5-2.063 1.545t-0.938 2.241v0.643q0 0.25 0.161 0.411t0.411 0.161h3.429q0.25 0 0.411-0.161t0.161-0.411q0-0.339 0.384-0.884t0.973-0.884q0.571-0.321 0.875-0.509t0.821-0.625 0.795-0.857 0.5-1.080 0.223-1.446zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-info-circle\" viewBox=\"0 0 32 32\">\r\n            <title>info-circle</title>\r\n            <path d=\"M18.286 24.571v-2.857q0-0.25-0.161-0.411t-0.411-0.161h-1.714v-9.143q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v2.857q0 0.25 0.161 0.411t0.411 0.161h1.714v5.714h-1.714q-0.25 0-0.411 0.161t-0.161 0.411v2.857q0 0.25 0.161 0.411t0.411 0.161h8q0.25 0 0.411-0.161t0.161-0.411zM16 8.571v-2.857q0-0.25-0.161-0.411t-0.411-0.161h-3.429q-0.25 0-0.411 0.161t-0.161 0.411v2.857q0 0.25 0.161 0.411t0.411 0.161h3.429q0.25 0 0.411-0.161t0.161-0.411zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-crosshairs\" viewBox=\"0 0 32 32\">\r\n            <title>crosshairs</title>\r\n            <path d=\"M21.375 18.286h-1.946q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h1.946q-0.571-1.929-2.009-3.366t-3.366-2.009v1.946q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-1.946q-1.929 0.571-3.366 2.009t-2.009 3.366h1.946q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.464-0.339 0.804t-0.804 0.339h-1.946q0.571 1.929 2.009 3.366t3.366 2.009v-1.946q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v1.946q1.929-0.571 3.366-2.009t2.009-3.366zM27.429 14.857v2.286q0 0.464-0.339 0.804t-0.804 0.339h-2.554q-0.661 2.875-2.759 4.973t-4.973 2.759v2.554q0 0.464-0.339 0.804t-0.804 0.339h-2.286q-0.464 0-0.804-0.339t-0.339-0.804v-2.554q-2.875-0.661-4.973-2.759t-2.759-4.973h-2.554q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h2.554q0.661-2.875 2.759-4.973t4.973-2.759v-2.554q0-0.464 0.339-0.804t0.804-0.339h2.286q0.464 0 0.804 0.339t0.339 0.804v2.554q2.875 0.661 4.973 2.759t2.759 4.973h2.554q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-times-circle-o\" viewBox=\"0 0 32 32\">\r\n            <title>times-circle-o</title>\r\n            <path d=\"M19.589 19.268l-2.607 2.607q-0.179 0.179-0.411 0.179t-0.411-0.179l-2.446-2.446-2.446 2.446q-0.179 0.179-0.411 0.179t-0.411-0.179l-2.607-2.607q-0.179-0.179-0.179-0.411t0.179-0.411l2.446-2.446-2.446-2.446q-0.179-0.179-0.179-0.411t0.179-0.411l2.607-2.607q0.179-0.179 0.411-0.179t0.411 0.179l2.446 2.446 2.446-2.446q0.179-0.179 0.411-0.179t0.411 0.179l2.607 2.607q0.179 0.179 0.179 0.411t-0.179 0.411l-2.446 2.446 2.446 2.446q0.179 0.179 0.179 0.411t-0.179 0.411zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-check-circle-o\" viewBox=\"0 0 32 32\">\r\n            <title>check-circle-o</title>\r\n            <path d=\"M20.911 14.518l-7.536 7.536q-0.339 0.339-0.804 0.339t-0.804-0.339l-5.25-5.25q-0.339-0.339-0.339-0.804t0.339-0.804l1.821-1.821q0.339-0.339 0.804-0.339t0.804 0.339l2.625 2.625 4.911-4.911q0.339-0.339 0.804-0.339t0.804 0.339l1.821 1.821q0.339 0.339 0.339 0.804t-0.339 0.804zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ban\" viewBox=\"0 0 32 32\">\r\n            <title>ban</title>\r\n            <path d=\"M23.429 15.946q0-2.875-1.554-5.268l-13.464 13.446q2.446 1.589 5.304 1.589 1.982 0 3.777-0.777t3.098-2.080 2.071-3.116 0.768-3.795zM5.589 21.286l13.482-13.464q-2.411-1.625-5.357-1.625-2.643 0-4.875 1.304t-3.536 3.554-1.304 4.893q0 2.893 1.589 5.339zM27.429 15.946q0 2.804-1.089 5.357t-2.92 4.393-4.375 2.929-5.33 1.089-5.33-1.089-4.375-2.929-2.92-4.393-1.089-5.357 1.089-5.348 2.92-4.384 4.375-2.929 5.33-1.089 5.33 1.089 4.375 2.929 2.92 4.384 1.089 5.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-left\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-left</title>\r\n            <path d=\"M27.429 16v2.286q0 0.946-0.58 1.616t-1.509 0.67h-12.571l5.232 5.25q0.679 0.643 0.679 1.607t-0.679 1.607l-1.339 1.357q-0.661 0.661-1.607 0.661-0.929 0-1.625-0.661l-11.625-11.643q-0.661-0.661-0.661-1.607 0-0.929 0.661-1.625l11.625-11.607q0.679-0.679 1.625-0.679 0.929 0 1.607 0.679l1.339 1.321q0.679 0.679 0.679 1.625t-0.679 1.625l-5.232 5.232h12.571q0.929 0 1.509 0.67t0.58 1.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-right\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-right</title>\r\n            <path d=\"M26.286 17.143q0 0.964-0.661 1.625l-11.625 11.625q-0.696 0.661-1.625 0.661-0.911 0-1.607-0.661l-1.339-1.339q-0.679-0.679-0.679-1.625t0.679-1.625l5.232-5.232h-12.571q-0.929 0-1.509-0.67t-0.58-1.616v-2.286q0-0.946 0.58-1.616t1.509-0.67h12.571l-5.232-5.25q-0.679-0.643-0.679-1.607t0.679-1.607l1.339-1.339q0.679-0.679 1.607-0.679 0.946 0 1.625 0.679l11.625 11.625q0.661 0.625 0.661 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-up\" viewBox=\"0 0 30 32\">\r\n            <title>arrow-up</title>\r\n            <path d=\"M28.768 17.339q0 0.911-0.661 1.607l-1.339 1.339q-0.679 0.679-1.625 0.679-0.964 0-1.607-0.679l-5.25-5.232v12.571q0 0.929-0.67 1.509t-1.616 0.58h-2.286q-0.946 0-1.616-0.58t-0.67-1.509v-12.571l-5.25 5.232q-0.643 0.679-1.607 0.679t-1.607-0.679l-1.339-1.339q-0.679-0.679-0.679-1.607 0-0.946 0.679-1.625l11.625-11.625q0.625-0.661 1.607-0.661 0.964 0 1.625 0.661l11.625 11.625q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-down\" viewBox=\"0 0 30 32\">\r\n            <title>arrow-down</title>\r\n            <path d=\"M28.768 14.857q0 0.946-0.661 1.607l-11.625 11.643q-0.696 0.661-1.625 0.661-0.946 0-1.607-0.661l-11.625-11.643q-0.679-0.643-0.679-1.607 0-0.946 0.679-1.625l1.321-1.339q0.696-0.661 1.625-0.661 0.946 0 1.607 0.661l5.25 5.25v-12.571q0-0.929 0.679-1.607t1.607-0.679h2.286q0.929 0 1.607 0.679t0.679 1.607v12.571l5.25-5.25q0.661-0.661 1.607-0.661 0.929 0 1.625 0.661l1.339 1.339q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mail-forward\" viewBox=\"0 0 32 32\">\r\n            <title>mail-forward</title>\r\n            <path d=\"M32 11.429q0 0.464-0.339 0.804l-9.143 9.143q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-4.571h-4q-1.75 0-3.134 0.107t-2.75 0.384-2.375 0.759-1.884 1.241-1.429 1.804-0.866 2.473-0.313 3.232q0 0.982 0.089 2.196 0 0.107 0.045 0.42t0.045 0.473q0 0.268-0.152 0.446t-0.42 0.179q-0.286 0-0.5-0.304-0.125-0.161-0.232-0.393t-0.241-0.536-0.188-0.429q-2.268-5.089-2.268-8.054 0-3.554 0.946-5.946 2.893-7.196 15.625-7.196h4v-4.571q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l9.143 9.143q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-expand\" viewBox=\"0 0 32 32\">\r\n            <title>expand</title>\r\n            <path d=\"M13.482 18.857q0 0.232-0.179 0.411l-5.929 5.929 2.571 2.571q0.339 0.339 0.339 0.804t-0.339 0.804-0.804 0.339h-8q-0.464 0-0.804-0.339t-0.339-0.804v-8q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l2.571 2.571 5.929-5.929q0.179-0.179 0.411-0.179t0.411 0.179l2.036 2.036q0.179 0.179 0.179 0.411zM27.429 3.429v8q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-2.571-2.571-5.929 5.929q-0.179 0.179-0.411 0.179t-0.411-0.179l-2.036-2.036q-0.179-0.179-0.179-0.411t0.179-0.411l5.929-5.929-2.571-2.571q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h8q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-compress\" viewBox=\"0 0 32 32\">\r\n            <title>compress</title>\r\n            <path d=\"M13.714 17.143v8q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-2.571-2.571-5.929 5.929q-0.179 0.179-0.411 0.179t-0.411-0.179l-2.036-2.036q-0.179-0.179-0.179-0.411t0.179-0.411l5.929-5.929-2.571-2.571q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h8q0.464 0 0.804 0.339t0.339 0.804zM27.196 5.143q0 0.232-0.179 0.411l-5.929 5.929 2.571 2.571q0.339 0.339 0.339 0.804t-0.339 0.804-0.804 0.339h-8q-0.464 0-0.804-0.339t-0.339-0.804v-8q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l2.571 2.571 5.929-5.929q0.179-0.179 0.411-0.179t0.411 0.179l2.036 2.036q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plus\" viewBox=\"0 0 25 32\">\r\n            <title>plus</title>\r\n            <path d=\"M25.143 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-7.429v7.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h7.429v-7.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214v7.429h7.429q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-minus\" viewBox=\"0 0 25 32\">\r\n            <title>minus</title>\r\n            <path d=\"M25.143 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-21.714q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h21.714q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-asterisk\" viewBox=\"0 0 30 32\">\r\n            <title>asterisk</title>\r\n            <path d=\"M26.464 18.75q0.821 0.464 1.063 1.384t-0.223 1.741l-1.143 1.964q-0.464 0.821-1.384 1.063t-1.741-0.223l-4.75-2.732v5.482q0 0.929-0.679 1.607t-1.607 0.679h-2.286q-0.929 0-1.607-0.679t-0.679-1.607v-5.482l-4.75 2.732q-0.821 0.464-1.741 0.223t-1.384-1.063l-1.143-1.964q-0.464-0.821-0.223-1.741t1.063-1.384l4.75-2.75-4.75-2.75q-0.821-0.464-1.063-1.384t0.223-1.741l1.143-1.964q0.464-0.821 1.384-1.063t1.741 0.223l4.75 2.732v-5.482q0-0.929 0.679-1.607t1.607-0.679h2.286q0.929 0 1.607 0.679t0.679 1.607v5.482l4.75-2.732q0.821-0.464 1.741-0.223t1.384 1.063l1.143 1.964q0.464 0.821 0.223 1.741t-1.063 1.384l-4.75 2.75z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-exclamation-circle\" viewBox=\"0 0 32 32\">\r\n            <title>exclamation-circle</title>\r\n            <path d=\"M13.714 2.286q3.732 0 6.884 1.839t4.991 4.991 1.839 6.884-1.839 6.884-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839zM16 24.554v-3.393q0-0.25-0.161-0.42t-0.393-0.17h-3.429q-0.232 0-0.411 0.179t-0.179 0.411v3.393q0 0.232 0.179 0.411t0.411 0.179h3.429q0.232 0 0.393-0.17t0.161-0.42zM15.964 18.411l0.321-11.089q0-0.214-0.179-0.321-0.179-0.143-0.429-0.143h-3.929q-0.25 0-0.429 0.143-0.179 0.107-0.179 0.321l0.304 11.089q0 0.179 0.179 0.313t0.429 0.134h3.304q0.25 0 0.42-0.134t0.188-0.313z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gift\" viewBox=\"0 0 32 32\">\r\n            <title>gift</title>\r\n            <path d=\"M16.571 24.214v-12.786h-5.714v12.786q0 0.446 0.321 0.688t0.821 0.241h3.429q0.5 0 0.821-0.241t0.321-0.688zM8.429 9.143h3.482l-2.25-2.875q-0.464-0.554-1.232-0.554-0.714 0-1.214 0.5t-0.5 1.214 0.5 1.214 1.214 0.5zM20.714 7.429q0-0.714-0.5-1.214t-1.214-0.5q-0.768 0-1.232 0.554l-2.232 2.875h3.464q0.714 0 1.214-0.5t0.5-1.214zM27.429 12v5.714q0 0.25-0.161 0.411t-0.411 0.161h-1.714v7.429q0 0.714-0.5 1.214t-1.214 0.5h-19.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-5.714q0-0.25 0.161-0.411t0.411-0.161h7.857q-1.661 0-2.83-1.17t-1.17-2.83 1.17-2.83 2.83-1.17q1.911 0 3 1.375l2.286 2.946 2.286-2.946q1.089-1.375 3-1.375 1.661 0 2.83 1.17t1.17 2.83-1.17 2.83-2.83 1.17h7.857q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-leaf\" viewBox=\"0 0 32 32\">\r\n            <title>leaf</title>\r\n            <path d=\"M22.857 12.571q0-0.464-0.339-0.804t-0.804-0.339q-3.071 0-5.679 0.884t-4.634 2.393-4.205 3.92q-0.339 0.375-0.339 0.804 0 0.464 0.339 0.804t0.804 0.339q0.429 0 0.804-0.339 0.482-0.429 1.321-1.268t1.196-1.179q2.446-2.214 4.795-3.143t5.598-0.929q0.464 0 0.804-0.339t0.339-0.804zM32 9.036q0 1.696-0.357 3.446-0.821 4-3.295 6.839t-6.384 4.786q-3.821 1.929-7.821 1.929-2.643 0-5.107-0.839-0.268-0.089-1.571-0.75t-1.714-0.661q-0.286 0-0.705 0.571t-0.804 1.25-0.938 1.25-1.071 0.571q-0.536 0-0.911-0.196t-0.554-0.429-0.482-0.75q-0.036-0.071-0.107-0.196t-0.098-0.179-0.054-0.17-0.027-0.241q0-0.625 0.554-1.313t1.214-1.17 1.214-1 0.554-0.857q0-0.071-0.25-0.679t-0.286-0.786q-0.161-0.911-0.161-1.857 0-2.054 0.777-3.929t2.125-3.295 3.045-2.482 3.643-1.705q0.982-0.321 2.589-0.455t3.205-0.161 3.188-0.107 2.92-0.429 2.027-1.009l0.527-0.527t0.527-0.5 0.482-0.357 0.652-0.286 0.777-0.080q0.696 0 1.259 0.821t0.848 2 0.429 2.214 0.143 1.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fire\" viewBox=\"0 0 25 32\">\r\n            <title>fire</title>\r\n            <path d=\"M25.143 30.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-24q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h24q0.232 0 0.402 0.17t0.17 0.402zM20.571 11.429q0 1.393-0.438 2.571t-1.143 2.009-1.563 1.571-1.714 1.384-1.563 1.286-1.143 1.455-0.438 1.723q0 1.714 1.196 4l-0.071-0.018 0.018 0.018q-1.607-0.732-2.857-1.482t-2.473-1.786-2.027-2.188-1.295-2.688-0.491-3.286q0-1.393 0.438-2.571t1.143-2.009 1.563-1.571 1.714-1.384 1.563-1.286 1.143-1.455 0.438-1.723q0-1.679-1.179-4l0.054 0.018-0.018-0.018q1.607 0.732 2.857 1.482t2.473 1.786 2.027 2.188 1.295 2.688 0.491 3.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-eye\" viewBox=\"0 0 32 32\">\r\n            <title>eye</title>\r\n            <path d=\"M29.714 17.143q-2.714-4.214-6.804-6.304 1.089 1.857 1.089 4.018 0 3.304-2.348 5.652t-5.652 2.348-5.652-2.348-2.348-5.652q0-2.161 1.089-4.018-4.089 2.089-6.804 6.304 2.375 3.661 5.955 5.83t7.759 2.17 7.759-2.17 5.955-5.83zM16.857 10.286q0-0.357-0.25-0.607t-0.607-0.25q-2.232 0-3.83 1.598t-1.598 3.83q0 0.357 0.25 0.607t0.607 0.25 0.607-0.25 0.25-0.607q0-1.536 1.089-2.625t2.625-1.089q0.357 0 0.607-0.25t0.25-0.607zM32 17.143q0 0.607-0.357 1.232-2.5 4.107-6.723 6.58t-8.92 2.473-8.92-2.482-6.723-6.571q-0.357-0.625-0.357-1.232t0.357-1.232q2.5-4.089 6.723-6.571t8.92-2.482 8.92 2.482 6.723 6.571q0.357 0.625 0.357 1.232z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-eye-slash\" viewBox=\"0 0 32 32\">\r\n            <title>eye-slash</title>\r\n            <path d=\"M9.911 23.839l1.393-2.518q-1.554-1.125-2.429-2.839t-0.875-3.625q0-2.161 1.089-4.018-4.089 2.089-6.804 6.304 2.982 4.607 7.625 6.696zM16.857 10.286q0-0.357-0.25-0.607t-0.607-0.25q-2.232 0-3.83 1.598t-1.598 3.83q0 0.357 0.25 0.607t0.607 0.25 0.607-0.25 0.25-0.607q0-1.536 1.089-2.625t2.625-1.089q0.357 0 0.607-0.25t0.25-0.607zM23.339 6.875q0 0.125-0.018 0.161-1.875 3.357-5.625 10.107t-5.643 10.125l-0.875 1.589q-0.179 0.286-0.5 0.286-0.214 0-2.393-1.25-0.286-0.179-0.286-0.5 0-0.214 0.786-1.554-2.554-1.161-4.705-3.089t-3.723-4.375q-0.357-0.554-0.357-1.232t0.357-1.232q2.732-4.196 6.786-6.625t8.857-2.429q1.589 0 3.214 0.304l0.964-1.732q0.179-0.286 0.5-0.286 0.089 0 0.321 0.107t0.554 0.277 0.589 0.33 0.563 0.33 0.348 0.205q0.286 0.179 0.286 0.482zM24 14.857q0 2.482-1.411 4.527t-3.732 2.938l5-8.964q0.143 0.804 0.143 1.5zM32 17.143q0 0.625-0.357 1.232-0.696 1.143-1.946 2.589-2.679 3.071-6.205 4.768t-7.491 1.696l1.321-2.357q3.786-0.321 7.009-2.446t5.384-5.482q-2.054-3.196-5.036-5.25l1.125-2q1.696 1.143 3.259 2.732t2.58 3.286q0.357 0.607 0.357 1.232z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-warning\" viewBox=\"0 0 32 32\">\r\n            <title>warning</title>\r\n            <path d=\"M18.286 24.554v-3.393q0-0.25-0.17-0.42t-0.402-0.17h-3.429q-0.232 0-0.402 0.17t-0.17 0.42v3.393q0 0.25 0.17 0.42t0.402 0.17h3.429q0.232 0 0.402-0.17t0.17-0.42zM18.25 17.875l0.321-8.196q0-0.214-0.179-0.339-0.232-0.196-0.429-0.196h-3.929q-0.196 0-0.429 0.196-0.179 0.125-0.179 0.375l0.304 8.161q0 0.179 0.179 0.295t0.429 0.116h3.304q0.25 0 0.42-0.116t0.188-0.295zM18 1.196l13.714 25.143q0.625 1.125-0.036 2.25-0.304 0.518-0.83 0.821t-1.134 0.304h-27.429q-0.607 0-1.134-0.304t-0.83-0.821q-0.661-1.125-0.036-2.25l13.714-25.143q0.304-0.554 0.839-0.875t1.161-0.321 1.161 0.321 0.839 0.875z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plane\" viewBox=\"0 0 25 32\">\r\n            <title>plane</title>\r\n            <path d=\"M24.571 2.857q0.786 0.929 0.214 2.643t-1.929 3.071l-2.875 2.875 2.857 12.429q0.089 0.339-0.214 0.589l-2.286 1.714q-0.125 0.107-0.339 0.107-0.071 0-0.125-0.018-0.268-0.054-0.375-0.286l-4.982-9.071-4.625 4.625 0.946 3.464q0.089 0.304-0.143 0.554l-1.714 1.714q-0.161 0.161-0.411 0.161h-0.036q-0.268-0.036-0.429-0.232l-3.375-4.5-4.5-3.375q-0.196-0.125-0.232-0.411-0.018-0.232 0.161-0.446l1.714-1.732q0.161-0.161 0.411-0.161 0.107 0 0.143 0.018l3.464 0.946 4.625-4.625-9.071-4.982q-0.25-0.143-0.304-0.429-0.036-0.286 0.161-0.482l2.286-2.286q0.25-0.232 0.536-0.143l11.875 2.839 2.857-2.857q1.357-1.357 3.071-1.929t2.643 0.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-calendar\" viewBox=\"0 0 30 32\">\r\n            <title>calendar</title>\r\n            <path d=\"M2.286 29.714h5.143v-5.143h-5.143v5.143zM8.571 29.714h5.714v-5.143h-5.714v5.143zM2.286 23.429h5.143v-5.714h-5.143v5.714zM8.571 23.429h5.714v-5.714h-5.714v5.714zM2.286 16.571h5.143v-5.143h-5.143v5.143zM15.429 29.714h5.714v-5.143h-5.714v5.143zM8.571 16.571h5.714v-5.143h-5.714v5.143zM22.286 29.714h5.143v-5.143h-5.143v5.143zM15.429 23.429h5.714v-5.714h-5.714v5.714zM9.143 8v-5.143q0-0.232-0.17-0.402t-0.402-0.17h-1.143q-0.232 0-0.402 0.17t-0.17 0.402v5.143q0 0.232 0.17 0.402t0.402 0.17h1.143q0.232 0 0.402-0.17t0.17-0.402zM22.286 23.429h5.143v-5.714h-5.143v5.714zM15.429 16.571h5.714v-5.143h-5.714v5.143zM22.286 16.571h5.143v-5.143h-5.143v5.143zM22.857 8v-5.143q0-0.232-0.17-0.402t-0.402-0.17h-1.143q-0.232 0-0.402 0.17t-0.17 0.402v5.143q0 0.232 0.17 0.402t0.402 0.17h1.143q0.232 0 0.402-0.17t0.17-0.402zM29.714 6.857v22.857q0 0.929-0.679 1.607t-1.607 0.679h-25.143q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h2.286v-1.714q0-1.179 0.839-2.018t2.018-0.839h1.143q1.179 0 2.018 0.839t0.839 2.018v1.714h6.857v-1.714q0-1.179 0.839-2.018t2.018-0.839h1.143q1.179 0 2.018 0.839t0.839 2.018v1.714h2.286q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-random\" viewBox=\"0 0 32 32\">\r\n            <title>random</title>\r\n            <path d=\"M11.893 8.589q-1.071 1.643-2.446 4.875-0.393-0.804-0.661-1.295t-0.723-1.134-0.911-1.009-1.125-0.625-1.455-0.259h-4q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h4q4.464 0 7.321 4.018zM32 22.857q0 0.25-0.161 0.411l-5.714 5.714q-0.161 0.161-0.411 0.161-0.232 0-0.402-0.17t-0.17-0.402v-3.429q-0.571 0-1.518 0.009t-1.446 0.018-1.304-0.018-1.268-0.089-1.143-0.188-1.125-0.33-1.036-0.509-1.054-0.714-0.982-0.955-1-1.241q1.054-1.661 2.429-4.875 0.393 0.804 0.661 1.295t0.723 1.134 0.911 1.009 1.125 0.625 1.455 0.259h4.571v-3.429q0-0.25 0.161-0.411t0.411-0.161q0.214 0 0.429 0.179l5.696 5.696q0.161 0.161 0.161 0.411zM32 6.857q0 0.25-0.161 0.411l-5.714 5.714q-0.161 0.161-0.411 0.161-0.232 0-0.402-0.17t-0.17-0.402v-3.429h-4.571q-0.857 0-1.554 0.268t-1.232 0.804-0.911 1.098-0.804 1.384q-0.571 1.107-1.393 3.054-0.518 1.179-0.884 1.982t-0.964 1.875-1.143 1.786-1.321 1.482-1.607 1.223-1.902 0.75-2.286 0.295h-4q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h4q0.857 0 1.554-0.268t1.232-0.804 0.911-1.098 0.804-1.384q0.571-1.107 1.393-3.054 0.518-1.179 0.884-1.982t0.964-1.875 1.143-1.786 1.321-1.482 1.607-1.223 1.902-0.75 2.286-0.295h4.571v-3.429q0-0.25 0.161-0.411t0.411-0.161q0.214 0 0.429 0.179l5.696 5.696q0.161 0.161 0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-comment\" viewBox=\"0 0 32 32\">\r\n            <title>comment</title>\r\n            <path d=\"M32 16q0 3.107-2.143 5.741t-5.821 4.161-8.036 1.527q-1.25 0-2.589-0.143-3.536 3.125-8.214 4.321-0.875 0.25-2.036 0.393-0.304 0.036-0.545-0.161t-0.313-0.518v-0.018q-0.054-0.071-0.009-0.214t0.036-0.179 0.080-0.17l0.107-0.161t0.125-0.152 0.143-0.161q0.125-0.143 0.554-0.616t0.616-0.679 0.554-0.705 0.58-0.911 0.482-1.054 0.464-1.357q-2.804-1.589-4.42-3.929t-1.616-5.018q0-2.321 1.268-4.438t3.411-3.652 5.107-2.438 6.214-0.902q4.357 0 8.036 1.527t5.821 4.161 2.143 5.741z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-magnet\" viewBox=\"0 0 32 32\">\r\n            <title>magnet</title>\r\n            <path d=\"M27.429 14.857v2.286q0 3.589-1.759 6.464t-4.893 4.491-7.063 1.616-7.063-1.616-4.893-4.491-1.759-6.464v-2.286q0-0.464 0.339-0.804t0.804-0.339h6.857q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.929 0.42 1.607t0.955 1.018 1.268 0.536 1.143 0.232 0.786 0.036 0.786-0.036 1.143-0.232 1.268-0.536 0.955-1.018 0.42-1.607v-2.286q0-0.464 0.339-0.804t0.804-0.339h6.857q0.464 0 0.804 0.339t0.339 0.804zM9.143 3.429v6.857q0 0.464-0.339 0.804t-0.804 0.339h-6.857q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h6.857q0.464 0 0.804 0.339t0.339 0.804zM27.429 3.429v6.857q0 0.464-0.339 0.804t-0.804 0.339h-6.857q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h6.857q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-up\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-up</title>\r\n            <path d=\"M30.054 23.768l-2.964 2.946q-0.339 0.339-0.804 0.339t-0.804-0.339l-9.482-9.482-9.482 9.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-2.964-2.946q-0.339-0.339-0.339-0.813t0.339-0.813l13.25-13.232q0.339-0.339 0.804-0.339t0.804 0.339l13.25 13.232q0.339 0.339 0.339 0.813t-0.339 0.813z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-down\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-down</title>\r\n            <path d=\"M30.054 14.429l-13.25 13.232q-0.339 0.339-0.804 0.339t-0.804-0.339l-13.25-13.232q-0.339-0.339-0.339-0.813t0.339-0.813l2.964-2.946q0.339-0.339 0.804-0.339t0.804 0.339l9.482 9.482 9.482-9.482q0.339-0.339 0.804-0.339t0.804 0.339l2.964 2.946q0.339 0.339 0.339 0.813t-0.339 0.813z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-retweet\" viewBox=\"0 0 34 32\">\r\n            <title>retweet</title>\r\n            <path d=\"M22.857 26.857q0 0.232-0.17 0.402t-0.402 0.17h-17.143q-0.143 0-0.241-0.036t-0.161-0.125-0.098-0.143-0.054-0.205-0.018-0.205v-10.714h-3.429q-0.464 0-0.804-0.339t-0.339-0.804q0-0.429 0.268-0.732l5.714-6.857q0.339-0.393 0.875-0.393t0.875 0.393l5.714 6.857q0.268 0.304 0.268 0.732 0 0.464-0.339 0.804t-0.804 0.339h-3.429v6.857h10.286q0.286 0 0.446 0.196l2.857 3.429q0.125 0.196 0.125 0.375zM34.286 19.429q0 0.429-0.268 0.732l-5.714 6.857q-0.357 0.411-0.875 0.411t-0.875-0.411l-5.714-6.857q-0.268-0.304-0.268-0.732 0-0.464 0.339-0.804t0.804-0.339h3.429v-6.857h-10.286q-0.286 0-0.446-0.214l-2.857-3.429q-0.125-0.161-0.125-0.357 0-0.232 0.17-0.402t0.402-0.17h17.143q0.143 0 0.241 0.036t0.161 0.125 0.098 0.143 0.054 0.205 0.018 0.205v10.714h3.429q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-shopping-cart\" viewBox=\"0 0 30 32\">\r\n            <title>shopping-cart</title>\r\n            <path d=\"M11.429 27.429q0 0.929-0.679 1.607t-1.607 0.679-1.607-0.679-0.679-1.607 0.679-1.607 1.607-0.679 1.607 0.679 0.679 1.607zM27.429 27.429q0 0.929-0.679 1.607t-1.607 0.679-1.607-0.679-0.679-1.607 0.679-1.607 1.607-0.679 1.607 0.679 0.679 1.607zM29.714 8v9.143q0 0.429-0.295 0.759t-0.723 0.384l-18.643 2.179q0.232 1.071 0.232 1.25 0 0.286-0.429 1.143h16.429q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-18.286q-0.464 0-0.804-0.339t-0.339-0.804q0-0.196 0.143-0.563t0.286-0.643 0.384-0.714 0.277-0.527l-3.161-14.696h-3.643q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571q0.286 0 0.509 0.116t0.348 0.277 0.232 0.438 0.143 0.464 0.098 0.527 0.080 0.464h21.446q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-folder\" viewBox=\"0 0 30 32\">\r\n            <title>folder</title>\r\n            <path d=\"M29.714 10.857v12.571q0 1.643-1.179 2.821t-2.821 1.179h-21.714q-1.643 0-2.821-1.179t-1.179-2.821v-17.143q0-1.643 1.179-2.821t2.821-1.179h5.714q1.643 0 2.821 1.179t1.179 2.821v0.571h12q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-folder-open\" viewBox=\"0 0 34 32\">\r\n            <title>folder-open</title>\r\n            <path d=\"M33.554 17q0 0.554-0.554 1.179l-6 7.071q-0.768 0.911-2.152 1.545t-2.563 0.634h-19.429q-0.607 0-1.080-0.232t-0.473-0.768q0-0.554 0.554-1.179l6-7.071q0.768-0.911 2.152-1.545t2.563-0.634h19.429q0.607 0 1.080 0.232t0.473 0.768zM27.429 10.857v2.857h-14.857q-1.679 0-3.518 0.848t-2.929 2.134l-6.107 7.179q0-0.071-0.009-0.223t-0.009-0.223v-17.143q0-1.643 1.179-2.821t2.821-1.179h5.714q1.643 0 2.821 1.179t1.179 2.821v0.571h9.714q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrows-v\" viewBox=\"0 0 14 32\">\r\n            <title>arrows-v</title>\r\n            <path d=\"M12.571 5.714q0 0.464-0.339 0.804t-0.804 0.339h-2.286v18.286h2.286q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804l-4.571 4.571q-0.339 0.339-0.804 0.339t-0.804-0.339l-4.571-4.571q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h2.286v-18.286h-2.286q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l4.571-4.571q0.339-0.339 0.804-0.339t0.804 0.339l4.571 4.571q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrows-h\" viewBox=\"0 0 32 32\">\r\n            <title>arrows-h</title>\r\n            <path d=\"M32 16q0 0.464-0.339 0.804l-4.571 4.571q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-2.286h-18.286v2.286q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-4.571-4.571q-0.339-0.339-0.339-0.804t0.339-0.804l4.571-4.571q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804v2.286h18.286v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l4.571 4.571q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bar-chart\" viewBox=\"0 0 37 32\">\r\n            <title>bar-chart</title>\r\n            <path d=\"M11.429 16v9.143h-4.571v-9.143h4.571zM18.286 6.857v18.286h-4.571v-18.286h4.571zM36.571 27.429v2.286h-36.571v-27.429h2.286v25.143h34.286zM25.143 11.429v13.714h-4.571v-13.714h4.571zM32 4.571v20.571h-4.571v-20.571h4.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-twitter-square\" viewBox=\"0 0 32 32\">\r\n            <title>twitter-square</title>\r\n            <path d=\"M22.857 10.893q-1 0.446-2.161 0.607 1.214-0.714 1.661-2.089-1.161 0.679-2.393 0.911-1.089-1.179-2.732-1.179-1.554 0-2.652 1.098t-1.098 2.652q0 0.518 0.089 0.857-2.304-0.125-4.321-1.161t-3.429-2.768q-0.518 0.893-0.518 1.893 0 2.036 1.625 3.125-0.839-0.018-1.786-0.464v0.036q0 1.339 0.893 2.384t2.196 1.295q-0.518 0.143-0.911 0.143-0.232 0-0.696-0.071 0.375 1.125 1.33 1.857t2.17 0.75q-2.071 1.607-4.661 1.607-0.464 0-0.893-0.054 2.643 1.679 5.75 1.679 2 0 3.75-0.634t3-1.696 2.152-2.446 1.339-2.893 0.438-3.009q0-0.321-0.018-0.482 1.125-0.804 1.875-1.946zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-facebook-square\" viewBox=\"0 0 32 32\">\r\n            <title>facebook-square</title>\r\n            <path d=\"M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-3.357v-10.625h3.554l0.536-4.143h-4.089v-2.643q0-1 0.42-1.5t1.634-0.5l2.179-0.018v-3.696q-1.125-0.161-3.179-0.161-2.429 0-3.884 1.429t-1.455 4.036v3.054h-3.571v4.143h3.571v10.625h-9.5q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-camera-retro\" viewBox=\"0 0 32 32\">\r\n            <title>camera-retro</title>\r\n            <path d=\"M16.571 14.857q0-0.25-0.161-0.411t-0.411-0.161q-1.179 0-2.018 0.839t-0.839 2.018q0 0.25 0.161 0.411t0.411 0.161 0.411-0.161 0.161-0.411q0-0.714 0.5-1.214t1.214-0.5q0.25 0 0.411-0.161t0.161-0.411zM20.571 17.179q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232 1.339-3.232 3.232-1.339 3.232 1.339 1.339 3.232zM2.286 27.429h27.429v-2.286h-27.429v2.286zM22.857 17.179q0-2.839-2.009-4.848t-4.848-2.009-4.848 2.009-2.009 4.848 2.009 4.848 4.848 2.009 4.848-2.009 2.009-4.848zM4.571 5.714h6.857v-2.286h-6.857v2.286zM2.286 9.143h27.429v-4.571h-14.786l-1.143 2.286h-11.5v2.286zM32 4.571v22.857q0 0.946-0.67 1.616t-1.616 0.67h-27.429q-0.946 0-1.616-0.67t-0.67-1.616v-22.857q0-0.946 0.67-1.616t1.616-0.67h27.429q0.946 0 1.616 0.67t0.67 1.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-key\" viewBox=\"0 0 32 32\">\r\n            <title>key</title>\r\n            <path d=\"M14.857 9.143q0-1.429-1-2.429t-2.429-1-2.429 1-1 2.429q0 0.75 0.339 1.482-0.732-0.339-1.482-0.339-1.429 0-2.429 1t-1 2.429 1 2.429 2.429 1 2.429-1 1-2.429q0-0.75-0.339-1.482 0.732 0.339 1.482 0.339 1.429 0 2.429-1t1-2.429zM30.054 21.714q0 0.304-0.875 1.179t-1.179 0.875q-0.161 0-0.509-0.286t-0.652-0.589-0.688-0.714-0.438-0.464l-1.714 1.714 3.929 3.929q0.5 0.5 0.5 1.214 0 0.75-0.696 1.446t-1.446 0.696q-0.714 0-1.214-0.5l-11.982-11.982q-3.143 2.339-6.518 2.339-2.911 0-4.741-1.83t-1.83-4.741q0-2.857 1.696-5.589t4.429-4.429 5.589-1.696q2.911 0 4.741 1.83t1.83 4.741q0 3.375-2.339 6.518l6.339 6.339 1.714-1.714q-0.054-0.054-0.464-0.438t-0.714-0.688-0.589-0.652-0.286-0.509q0-0.304 0.875-1.179t1.179-0.875q0.232 0 0.411 0.179 0.107 0.107 0.821 0.795t1.464 1.42 1.545 1.536 1.304 1.393 0.509 0.732z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gears\" viewBox=\"0 0 34 32\">\r\n            <title>gears</title>\r\n            <path d=\"M16 16q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232 1.339 3.232 3.232 1.339 3.232-1.339 1.339-3.232zM29.714 25.143q0-0.929-0.679-1.607t-1.607-0.679-1.607 0.679-0.679 1.607q0 0.946 0.67 1.616t1.616 0.67 1.616-0.67 0.67-1.616zM29.714 6.857q0-0.929-0.679-1.607t-1.607-0.679-1.607 0.679-0.679 1.607q0 0.946 0.67 1.616t1.616 0.67 1.616-0.67 0.67-1.616zM22.857 14.375v3.304q0 0.179-0.125 0.348t-0.286 0.188l-2.768 0.429q-0.196 0.625-0.571 1.357 0.607 0.857 1.607 2.054 0.125 0.179 0.125 0.357 0 0.214-0.125 0.339-0.411 0.536-1.473 1.598t-1.402 1.063q-0.196 0-0.375-0.125l-2.054-1.607q-0.661 0.339-1.375 0.554-0.196 1.929-0.411 2.768-0.125 0.429-0.536 0.429h-3.321q-0.196 0-0.357-0.134t-0.179-0.313l-0.411-2.732q-0.607-0.179-1.339-0.554l-2.107 1.589q-0.125 0.125-0.357 0.125-0.196 0-0.375-0.143-2.571-2.375-2.571-2.857 0-0.161 0.125-0.339 0.179-0.25 0.732-0.946t0.839-1.089q-0.411-0.786-0.625-1.464l-2.714-0.429q-0.179-0.018-0.304-0.17t-0.125-0.348v-3.304q0-0.179 0.125-0.348t0.286-0.188l2.768-0.429q0.196-0.625 0.571-1.357-0.607-0.857-1.607-2.054-0.125-0.196-0.125-0.357 0-0.214 0.125-0.357 0.393-0.536 1.464-1.589t1.411-1.054q0.196 0 0.375 0.125l2.054 1.607q0.607-0.321 1.375-0.571 0.196-1.929 0.411-2.75 0.125-0.429 0.536-0.429h3.321q0.196 0 0.357 0.134t0.179 0.313l0.411 2.732q0.607 0.179 1.339 0.554l2.107-1.589q0.143-0.125 0.357-0.125 0.196 0 0.375 0.143 2.571 2.375 2.571 2.857 0 0.161-0.125 0.339-0.214 0.286-0.75 0.964t-0.804 1.071q0.411 0.857 0.607 1.464l2.714 0.411q0.179 0.036 0.304 0.188t0.125 0.348zM34.286 23.893v2.5q0 0.286-2.661 0.554-0.214 0.482-0.536 0.929 0.911 2.018 0.911 2.464 0 0.071-0.071 0.125-2.179 1.268-2.214 1.268-0.143 0-0.821-0.839t-0.929-1.214q-0.357 0.036-0.536 0.036t-0.536-0.036q-0.25 0.375-0.929 1.214t-0.821 0.839q-0.036 0-2.214-1.268-0.071-0.054-0.071-0.125 0-0.446 0.911-2.464-0.321-0.446-0.536-0.929-2.661-0.268-2.661-0.554v-2.5q0-0.286 2.661-0.554 0.232-0.518 0.536-0.929-0.911-2.018-0.911-2.464 0-0.071 0.071-0.125 0.071-0.036 0.625-0.357t1.054-0.607 0.536-0.286q0.143 0 0.821 0.83t0.929 1.205q0.357-0.036 0.536-0.036t0.536 0.036q0.911-1.268 1.643-2l0.107-0.036q0.071 0 2.214 1.25 0.071 0.054 0.071 0.125 0 0.446-0.911 2.464 0.304 0.411 0.536 0.929 2.661 0.268 2.661 0.554zM34.286 5.607v2.5q0 0.286-2.661 0.554-0.214 0.482-0.536 0.929 0.911 2.018 0.911 2.464 0 0.071-0.071 0.125-2.179 1.268-2.214 1.268-0.143 0-0.821-0.839t-0.929-1.214q-0.357 0.036-0.536 0.036t-0.536-0.036q-0.25 0.375-0.929 1.214t-0.821 0.839q-0.036 0-2.214-1.268-0.071-0.054-0.071-0.125 0-0.446 0.911-2.464-0.321-0.446-0.536-0.929-2.661-0.268-2.661-0.554v-2.5q0-0.286 2.661-0.554 0.232-0.518 0.536-0.929-0.911-2.018-0.911-2.464 0-0.071 0.071-0.125 0.071-0.036 0.625-0.357t1.054-0.607 0.536-0.286q0.143 0 0.821 0.83t0.929 1.205q0.357-0.036 0.536-0.036t0.536 0.036q0.911-1.268 1.643-2l0.107-0.036q0.071 0 2.214 1.25 0.071 0.054 0.071 0.125 0 0.446-0.911 2.464 0.304 0.411 0.536 0.929 2.661 0.268 2.661 0.554z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-comments\" viewBox=\"0 0 32 32\">\r\n            <title>comments</title>\r\n            <path d=\"M25.143 13.714q0 2.482-1.679 4.589t-4.58 3.33-6.313 1.223q-1.536 0-3.143-0.286-2.214 1.571-4.964 2.286-0.643 0.161-1.536 0.286h-0.054q-0.196 0-0.366-0.143t-0.205-0.375q-0.018-0.054-0.018-0.116t0.009-0.116 0.036-0.107l0.045-0.089t0.063-0.098 0.071-0.089 0.080-0.089 0.071-0.080q0.089-0.107 0.411-0.446t0.464-0.527 0.402-0.518 0.446-0.688 0.366-0.786q-2.214-1.286-3.482-3.161t-1.268-4q0-2.482 1.679-4.589t4.58-3.33 6.312-1.223 6.313 1.223 4.58 3.33 1.679 4.589zM32 18.286q0 2.143-1.268 4.009t-3.482 3.152q0.179 0.429 0.366 0.786t0.446 0.688 0.402 0.518 0.464 0.527 0.411 0.446q0.018 0.018 0.071 0.080t0.080 0.089 0.071 0.089 0.063 0.098l0.045 0.089t0.036 0.107 0.009 0.116-0.018 0.116q-0.054 0.25-0.232 0.393t-0.393 0.125q-0.893-0.125-1.536-0.286-2.75-0.714-4.964-2.286-1.607 0.286-3.143 0.286-4.839 0-8.429-2.357 1.036 0.071 1.571 0.071 2.875 0 5.518-0.804t4.714-2.304q2.232-1.643 3.429-3.786t1.196-4.536q0-1.375-0.411-2.714 2.304 1.268 3.643 3.179t1.339 4.107z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-thumbs-o-up\" viewBox=\"0 0 32 32\">\r\n            <title>thumbs-o-up</title>\r\n            <path d=\"M4.571 24q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM25.143 13.714q0-0.911-0.696-1.598t-1.589-0.688h-6.286q0-1.036 0.857-2.848t0.857-2.866q0-1.75-0.571-2.589t-2.286-0.839q-0.464 0.464-0.679 1.518t-0.545 2.241-1.063 1.955q-0.393 0.411-1.375 1.625-0.071 0.089-0.411 0.536t-0.563 0.732-0.616 0.759-0.714 0.786-0.688 0.634-0.714 0.482-0.634 0.161h-0.571v11.429h0.571q0.232 0 0.563 0.054t0.589 0.116 0.679 0.196 0.625 0.205 0.634 0.223 0.518 0.188q3.768 1.304 6.107 1.304h2.161q3.429 0 3.429-2.982 0-0.464-0.089-1 0.536-0.286 0.848-0.938t0.313-1.313-0.321-1.232q0.946-0.893 0.946-2.125 0-0.446-0.179-0.991t-0.446-0.848q0.571-0.018 0.955-0.839t0.384-1.446zM27.429 13.696q0 1.589-0.875 2.911 0.161 0.589 0.161 1.232 0 1.375-0.679 2.571 0.054 0.375 0.054 0.768 0 1.804-1.071 3.179 0.018 2.482-1.518 3.92t-4.054 1.438h-2.304q-1.714 0-3.384-0.402t-3.866-1.17q-2.071-0.714-2.464-0.714h-5.143q-0.946 0-1.616-0.67t-0.67-1.616v-11.429q0-0.946 0.67-1.616t1.616-0.67h4.893q0.643-0.429 2.446-2.768 1.036-1.339 1.911-2.286 0.429-0.446 0.634-1.527t0.545-2.259 1.107-1.929q0.696-0.661 1.607-0.661 1.5 0 2.696 0.58t1.821 1.813 0.625 3.321q0 1.661-0.857 3.429h3.143q1.857 0 3.214 1.357t1.357 3.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-thumbs-o-down\" viewBox=\"0 0 32 32\">\r\n            <title>thumbs-o-down</title>\r\n            <path d=\"M4.571 8q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM25.143 18.286q0-0.625-0.384-1.446t-0.955-0.839q0.268-0.304 0.446-0.848t0.179-0.991q0-1.232-0.946-2.125 0.321-0.571 0.321-1.232t-0.313-1.313-0.848-0.938q0.089-0.536 0.089-1 0-1.518-0.875-2.25t-2.429-0.732h-2.286q-2.339 0-6.107 1.304-0.089 0.036-0.518 0.188t-0.634 0.223-0.625 0.205-0.679 0.196-0.589 0.116-0.563 0.054h-0.571v11.429h0.571q0.286 0 0.634 0.161t0.714 0.482 0.688 0.634 0.714 0.786 0.616 0.759 0.563 0.732 0.411 0.536q0.982 1.214 1.375 1.625 0.732 0.768 1.063 1.955t0.545 2.241 0.679 1.518q1.714 0 2.286-0.839t0.571-2.589q0-1.054-0.857-2.866t-0.857-2.848h6.286q0.893 0 1.589-0.688t0.696-1.598zM27.429 18.304q0 1.839-1.357 3.196t-3.214 1.357h-3.143q0.857 1.768 0.857 3.429 0 2.107-0.625 3.321-0.625 1.232-1.821 1.813t-2.696 0.58q-0.911 0-1.607-0.661-0.607-0.589-0.964-1.464t-0.455-1.616-0.313-1.509-0.554-1.143q-0.857-0.893-1.911-2.268-1.804-2.339-2.446-2.768h-4.893q-0.946 0-1.616-0.67t-0.67-1.616v-11.429q0-0.946 0.67-1.616t1.616-0.67h5.143q0.393 0 2.464-0.714 2.286-0.786 3.982-1.179t3.571-0.393h2q2.5 0 4.045 1.411t1.527 3.857v0.089q1.071 1.375 1.071 3.179 0 0.393-0.054 0.768 0.679 1.196 0.679 2.571 0 0.643-0.161 1.232 0.875 1.321 0.875 2.911z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-star-half\" viewBox=\"0 0 16 32\">\r\n            <title>star-half</title>\r\n            <path d=\"M14.857 0.571v23.911l-8.018 4.214q-0.393 0.214-0.714 0.214-0.375 0-0.563-0.259t-0.188-0.634q0-0.107 0.036-0.357l1.536-8.929-6.5-6.321q-0.446-0.482-0.446-0.857 0-0.661 1-0.821l8.964-1.304 4.018-8.125q0.339-0.732 0.875-0.732z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-heart-o\" viewBox=\"0 0 32 32\">\r\n            <title>heart-o</title>\r\n            <path d=\"M29.714 10.643q0-1.446-0.384-2.554t-0.982-1.759-1.455-1.063-1.679-0.554-1.75-0.143-2 0.455-1.973 1.143-1.545 1.286-1.071 1.098q-0.321 0.393-0.875 0.393t-0.875-0.393q-0.429-0.5-1.071-1.098t-1.545-1.286-1.973-1.143-2-0.455-1.75 0.143-1.679 0.554-1.455 1.063-0.982 1.759-0.384 2.554q0 3 3.339 6.339l10.375 10 10.357-9.982q3.357-3.357 3.357-6.357zM32 10.643q0 3.946-4.089 8.036l-11.125 10.714q-0.321 0.321-0.786 0.321t-0.786-0.321l-11.143-10.75q-0.179-0.143-0.491-0.464t-0.991-1.17-1.214-1.741-0.955-2.161-0.42-2.464q0-3.929 2.268-6.143t6.268-2.214q1.107 0 2.259 0.384t2.143 1.036 1.705 1.223 1.357 1.214q0.643-0.643 1.357-1.214t1.705-1.223 2.143-1.036 2.259-0.384q4 0 6.268 2.214t2.268 6.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sign-out\" viewBox=\"0 0 30 32\">\r\n            <title>sign-out</title>\r\n            <path d=\"M11.429 25.714q0 0.071 0.018 0.357t0.009 0.473-0.054 0.42-0.179 0.348-0.366 0.116h-5.714q-2.125 0-3.634-1.509t-1.509-3.634v-12.571q0-2.125 1.509-3.634t3.634-1.509h5.714q0.232 0 0.402 0.17t0.17 0.402q0 0.071 0.018 0.357t0.009 0.473-0.054 0.42-0.179 0.348-0.366 0.116h-5.714q-1.179 0-2.018 0.839t-0.839 2.018v12.571q0 1.179 0.839 2.018t2.018 0.839h5.571t0.205 0.018 0.205 0.054 0.143 0.098 0.125 0.161 0.036 0.241zM28 16q0 0.464-0.339 0.804l-9.714 9.714q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-5.143h-8q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h8v-5.143q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l9.714 9.714q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-linkedin-square\" viewBox=\"0 0 32 32\">\r\n            <title>linkedin-square</title>\r\n            <path d=\"M4.232 25.25h4.125v-12.393h-4.125v12.393zM8.625 9.036q-0.018-0.929-0.643-1.536t-1.661-0.607-1.688 0.607-0.652 1.536q0 0.911 0.634 1.527t1.652 0.616h0.018q1.054 0 1.696-0.616t0.643-1.527zM19.071 25.25h4.125v-7.107q0-2.75-1.304-4.161t-3.446-1.411q-2.429 0-3.732 2.089h0.036v-1.804h-4.125q0.054 1.179 0 12.393h4.125v-6.929q0-0.679 0.125-1 0.268-0.625 0.804-1.063t1.321-0.438q2.071 0 2.071 2.804v6.625zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-thumb-tack\" viewBox=\"0 0 21 32\">\r\n            <title>thumb-tack</title>\r\n            <path d=\"M8.571 15.429v-8q0-0.25-0.161-0.411t-0.411-0.161-0.411 0.161-0.161 0.411v8q0 0.25 0.161 0.411t0.411 0.161 0.411-0.161 0.161-0.411zM20.571 21.714q0 0.464-0.339 0.804t-0.804 0.339h-7.661l-0.911 8.625q-0.036 0.214-0.188 0.366t-0.366 0.152h-0.018q-0.482 0-0.571-0.482l-1.357-8.661h-7.214q-0.464 0-0.804-0.339t-0.339-0.804q0-2.196 1.402-3.955t3.17-1.759v-9.143q-0.929 0-1.607-0.679t-0.679-1.607 0.679-1.607 1.607-0.679h11.429q0.929 0 1.607 0.679t0.679 1.607-0.679 1.607-1.607 0.679v9.143q1.768 0 3.17 1.759t1.402 3.955z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-external-link\" viewBox=\"0 0 32 32\">\r\n            <title>external-link</title>\r\n            <path d=\"M25.143 16.571v5.714q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h12.571q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-12.571q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018v-5.714q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411zM32 1.143v9.143q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-3.143-3.143-11.643 11.643q-0.179 0.179-0.411 0.179t-0.411-0.179l-2.036-2.036q-0.179-0.179-0.179-0.411t0.179-0.411l11.643-11.643-3.143-3.143q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h9.143q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sign-in\" viewBox=\"0 0 32 32\">\r\n            <title>sign-in</title>\r\n            <path d=\"M21.143 16q0 0.464-0.339 0.804l-9.714 9.714q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-5.143h-8q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.464 0.339-0.804t0.804-0.339h8v-5.143q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l9.714 9.714q0.339 0.339 0.339 0.804zM27.429 9.714v12.571q0 2.125-1.509 3.634t-3.634 1.509h-5.714q-0.232 0-0.402-0.17t-0.17-0.402q0-0.071-0.018-0.357t-0.009-0.473 0.054-0.42 0.179-0.348 0.366-0.116h5.714q1.179 0 2.018-0.839t0.839-2.018v-12.571q0-1.179-0.839-2.018t-2.018-0.839h-5.571t-0.205-0.018-0.205-0.054-0.143-0.098-0.125-0.161-0.036-0.241q0-0.071-0.018-0.357t-0.009-0.473 0.054-0.42 0.179-0.348 0.366-0.116h5.714q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-trophy\" viewBox=\"0 0 30 32\">\r\n            <title>trophy</title>\r\n            <path d=\"M8.179 15.768q-1.321-2.893-1.321-6.625h-4.571v1.714q0 1.393 1.688 2.893t4.205 2.018zM27.429 10.857v-1.714h-4.571q0 3.732-1.321 6.625 2.518-0.518 4.205-2.018t1.688-2.893zM29.714 8.571v2.286q0 1.268-0.741 2.554t-2 2.321-3.089 1.741-3.848 0.795q-0.75 0.964-1.696 1.696-0.679 0.607-0.938 1.295t-0.259 1.598q0 0.964 0.545 1.625t1.741 0.661q1.339 0 2.384 0.813t1.045 2.045v1.143q0 0.25-0.161 0.411t-0.411 0.161h-14.857q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-1.232 1.045-2.045t2.384-0.813q1.196 0 1.741-0.661t0.545-1.625q0-0.911-0.259-1.598t-0.938-1.295q-0.946-0.732-1.696-1.696-2.018-0.089-3.848-0.795t-3.089-1.741-2-2.321-0.741-2.554v-2.286q0-0.714 0.5-1.214t1.214-0.5h5.143v-1.714q0-1.179 0.839-2.018t2.018-0.839h10.286q1.179 0 2.018 0.839t0.839 2.018v1.714h5.143q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-github-square\" viewBox=\"0 0 32 32\">\r\n            <title>github-square</title>\r\n            <path d=\"M7.036 24.143q-0.143 0.161-0.357-0.054-0.232-0.196-0.071-0.339 0.143-0.161 0.357 0.054 0.214 0.196 0.071 0.339zM6.286 23.054q0.161 0.214 0 0.339-0.143 0.107-0.304-0.125t0-0.321q0.161-0.125 0.304 0.107zM5.196 21.982q-0.089 0.125-0.232 0.036-0.179-0.089-0.125-0.214 0.054-0.089 0.232-0.036 0.179 0.089 0.125 0.214zM5.75 22.589q-0.107 0.125-0.286-0.054-0.161-0.196-0.036-0.286 0.107-0.107 0.286 0.054 0.161 0.196 0.036 0.286zM8.054 24.589q-0.071 0.214-0.339 0.107-0.304-0.071-0.232-0.268t0.339-0.125q0.286 0.089 0.232 0.286zM9.179 24.679q0 0.196-0.286 0.196-0.304 0.036-0.304-0.196 0-0.196 0.286-0.196 0.304-0.036 0.304 0.196zM10.214 24.5q0.036 0.179-0.25 0.25t-0.321-0.143 0.25-0.268q0.286-0.036 0.321 0.161zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-4q-0.286 0-0.438-0.018t-0.348-0.089-0.286-0.259-0.089-0.491v-4.268q0-1.732-0.929-2.536 1.018-0.107 1.83-0.321t1.679-0.696 1.446-1.188 0.946-1.875 0.366-2.688q0-2.161-1.411-3.679 0.661-1.625-0.143-3.643-0.5-0.161-1.446 0.196t-1.643 0.786l-0.679 0.429q-1.661-0.464-3.429-0.464t-3.429 0.464q-0.286-0.196-0.759-0.482t-1.491-0.688-1.536-0.241q-0.786 2.018-0.125 3.643-1.411 1.518-1.411 3.679 0 1.518 0.366 2.679t0.938 1.875 1.438 1.196 1.679 0.696 1.83 0.321q-0.714 0.643-0.875 1.839-0.375 0.179-0.804 0.268t-1.018 0.089-1.17-0.384-0.991-1.116q-0.339-0.571-0.866-0.929t-0.884-0.429l-0.357-0.054q-0.375 0-0.518 0.080t-0.089 0.205 0.161 0.25 0.232 0.214l0.125 0.089q0.393 0.179 0.777 0.679t0.563 0.911l0.179 0.411q0.232 0.679 0.786 1.098t1.196 0.536 1.241 0.125 0.991-0.063l0.411-0.071q0 0.679 0.009 1.839t0.009 1.214q0 0.393-0.196 0.598t-0.393 0.232-0.589 0.027h-4q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-upload\" viewBox=\"0 0 30 32\">\r\n            <title>upload</title>\r\n            <path d=\"M22.857 26.286q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM27.429 26.286q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM29.714 22.286v5.714q0 0.714-0.5 1.214t-1.214 0.5h-26.286q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h7.625q0.375 1 1.259 1.643t1.973 0.643h4.571q1.089 0 1.973-0.643t1.259-1.643h7.625q0.714 0 1.214 0.5t0.5 1.214zM23.911 10.714q-0.304 0.714-1.054 0.714h-4.571v8q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-8h-4.571q-0.75 0-1.054-0.714-0.304-0.696 0.25-1.232l8-8q0.321-0.339 0.804-0.339t0.804 0.339l8 8q0.554 0.536 0.25 1.232z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-lemon-o\" viewBox=\"0 0 32 32\">\r\n            <title>lemon-o</title>\r\n            <path d=\"M25.125 14.75q0-0.786-0.125-2.027t-0.321-1.723q-0.214-0.536-0.304-0.786t-0.161-0.652-0.071-0.866q0-0.411 0.089-1.223t0.089-1.205q0-0.661-0.179-0.982-0.071-0.018-0.232-0.018-0.339 0-1.036 0.080t-1.054 0.080q-1.071 0-3.143-0.429t-3.125-0.429q-0.768 0-1.688 0.205t-1.518 0.42-1.598 0.607q-2.446 0.964-3.607 1.839-1.714 1.304-2.848 3.384t-1.571 4.214-0.438 4.438q0 0.714 0.223 2.143t0.223 2.161q0 0.411-0.196 1.188t-0.196 1.17 0.214 0.652 0.607 0.259q0.429 0 1.295-0.196t1.313-0.196q1.018 0 3.027 0.277t3.027 0.277q3.232 0 5.071-0.643 2.304-0.804 4.205-2.723t2.964-4.384 1.063-4.911zM27.411 14.714q0 2.946-1.25 5.848t-3.5 5.143-5.018 3.223q-2.214 0.786-5.821 0.786-1.018 0-3.036-0.259t-3.018-0.259q-0.429 0-1.295 0.259t-1.313 0.259q-1.304 0-2.205-0.991t-0.902-2.295q0-0.429 0.196-1.214t0.196-1.196q0-0.714-0.223-2.152t-0.223-2.17q0-1.982 0.321-3.884t0.973-3.741 1.795-3.464 2.679-2.786q1.393-1.054 4.143-2.143 3.464-1.393 5.643-1.393 1.071 0 3.134 0.429t3.098 0.429q0.339 0 1.018-0.089t1.036-0.089q1.446 0 2.107 0.902t0.661 2.402q0 0.411-0.089 1.214t-0.089 1.214q0 0.179 0.018 0.33t0.054 0.304 0.071 0.241 0.116 0.286 0.116 0.304q0.286 0.714 0.446 2.116t0.161 2.438z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-phone\" viewBox=\"0 0 25 32\">\r\n            <title>phone</title>\r\n            <path d=\"M25.143 22.143q0 0.482-0.179 1.259t-0.375 1.223q-0.375 0.893-2.179 1.893-1.679 0.911-3.321 0.911-0.482 0-0.938-0.063t-1.027-0.223-0.848-0.259-0.991-0.366-0.875-0.321q-1.75-0.625-3.125-1.482-2.286-1.411-4.723-3.848t-3.848-4.723q-0.857-1.375-1.482-3.125-0.054-0.161-0.321-0.875t-0.366-0.991-0.259-0.848-0.223-1.027-0.063-0.938q0-1.643 0.911-3.321 1-1.804 1.893-2.179 0.446-0.196 1.223-0.375t1.259-0.179q0.25 0 0.375 0.054 0.321 0.107 0.946 1.357 0.196 0.339 0.536 0.964t0.625 1.134 0.554 0.955q0.054 0.071 0.313 0.446t0.384 0.634 0.125 0.509q0 0.357-0.509 0.893t-1.107 0.982-1.107 0.946-0.509 0.821q0 0.161 0.089 0.402t0.152 0.366 0.25 0.429 0.205 0.339q1.357 2.446 3.107 4.196t4.196 3.107q0.036 0.018 0.339 0.205t0.429 0.25 0.366 0.152 0.402 0.089q0.321 0 0.821-0.509t0.946-1.107 0.982-1.107 0.893-0.509q0.25 0 0.509 0.125t0.634 0.384 0.446 0.313q0.446 0.268 0.955 0.554t1.134 0.625 0.964 0.536q1.25 0.625 1.357 0.946 0.054 0.125 0.054 0.375z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-square-o\" viewBox=\"0 0 25 32\">\r\n            <title>square-o</title>\r\n            <path d=\"M20 4.571h-14.857q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018v-14.857q0-1.179-0.839-2.018t-2.018-0.839zM25.143 7.429v14.857q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h14.857q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bookmark-o\" viewBox=\"0 0 23 32\">\r\n            <title>bookmark-o</title>\r\n            <path d=\"M20.571 4.571h-18.286v22.179l9.143-8.768 1.589 1.518 7.554 7.25v-22.179zM20.786 2.286q0.411 0 0.786 0.161 0.589 0.232 0.938 0.732t0.348 1.107v23.018q0 0.607-0.348 1.107t-0.938 0.732q-0.339 0.143-0.786 0.143-0.857 0-1.482-0.571l-7.875-7.571-7.875 7.571q-0.643 0.589-1.482 0.589-0.411 0-0.786-0.161-0.589-0.232-0.938-0.732t-0.348-1.107v-23.018q0-0.607 0.348-1.107t0.938-0.732q0.375-0.161 0.786-0.161h18.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-phone-square\" viewBox=\"0 0 32 32\">\r\n            <title>phone-square</title>\r\n            <path d=\"M22.857 21.304q0-0.196-0.036-0.286-0.054-0.143-0.688-0.527t-1.58-0.884l-0.946-0.518q-0.089-0.054-0.339-0.232t-0.446-0.268-0.375-0.089q-0.321 0-0.839 0.58t-1.018 1.17-0.786 0.589q-0.125 0-0.295-0.063t-0.277-0.116-0.304-0.17-0.25-0.152q-1.768-0.982-3.045-2.259t-2.259-3.045q-0.036-0.054-0.152-0.25t-0.17-0.304-0.116-0.277-0.063-0.295q0-0.232 0.366-0.598t0.804-0.688 0.804-0.705 0.366-0.652q0-0.179-0.089-0.375t-0.268-0.446-0.232-0.339q-0.054-0.107-0.268-0.509t-0.446-0.813-0.473-0.848-0.446-0.723-0.295-0.321-0.286-0.036q-0.857 0-1.804 0.393-0.821 0.375-1.429 1.688t-0.607 2.33q0 0.286 0.045 0.607t0.089 0.545 0.161 0.589 0.179 0.527 0.223 0.589 0.196 0.536q1.071 2.929 3.866 5.723t5.723 3.866q0.107 0.036 0.536 0.196t0.589 0.223 0.527 0.179 0.589 0.161 0.545 0.089 0.607 0.045q1.018 0 2.33-0.607t1.688-1.429q0.393-0.946 0.393-1.804zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-twitter\" viewBox=\"0 0 30 32\">\r\n            <title>twitter</title>\r\n            <path d=\"M28.929 7.286q-1.196 1.75-2.893 2.982 0.018 0.25 0.018 0.75 0 2.321-0.679 4.634t-2.063 4.437-3.295 3.759-4.607 2.607-5.768 0.973q-4.839 0-8.857-2.589 0.625 0.071 1.393 0.071 4.018 0 7.161-2.464-1.875-0.036-3.357-1.152t-2.036-2.848q0.589 0.089 1.089 0.089 0.768 0 1.518-0.196-2-0.411-3.313-1.991t-1.313-3.67v-0.071q1.214 0.679 2.607 0.732-1.179-0.786-1.875-2.054t-0.696-2.75q0-1.571 0.786-2.911 2.161 2.661 5.259 4.259t6.634 1.777q-0.143-0.679-0.143-1.321 0-2.393 1.688-4.080t4.080-1.688q2.5 0 4.214 1.821 1.946-0.375 3.661-1.393-0.661 2.054-2.536 3.179 1.661-0.179 3.321-0.893z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-facebook-f\" viewBox=\"0 0 18 32\">\r\n            <title>facebook-f</title>\r\n            <path d=\"M17.125 0.214v4.714h-2.804q-1.536 0-2.071 0.643t-0.536 1.929v3.375h5.232l-0.696 5.286h-4.536v13.554h-5.464v-13.554h-4.554v-5.286h4.554v-3.893q0-3.321 1.857-5.152t4.946-1.83q2.625 0 4.071 0.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-github\" viewBox=\"0 0 32 32\">\r\n            <title>github</title>\r\n            <path d=\"M27.429 16q0 4.482-2.616 8.063t-6.759 4.955q-0.482 0.089-0.705-0.125t-0.223-0.536v-3.768q0-1.732-0.929-2.536 1.018-0.107 1.83-0.321t1.679-0.696 1.446-1.188 0.946-1.875 0.366-2.688q0-2.161-1.411-3.679 0.661-1.625-0.143-3.643-0.5-0.161-1.446 0.196t-1.643 0.786l-0.679 0.429q-1.661-0.464-3.429-0.464t-3.429 0.464q-0.286-0.196-0.759-0.482t-1.491-0.688-1.536-0.241q-0.786 2.018-0.125 3.643-1.411 1.518-1.411 3.679 0 1.518 0.366 2.679t0.938 1.875 1.438 1.196 1.679 0.696 1.83 0.321q-0.714 0.643-0.875 1.839-0.375 0.179-0.804 0.268t-1.018 0.089-1.17-0.384-0.991-1.116q-0.339-0.571-0.866-0.929t-0.884-0.429l-0.357-0.054q-0.375 0-0.518 0.080t-0.089 0.205 0.161 0.25 0.232 0.214l0.125 0.089q0.393 0.179 0.777 0.679t0.563 0.911l0.179 0.411q0.232 0.679 0.786 1.098t1.196 0.536 1.241 0.125 0.991-0.063l0.411-0.071q0 0.679 0.009 1.589t0.009 0.964q0 0.321-0.232 0.536t-0.714 0.125q-4.143-1.375-6.759-4.955t-2.616-8.063q0-3.732 1.839-6.884t4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-unlock\" viewBox=\"0 0 30 32\">\r\n            <title>unlock</title>\r\n            <path d=\"M29.714 10.286v4.571q0 0.464-0.339 0.804t-0.804 0.339h-1.143q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232v3.429h1.714q0.714 0 1.214 0.5t0.5 1.214v10.286q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-10.286q0-0.714 0.5-1.214t1.214-0.5h12v-3.429q0-3.304 2.348-5.652t5.652-2.348 5.652 2.348 2.348 5.652z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-credit-card\" viewBox=\"0 0 34 32\">\r\n            <title>credit-card</title>\r\n            <path d=\"M31.429 2.286q1.179 0 2.018 0.839t0.839 2.018v21.714q0 1.179-0.839 2.018t-2.018 0.839h-28.571q-1.179 0-2.018-0.839t-0.839-2.018v-21.714q0-1.179 0.839-2.018t2.018-0.839h28.571zM2.857 4.571q-0.232 0-0.402 0.17t-0.17 0.402v4h29.714v-4q0-0.232-0.17-0.402t-0.402-0.17h-28.571zM31.429 27.429q0.232 0 0.402-0.17t0.17-0.402v-10.857h-29.714v10.857q0 0.232 0.17 0.402t0.402 0.17h28.571zM4.571 25.143v-2.286h4.571v2.286h-4.571zM11.429 25.143v-2.286h6.857v2.286h-6.857z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rss\" viewBox=\"0 0 25 32\">\r\n            <title>rss</title>\r\n            <path d=\"M6.857 24q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM16 26.196q0.036 0.5-0.304 0.857-0.321 0.375-0.839 0.375h-2.411q-0.446 0-0.768-0.295t-0.357-0.741q-0.393-4.089-3.295-6.991t-6.991-3.295q-0.446-0.036-0.741-0.357t-0.295-0.768v-2.411q0-0.518 0.375-0.839 0.304-0.304 0.768-0.304h0.089q2.857 0.232 5.464 1.438t4.625 3.241q2.036 2.018 3.241 4.625t1.438 5.464zM25.143 26.232q0.036 0.482-0.321 0.839-0.321 0.357-0.821 0.357h-2.554q-0.464 0-0.795-0.313t-0.348-0.759q-0.214-3.839-1.804-7.295t-4.134-6-6-4.134-7.295-1.821q-0.446-0.018-0.759-0.348t-0.313-0.777v-2.554q0-0.5 0.357-0.821 0.321-0.321 0.786-0.321h0.054q4.679 0.232 8.955 2.143t7.598 5.25q3.339 3.321 5.25 7.598t2.143 8.955z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hdd-o\" viewBox=\"0 0 32 32\">\r\n            <title>hdd-o</title>\r\n            <path d=\"M18.571 21.714q0 0.589-0.42 1.009t-1.009 0.42-1.009-0.42-0.42-1.009 0.42-1.009 1.009-0.42 1.009 0.42 0.42 1.009zM23.143 21.714q0 0.589-0.42 1.009t-1.009 0.42-1.009-0.42-0.42-1.009 0.42-1.009 1.009-0.42 1.009 0.42 0.42 1.009zM25.143 24.571v-5.714q0-0.232-0.17-0.402t-0.402-0.17h-21.714q-0.232 0-0.402 0.17t-0.17 0.402v5.714q0 0.232 0.17 0.402t0.402 0.17h21.714q0.232 0 0.402-0.17t0.17-0.402zM3.179 16h21.071l-2.804-8.607q-0.071-0.232-0.286-0.384t-0.464-0.152h-13.964q-0.25 0-0.464 0.152t-0.286 0.384zM27.429 18.857v5.714q0 1.179-0.839 2.018t-2.018 0.839h-21.714q-1.179 0-2.018-0.839t-0.839-2.018v-5.714q0-0.446 0.286-1.339l3.518-10.821q0.304-0.946 1.125-1.536t1.804-0.589h13.964q0.982 0 1.804 0.589t1.125 1.536l3.518 10.821q0.286 0.893 0.286 1.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bullhorn\" viewBox=\"0 0 32 32\">\r\n            <title>bullhorn</title>\r\n            <path d=\"M29.714 11.429q0.946 0 1.616 0.67t0.67 1.616-0.67 1.616-1.616 0.67v6.857q0 0.929-0.679 1.607t-1.607 0.679q-7.446-6.196-14.5-6.786-1.036 0.339-1.625 1.179t-0.554 1.795 0.714 1.652q-0.357 0.589-0.411 1.17t0.107 1.036 0.598 0.982 0.857 0.893 1.098 0.902q-0.518 1.036-1.991 1.482t-3.009 0.205-2.357-0.991q-0.125-0.411-0.527-1.563t-0.571-1.688-0.411-1.589-0.268-1.804 0.063-1.759 0.393-1.973h-2.179q-1.179 0-2.018-0.839t-0.839-2.018v-3.429q0-1.179 0.839-2.018t2.018-0.839h8.571q7.768 0 16-6.857 0.929 0 1.607 0.679t0.679 1.607v6.857zM27.429 22.214v-17.036q-7.036 5.393-13.714 6.125v4.821q6.732 0.75 13.714 6.089z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bell\" viewBox=\"0 0 32 32\">\r\n            <title>bell</title>\r\n            <path d=\"M16.286 30.286q0-0.286-0.286-0.286-1.054 0-1.813-0.759t-0.759-1.813q0-0.286-0.286-0.286t-0.286 0.286q0 1.304 0.92 2.223t2.223 0.92q0.286 0 0.286-0.286zM4.393 25.143h23.214q-4.75-5.357-4.75-14.857 0-0.911-0.429-1.875t-1.232-1.839-2.17-1.438-3.027-0.563-3.027 0.563-2.17 1.438-1.232 1.839-0.429 1.875q0 9.5-4.75 14.857zM30.857 25.143q0 0.929-0.679 1.607t-1.607 0.679h-8q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-8q-0.929 0-1.607-0.679t-0.679-1.607q0.893-0.75 1.625-1.571t1.518-2.134 1.33-2.83 0.893-3.679 0.348-4.643q0-2.714 2.089-5.045t5.482-2.83q-0.143-0.339-0.143-0.696 0-0.714 0.5-1.214t1.214-0.5 1.214 0.5 0.5 1.214q0 0.357-0.143 0.696 3.393 0.5 5.482 2.83t2.089 5.045q0 2.482 0.348 4.643t0.893 3.679 1.33 2.83 1.518 2.134 1.625 1.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-certificate\" viewBox=\"0 0 32 32\">\r\n            <title>certificate</title>\r\n            <path d=\"M24.571 16l2.464 2.411q0.536 0.5 0.357 1.25-0.214 0.732-0.929 0.911l-3.357 0.857 0.946 3.321q0.214 0.732-0.339 1.25-0.518 0.554-1.25 0.339l-3.321-0.946-0.857 3.357q-0.179 0.714-0.911 0.929-0.214 0.036-0.339 0.036-0.554 0-0.911-0.393l-2.411-2.464-2.411 2.464q-0.5 0.536-1.25 0.357-0.732-0.196-0.911-0.929l-0.857-3.357-3.321 0.946q-0.732 0.214-1.25-0.339-0.554-0.518-0.339-1.25l0.946-3.321-3.357-0.857q-0.714-0.179-0.929-0.911-0.179-0.75 0.357-1.25l2.464-2.411-2.464-2.411q-0.536-0.5-0.357-1.25 0.214-0.732 0.929-0.911l3.357-0.857-0.946-3.321q-0.214-0.732 0.339-1.25 0.518-0.554 1.25-0.339l3.321 0.946 0.857-3.357q0.179-0.732 0.911-0.911 0.732-0.214 1.25 0.339l2.411 2.482 2.411-2.482q0.518-0.536 1.25-0.339 0.732 0.179 0.911 0.911l0.857 3.357 3.321-0.946q0.732-0.214 1.25 0.339 0.554 0.518 0.339 1.25l-0.946 3.321 3.357 0.857q0.714 0.179 0.929 0.911 0.179 0.75-0.357 1.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hand-o-right\" viewBox=\"0 0 32 32\">\r\n            <title>hand-o-right</title>\r\n            <path d=\"M4.571 24q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM29.714 13.714q0-0.911-0.696-1.598t-1.589-0.688h-10.286q0-0.357 0.268-0.866t0.589-0.982 0.589-1.214 0.268-1.509q0-1.196-0.795-1.741t-2.063-0.545q-0.429 0-1.607 2.482-0.429 0.786-0.661 1.161-0.714 1.143-2 2.589-1.268 1.446-1.804 1.893-1.232 1.018-2.5 1.018h-0.571v11.429h0.571q1.286 0 2.982 0.571t3.455 1.143 3.205 0.571q3.375 0 3.375-2.982 0-0.464-0.089-1 0.536-0.286 0.848-0.938t0.313-1.313-0.321-1.232q0.946-0.893 0.946-2.125 0-0.446-0.179-0.991t-0.446-0.848h5.911q0.929 0 1.607-0.679t0.679-1.607zM32 13.696q0 1.875-1.348 3.232t-3.223 1.357h-3.018q-0.071 1.107-0.661 2.125 0.054 0.375 0.054 0.768 0 1.804-1.071 3.179 0.018 2.482-1.518 3.92t-4.054 1.438q-2.375 0-5.75-1.232-2.929-1.054-3.982-1.054h-5.143q-0.946 0-1.616-0.67t-0.67-1.616v-11.429q0-0.946 0.67-1.616t1.616-0.67h5.143q0.179 0 0.384-0.080t0.42-0.25 0.402-0.321 0.429-0.402 0.366-0.384 0.339-0.384 0.25-0.304q1.161-1.321 1.786-2.304 0.232-0.375 0.589-1.107t0.661-1.286 0.723-1.125 0.982-0.884 1.241-0.313q2.232 0 3.687 1.196t1.455 3.375q0 1.214-0.393 2.286h6.679q1.857 0 3.214 1.357t1.357 3.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hand-o-left\" viewBox=\"0 0 32 32\">\r\n            <title>hand-o-left</title>\r\n            <path d=\"M24.571 25.143h0.571v-11.429h-0.571q-0.625 0-1.205-0.214t-1.116-0.661-0.893-0.821-0.875-0.964q-0.036-0.054-0.063-0.080t-0.071-0.080-0.080-0.089q-1.286-1.446-2-2.589-0.25-0.393-0.679-1.214-0.018-0.054-0.188-0.402t-0.33-0.643-0.357-0.634-0.384-0.545-0.33-0.205q-1.268 0-2.063 0.545t-0.795 1.741q0 0.768 0.268 1.509t0.589 1.214 0.589 0.982 0.268 0.866h-10.286q-0.893 0-1.589 0.688t-0.696 1.598q0 0.929 0.679 1.607t1.607 0.679h5.911q-0.268 0.304-0.446 0.848t-0.179 0.991q0 1.232 0.946 2.125-0.321 0.571-0.321 1.232t0.313 1.313 0.848 0.938q-0.071 0.429-0.071 1 0 1.518 0.866 2.25t2.42 0.732q1.5 0 3.268-0.571t3.464-1.143 2.982-0.571zM29.714 24q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM32 13.714v11.429q0 0.946-0.67 1.616t-1.616 0.67h-5.143q-1.054 0-3.982 1.054-3.393 1.232-5.661 1.232-2.536 0-4.107-1.384t-1.554-3.884l0.018-0.089q-1.089-1.357-1.089-3.179 0-0.393 0.054-0.768-0.589-1.018-0.661-2.125h-3.018q-1.875 0-3.223-1.357t-1.348-3.232q0-1.839 1.357-3.196t3.214-1.357h6.679q-0.393-1.071-0.393-2.286 0-2.179 1.455-3.375t3.688-1.196q0.679 0 1.241 0.313t0.982 0.884 0.723 1.125 0.661 1.286 0.589 1.107q0.625 0.982 1.786 2.304 0.036 0.054 0.25 0.304t0.339 0.384 0.366 0.384 0.429 0.402 0.402 0.321 0.42 0.25 0.384 0.080h5.143q0.946 0 1.616 0.67t0.67 1.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hand-o-up\" viewBox=\"0 0 32 32\">\r\n            <title>hand-o-up</title>\r\n            <path d=\"M22.857 28.571q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM25.143 14.929q0-3.375-2.982-3.375-0.464 0-1 0.089-0.286-0.536-0.938-0.848t-1.313-0.313-1.232 0.321q-0.893-0.946-2.125-0.946-0.446 0-0.991 0.179t-0.848 0.446v-5.911q0-0.929-0.679-1.607t-1.607-0.679q-0.911 0-1.598 0.696t-0.688 1.589v10.286q-0.357 0-0.866-0.268t-0.982-0.589-1.214-0.589-1.509-0.268q-1.196 0-1.741 0.795t-0.545 2.063q0 0.429 2.482 1.607 0.786 0.429 1.161 0.661 1.143 0.714 2.589 2 1.446 1.268 1.893 1.804 1.018 1.232 1.018 2.5v0.571h11.429v-0.571q0-1.286 0.571-2.982t1.143-3.455 0.571-3.205zM27.429 14.839q0 2.375-1.232 5.75-1.054 2.929-1.054 3.982v5.143q0 0.946-0.67 1.616t-1.616 0.67h-11.429q-0.946 0-1.616-0.67t-0.67-1.616v-5.143q0-0.179-0.080-0.384t-0.25-0.42-0.321-0.402-0.402-0.429-0.384-0.366-0.384-0.339-0.304-0.25q-1.321-1.161-2.304-1.786-0.375-0.232-1.107-0.589t-1.286-0.661-1.125-0.723-0.884-0.982-0.313-1.241q0-2.232 1.196-3.688t3.375-1.455q1.214 0 2.286 0.393v-6.679q0-1.857 1.357-3.214t3.196-1.357q1.875 0 3.232 1.348t1.357 3.223v3.018q1.107 0.071 2.125 0.661 0.375-0.054 0.768-0.054 1.804 0 3.179 1.071 2.482-0.018 3.92 1.518t1.438 4.054z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hand-o-down\" viewBox=\"0 0 32 32\">\r\n            <title>hand-o-down</title>\r\n            <path d=\"M25.143 17.143q0-1.5-0.571-3.268t-1.143-3.464-0.571-2.982v-0.571h-11.429v0.571q0 0.625-0.214 1.205t-0.661 1.116-0.821 0.893-0.964 0.875q-0.161 0.143-0.25 0.214-1.446 1.286-2.589 2-0.393 0.25-1.214 0.679-0.054 0.018-0.402 0.188t-0.643 0.33-0.634 0.357-0.545 0.384-0.205 0.33q0 1.268 0.545 2.062t1.741 0.795q0.768 0 1.509-0.268t1.214-0.589 0.982-0.589 0.866-0.268v10.286q0 0.893 0.688 1.589t1.598 0.696q0.929 0 1.607-0.679t0.679-1.607v-5.911q0.821 0.625 1.839 0.625 1.232 0 2.125-0.946 0.571 0.321 1.232 0.321t1.313-0.313 0.938-0.848q0.429 0.071 1 0.071 1.518 0 2.25-0.866t0.732-2.42zM22.857 3.429q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM27.429 17.071q0 2.536-1.384 4.107t-3.884 1.554l-0.089-0.018q-1.357 1.089-3.179 1.089-0.393 0-0.768-0.054-0.964 0.536-2.125 0.661v3.018q0 1.875-1.357 3.223t-3.232 1.348q-1.839 0-3.196-1.357t-1.357-3.214v-6.679q-0.964 0.393-2.286 0.393-2.161 0-3.366-1.455t-1.205-3.688q0-0.679 0.313-1.241t0.884-0.982 1.125-0.723 1.286-0.661 1.107-0.589q0.982-0.625 2.304-1.786 0.054-0.036 0.304-0.25t0.384-0.339 0.384-0.366 0.402-0.429 0.321-0.402 0.25-0.42 0.080-0.384v-5.143q0-0.946 0.67-1.616t1.616-0.67h11.429q0.946 0 1.616 0.67t0.67 1.616v5.143q0 1.054 1.054 3.982 1.232 3.393 1.232 5.661z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-left\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-left</title>\r\n            <path d=\"M22.857 17.143v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-8.964l3.375-3.375q0.339-0.339 0.339-0.804t-0.339-0.804l-1.625-1.625q-0.321-0.321-0.804-0.321t-0.804 0.321l-8.089 8.089q-0.321 0.321-0.321 0.804t0.321 0.804l8.089 8.089q0.321 0.321 0.804 0.321t0.804-0.321l1.625-1.625q0.321-0.321 0.321-0.804t-0.321-0.804l-3.375-3.375h8.964q0.464 0 0.804-0.339t0.339-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-right\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-right</title>\r\n            <path d=\"M22.946 16q0-0.482-0.321-0.804l-8.089-8.089q-0.321-0.321-0.804-0.321t-0.804 0.321l-1.625 1.625q-0.321 0.321-0.321 0.804t0.321 0.804l3.375 3.375h-8.964q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h8.964l-3.375 3.375q-0.339 0.339-0.339 0.804t0.339 0.804l1.625 1.625q0.321 0.321 0.804 0.321t0.804-0.321l8.089-8.089q0.321-0.321 0.321-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-up\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-up</title>\r\n            <path d=\"M22.929 15.982q0-0.482-0.321-0.804l-8.089-8.089q-0.321-0.321-0.804-0.321t-0.804 0.321l-8.089 8.089q-0.321 0.321-0.321 0.804t0.321 0.804l1.625 1.625q0.321 0.321 0.804 0.321t0.804-0.321l3.375-3.375v8.964q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804v-8.964l3.375 3.375q0.339 0.339 0.804 0.339t0.804-0.339l1.625-1.625q0.321-0.321 0.321-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-down\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-down</title>\r\n            <path d=\"M22.929 16.018q0-0.482-0.321-0.804l-1.625-1.625q-0.321-0.321-0.804-0.321t-0.804 0.321l-3.375 3.375v-8.964q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v8.964l-3.375-3.375q-0.339-0.339-0.804-0.339t-0.804 0.339l-1.625 1.625q-0.321 0.321-0.321 0.804t0.321 0.804l8.089 8.089q0.321 0.321 0.804 0.321t0.804-0.321l8.089-8.089q0.321-0.321 0.321-0.804zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-globe\" viewBox=\"0 0 32 32\">\r\n            <title>globe</title>\r\n            <path d=\"M13.714 2.286q3.732 0 6.884 1.839t4.991 4.991 1.839 6.884-1.839 6.884-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839zM18.607 11.589q-0.036 0.018-0.17 0.17t-0.241 0.17q0.036 0 0.080-0.089t0.089-0.196 0.063-0.125q0.107-0.125 0.393-0.268 0.25-0.107 0.929-0.214 0.607-0.143 0.911 0.196-0.036-0.036 0.17-0.232t0.259-0.214q0.054-0.036 0.268-0.080t0.268-0.134l0.036-0.393q-0.214 0.018-0.313-0.125t-0.116-0.375q0 0.036-0.107 0.143 0-0.125-0.080-0.143t-0.205 0.018-0.161 0.018q-0.179-0.054-0.268-0.134t-0.143-0.295-0.071-0.268q-0.036-0.089-0.17-0.188t-0.17-0.188q-0.018-0.036-0.045-0.098t-0.054-0.116-0.071-0.098-0.098-0.045-0.125 0.089-0.134 0.179-0.080 0.089q-0.054-0.036-0.107-0.027t-0.080 0.018-0.080 0.054-0.089 0.063q-0.054 0.036-0.152 0.054t-0.152 0.036q0.268-0.089-0.018-0.196-0.179-0.071-0.286-0.054 0.161-0.071 0.134-0.214t-0.152-0.25h0.089q-0.018-0.071-0.152-0.152t-0.313-0.152-0.232-0.107q-0.143-0.089-0.607-0.17t-0.589-0.009q-0.089 0.107-0.080 0.188t0.071 0.25 0.063 0.223q0.018 0.107-0.098 0.232t-0.116 0.214q0 0.125 0.25 0.277t0.179 0.384q-0.054 0.143-0.286 0.286t-0.286 0.214q-0.089 0.143-0.027 0.33t0.188 0.295q0.036 0.036 0.027 0.071t-0.063 0.080-0.098 0.071-0.116 0.063l-0.054 0.036q-0.196 0.089-0.366-0.107t-0.241-0.464q-0.125-0.446-0.286-0.536-0.411-0.143-0.518 0.018-0.089-0.232-0.732-0.464-0.446-0.161-1.036-0.071 0.107-0.018 0-0.268-0.125-0.268-0.339-0.214 0.054-0.107 0.071-0.313t0.018-0.241q0.054-0.232 0.214-0.411 0.018-0.018 0.125-0.152t0.17-0.241 0.009-0.107q0.625 0.071 0.893-0.196 0.089-0.089 0.205-0.304t0.188-0.304q0.161-0.107 0.25-0.098t0.259 0.098 0.259 0.089q0.25 0.018 0.277-0.196t-0.134-0.357q0.214 0.018 0.054-0.304-0.089-0.125-0.143-0.161-0.214-0.071-0.482 0.089-0.143 0.071 0.036 0.143-0.018-0.018-0.17 0.188t-0.295 0.313-0.286-0.089q-0.018-0.018-0.098-0.241t-0.17-0.241q-0.143 0-0.286 0.268 0.054-0.143-0.196-0.268t-0.429-0.143q0.339-0.214-0.143-0.482-0.125-0.071-0.366-0.089t-0.348 0.071q-0.089 0.125-0.098 0.205t0.089 0.143 0.188 0.098 0.205 0.071 0.152 0.054q0.25 0.179 0.143 0.25-0.036 0.018-0.152 0.063t-0.205 0.080-0.107 0.071q-0.054 0.071 0 0.25t-0.036 0.25q-0.089-0.089-0.161-0.313t-0.125-0.295q0.125 0.161-0.446 0.107l-0.179-0.018q-0.071 0-0.286 0.036t-0.366 0.018-0.241-0.143q-0.071-0.143 0-0.357 0.018-0.071 0.071-0.036-0.071-0.054-0.196-0.17t-0.179-0.152q-0.821 0.268-1.679 0.732 0.107 0.018 0.214-0.018 0.089-0.036 0.232-0.116t0.179-0.098q0.607-0.25 0.75-0.125l0.089-0.089q0.25 0.286 0.357 0.446-0.125-0.071-0.536-0.018-0.357 0.107-0.393 0.214 0.125 0.214 0.089 0.321-0.071-0.054-0.205-0.179t-0.259-0.196-0.268-0.089q-0.286 0-0.393 0.018-2.607 1.429-4.196 3.964 0.125 0.125 0.214 0.143 0.071 0.018 0.089 0.161t0.045 0.196 0.205-0.054q0.161 0.143 0.054 0.339 0.018-0.018 0.786 0.482 0.339 0.304 0.375 0.375 0.054 0.196-0.179 0.321-0.018-0.036-0.161-0.161t-0.161-0.071q-0.054 0.089 0.009 0.33t0.188 0.223q-0.125 0-0.17 0.286t-0.045 0.634-0.018 0.42l0.036 0.018q-0.054 0.214 0.098 0.616t0.384 0.348q-0.232 0.054 0.357 0.768 0.107 0.143 0.143 0.161 0.054 0.036 0.214 0.134t0.268 0.179 0.179 0.188q0.071 0.089 0.179 0.402t0.25 0.42q-0.036 0.107 0.17 0.357t0.188 0.411q-0.018 0-0.045 0.018t-0.045 0.018q0.054 0.125 0.277 0.25t0.277 0.232q0.018 0.054 0.036 0.179t0.054 0.196 0.143 0.036q0.036-0.357-0.429-1.107-0.268-0.446-0.304-0.518-0.054-0.089-0.098-0.277t-0.080-0.259q0.036 0 0.107 0.027t0.152 0.063 0.134 0.071 0.036 0.054q-0.054 0.125 0.036 0.313t0.214 0.33 0.304 0.339 0.214 0.232q0.107 0.107 0.25 0.348t0 0.241q0.161 0 0.357 0.179t0.304 0.357q0.089 0.143 0.143 0.464t0.089 0.429q0.036 0.125 0.152 0.241t0.223 0.17l0.286 0.143t0.232 0.125q0.089 0.036 0.33 0.188t0.384 0.205q0.179 0.071 0.286 0.071t0.259-0.045 0.241-0.063q0.268-0.036 0.518 0.268t0.375 0.375q0.643 0.339 0.982 0.196-0.036 0.018 0.009 0.134t0.143 0.277 0.161 0.259 0.098 0.152q0.089 0.107 0.321 0.268t0.321 0.268q0.107-0.071 0.125-0.161-0.054 0.143 0.125 0.357t0.321 0.179q0.25-0.054 0.25-0.571-0.554 0.268-0.875-0.321 0-0.018-0.045-0.098t-0.071-0.152-0.045-0.152 0-0.134 0.089-0.054q0.161 0 0.179-0.063t-0.036-0.223-0.071-0.232q-0.018-0.143-0.196-0.357t-0.214-0.268q-0.089 0.161-0.286 0.143t-0.286-0.161q0 0.018-0.027 0.098t-0.027 0.116q-0.232 0-0.268-0.018 0.018-0.054 0.045-0.313t0.063-0.402q0.018-0.071 0.098-0.214t0.134-0.259 0.071-0.223-0.080-0.17-0.313-0.045q-0.339 0.018-0.464 0.357-0.018 0.054-0.054 0.188t-0.089 0.205-0.161 0.125q-0.125 0.054-0.429 0.036t-0.429-0.089q-0.232-0.143-0.402-0.518t-0.17-0.661q0-0.179 0.045-0.473t0.054-0.446-0.098-0.438q0.054-0.036 0.161-0.17t0.179-0.188q0.036-0.018 0.080-0.027t0.080 0 0.071-0.027 0.054-0.107q-0.018-0.018-0.071-0.054-0.054-0.054-0.071-0.054 0.125 0.054 0.509-0.027t0.491 0.027q0.268 0.196 0.393-0.036 0-0.018-0.045-0.17t-0.009-0.241q0.089 0.482 0.518 0.161 0.054 0.054 0.277 0.089t0.313 0.089q0.054 0.036 0.125 0.098t0.098 0.080 0.089-0.009 0.152-0.116q0.179 0.25 0.214 0.429 0.196 0.714 0.339 0.786 0.125 0.054 0.196 0.036t0.080-0.17 0-0.25-0.027-0.223l-0.018-0.143v-0.321l-0.018-0.143q-0.268-0.054-0.33-0.214t0.027-0.33 0.268-0.33q0.018-0.018 0.143-0.063t0.277-0.116 0.223-0.143q0.375-0.339 0.268-0.625 0.125 0 0.196-0.161-0.018 0-0.089-0.054t-0.134-0.089-0.080-0.036q0.161-0.089 0.036-0.286 0.089-0.054 0.134-0.196t0.134-0.179q0.161 0.214 0.375 0.036 0.125-0.143 0.018-0.286 0.089-0.125 0.366-0.188t0.33-0.17q0.125 0.036 0.143-0.036t0.018-0.214 0.054-0.214q0.071-0.089 0.268-0.161t0.232-0.089l0.304-0.196q0.054-0.071 0-0.071 0.321 0.036 0.554-0.196 0.179-0.196-0.107-0.357 0.054-0.107-0.054-0.17t-0.268-0.098q0.054-0.018 0.205-0.009t0.188-0.027q0.268-0.179-0.125-0.286-0.304-0.089-0.768 0.214zM15.696 27.25q3.679-0.643 6.268-3.375-0.054-0.054-0.223-0.080t-0.223-0.063q-0.321-0.125-0.429-0.143 0.018-0.125-0.045-0.232t-0.143-0.161-0.223-0.143-0.196-0.125q-0.036-0.036-0.125-0.107t-0.125-0.098-0.134-0.080-0.152-0.036-0.179 0.018l-0.054 0.018q-0.054 0.018-0.098 0.045t-0.098 0.054-0.071 0.054 0 0.045q-0.375-0.304-0.643-0.393-0.089-0.018-0.196-0.098t-0.188-0.125-0.179-0.027-0.205 0.125q-0.089 0.089-0.107 0.268t-0.036 0.232q-0.125-0.089 0-0.313t0.036-0.33q-0.054-0.107-0.188-0.080t-0.214 0.080-0.205 0.152-0.161 0.116-0.152 0.098-0.152 0.134q-0.054 0.071-0.107 0.214t-0.089 0.196q-0.036-0.071-0.205-0.116t-0.17-0.098q0.036 0.179 0.071 0.625t0.089 0.679q0.125 0.554-0.214 0.857-0.482 0.446-0.518 0.714-0.071 0.393 0.214 0.464 0 0.125-0.143 0.366t-0.125 0.384q0 0.107 0.036 0.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-wrench\" viewBox=\"0 0 30 32\">\r\n            <title>wrench</title>\r\n            <path d=\"M6.857 26.286q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM18.357 18.786l-12.179 12.179q-0.661 0.661-1.607 0.661-0.929 0-1.625-0.661l-1.893-1.929q-0.679-0.643-0.679-1.607 0-0.946 0.679-1.625l12.161-12.161q0.696 1.75 2.045 3.098t3.098 2.045zM29.679 11.018q0 0.696-0.411 1.893-0.839 2.393-2.938 3.884t-4.616 1.491q-3.304 0-5.652-2.348t-2.348-5.652 2.348-5.652 5.652-2.348q1.036 0 2.17 0.295t1.92 0.83q0.286 0.196 0.286 0.5t-0.286 0.5l-5.232 3.018v4l3.446 1.911q0.089-0.054 1.411-0.866t2.42-1.446 1.259-0.634q0.268 0 0.42 0.179t0.152 0.446z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tasks\" viewBox=\"0 0 32 32\">\r\n            <title>tasks</title>\r\n            <path d=\"M18.286 25.143h11.429v-2.286h-11.429v2.286zM11.429 16h18.286v-2.286h-18.286v2.286zM22.857 6.857h6.857v-2.286h-6.857v2.286zM32 21.714v4.571q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 12.571v4.571q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804zM32 3.429v4.571q0 0.464-0.339 0.804t-0.804 0.339h-29.714q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h29.714q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <!--<symbol id=\"icon-filter\" viewBox=\"0 0 25 32\">\r\n            <title>filter</title>\r\n            <path d=\"M25.054 5.268q0.304 0.732-0.25 1.25l-8.804 8.804v13.25q0 0.75-0.696 1.054-0.232 0.089-0.446 0.089-0.482 0-0.804-0.339l-4.571-4.571q-0.339-0.339-0.339-0.804v-8.679l-8.804-8.804q-0.554-0.518-0.25-1.25 0.304-0.696 1.054-0.696h22.857q0.75 0 1.054 0.696z\"></path>\r\n        </symbol>-->\r\n\t\t<symbol id=\"icon-filter\" viewBox=\"0 0 32 32\">\r\n\t\t\t<title>filter</title>\r\n\t\t\t<path d=\"M16 0c-8.837 0-16 2.239-16 5v3l12 12v10c0 1.105 1.791 2 4 2s4-0.895 4-2v-10l12-12v-3c-0-2.761-7.164-5-16-5zM2.949 4.338c0.748-0.427 1.799-0.832 3.040-1.171 2.748-0.752 6.303-1.167 10.011-1.167s7.262 0.414 10.011 1.167c1.241 0.34 2.292 0.745 3.040 1.171 0.494 0.281 0.76 0.52 0.884 0.662-0.124 0.142-0.391 0.38-0.884 0.662-0.748 0.427-1.799 0.832-3.040 1.171-2.748 0.752-6.303 1.167-10.011 1.167s-7.262-0.414-10.011-1.167c-1.24-0.34-2.292-0.745-3.040-1.171-0.494-0.281-0.76-0.519-0.884-0.662 0.124-0.142 0.391-0.38 0.884-0.662z\"></path>\r\n\t\t</symbol>\r\n        <symbol id=\"icon-briefcase\" viewBox=\"0 0 32 32\">\r\n            <title>briefcase</title>\r\n            <path d=\"M11.429 4.571h9.143v-2.286h-9.143v2.286zM32 16v8.571q0 1.179-0.839 2.018t-2.018 0.839h-26.286q-1.179 0-2.018-0.839t-0.839-2.018v-8.571h12v2.857q0 0.464 0.339 0.804t0.804 0.339h5.714q0.464 0 0.804-0.339t0.339-0.804v-2.857h12zM18.286 16v2.286h-4.571v-2.286h4.571zM32 7.429v6.857h-32v-6.857q0-1.179 0.839-2.018t2.018-0.839h6.286v-2.857q0-0.714 0.5-1.214t1.214-0.5h10.286q0.714 0 1.214 0.5t0.5 1.214v2.857h6.286q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrows-alt\" viewBox=\"0 0 32 32\">\r\n            <title>arrows-alt</title>\r\n            <path d=\"M22.911 9.661l-6.339 6.339 6.339 6.339 2.571-2.571q0.518-0.554 1.25-0.25 0.696 0.304 0.696 1.054v8q0 0.464-0.339 0.804t-0.804 0.339h-8q-0.75 0-1.054-0.714-0.304-0.696 0.25-1.232l2.571-2.571-6.339-6.339-6.339 6.339 2.571 2.571q0.554 0.536 0.25 1.232-0.304 0.714-1.054 0.714h-8q-0.464 0-0.804-0.339t-0.339-0.804v-8q0-0.75 0.714-1.054 0.696-0.304 1.232 0.25l2.571 2.571 6.339-6.339-6.339-6.339-2.571 2.571q-0.339 0.339-0.804 0.339-0.214 0-0.429-0.089-0.714-0.304-0.714-1.054v-8q0-0.464 0.339-0.804t0.804-0.339h8q0.75 0 1.054 0.714 0.304 0.696-0.25 1.232l-2.571 2.571 6.339 6.339 6.339-6.339-2.571-2.571q-0.554-0.536-0.25-1.232 0.304-0.714 1.054-0.714h8q0.464 0 0.804 0.339t0.339 0.804v8q0 0.75-0.696 1.054-0.232 0.089-0.446 0.089-0.464 0-0.804-0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-users\" viewBox=\"0 0 34 32\">\r\n            <title>users</title>\r\n            <path d=\"M10.589 16q-2.893 0.089-4.732 2.286h-2.393q-1.464 0-2.464-0.723t-1-2.116q0-6.304 2.214-6.304 0.107 0 0.777 0.375t1.741 0.759 2.125 0.384q1.196 0 2.375-0.411-0.089 0.661-0.089 1.179 0 2.482 1.446 4.571zM29.714 27.375q0 2.143-1.304 3.384t-3.464 1.241h-15.607q-2.161 0-3.464-1.241t-1.304-3.384q0-0.946 0.063-1.848t0.25-1.946 0.473-1.938 0.768-1.741 1.107-1.446 1.527-0.955 1.991-0.357q0.179 0 0.768 0.384t1.304 0.857 1.911 0.857 2.411 0.384 2.411-0.384 1.911-0.857 1.304-0.857 0.768-0.384q1.089 0 1.991 0.357t1.527 0.955 1.107 1.446 0.768 1.741 0.473 1.938 0.25 1.946 0.063 1.848zM11.429 4.571q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232 1.339-3.232 3.232-1.339 3.232 1.339 1.339 3.232zM24 11.429q0 2.839-2.009 4.848t-4.848 2.009-4.848-2.009-2.009-4.848 2.009-4.848 4.848-2.009 4.848 2.009 2.009 4.848zM34.286 15.446q0 1.393-1 2.116t-2.464 0.723h-2.393q-1.839-2.196-4.732-2.286 1.446-2.089 1.446-4.571 0-0.518-0.089-1.179 1.179 0.411 2.375 0.411 1.054 0 2.125-0.384t1.741-0.759 0.777-0.375q2.214 0 2.214 6.304zM32 4.571q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232 1.339-3.232 3.232-1.339 3.232 1.339 1.339 3.232z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-link\" viewBox=\"0 0 30 32\">\r\n            <title>link</title>\r\n            <path d=\"M26 21.714q0-0.714-0.5-1.214l-3.714-3.714q-0.5-0.5-1.214-0.5-0.75 0-1.286 0.571 0.054 0.054 0.339 0.33t0.384 0.384 0.268 0.339 0.232 0.455 0.063 0.491q0 0.714-0.5 1.214t-1.214 0.5q-0.268 0-0.491-0.063t-0.455-0.232-0.339-0.268-0.384-0.384-0.33-0.339q-0.589 0.554-0.589 1.304 0 0.714 0.5 1.214l3.679 3.696q0.482 0.482 1.214 0.482 0.714 0 1.214-0.464l2.625-2.607q0.5-0.5 0.5-1.196zM13.446 9.125q0-0.714-0.5-1.214l-3.679-3.696q-0.5-0.5-1.214-0.5-0.696 0-1.214 0.482l-2.625 2.607q-0.5 0.5-0.5 1.196 0 0.714 0.5 1.214l3.714 3.714q0.482 0.482 1.214 0.482 0.75 0 1.286-0.554-0.054-0.054-0.339-0.33t-0.384-0.384-0.268-0.339-0.232-0.455-0.063-0.491q0-0.714 0.5-1.214t1.214-0.5q0.268 0 0.491 0.063t0.455 0.232 0.339 0.268 0.384 0.384 0.33 0.339q0.589-0.554 0.589-1.304zM29.429 21.714q0 2.143-1.518 3.625l-2.625 2.607q-1.482 1.482-3.625 1.482-2.161 0-3.643-1.518l-3.679-3.696q-1.482-1.482-1.482-3.625 0-2.196 1.571-3.732l-1.571-1.571q-1.536 1.571-3.714 1.571-2.143 0-3.643-1.5l-3.714-3.714q-1.5-1.5-1.5-3.643t1.518-3.625l2.625-2.607q1.482-1.482 3.625-1.482 2.161 0 3.643 1.518l3.679 3.696q1.482 1.482 1.482 3.625 0 2.196-1.571 3.732l1.571 1.571q1.536-1.571 3.714-1.571 2.143 0 3.643 1.5l3.714 3.714q1.5 1.5 1.5 3.643z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cloud\" viewBox=\"0 0 34 32\">\r\n            <title>cloud</title>\r\n            <path d=\"M34.286 20.571q0 2.839-2.009 4.848t-4.848 2.009h-19.429q-3.304 0-5.652-2.348t-2.348-5.652q0-2.357 1.268-4.313t3.339-2.92q-0.036-0.5-0.036-0.768 0-3.786 2.679-6.464t6.464-2.679q2.821 0 5.116 1.571t3.348 4.107q1.25-1.107 2.964-1.107 1.893 0 3.232 1.339t1.339 3.232q0 1.339-0.732 2.464 2.304 0.536 3.804 2.402t1.5 4.277z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flask\" viewBox=\"0 0 30 32\">\r\n            <title>flask</title>\r\n            <path d=\"M27.268 25.857q1 1.589 0.384 2.723t-2.509 1.134h-20.571q-1.893 0-2.509-1.134t0.384-2.723l8.982-14.161v-7.125h-1.143q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h9.143q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-1.143v7.125zM13.357 12.911l-4.857 7.661h12.714l-4.857-7.661-0.357-0.554v-7.786h-2.286v7.786z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cut\" viewBox=\"0 0 32 32\">\r\n            <title>cut</title>\r\n            <path d=\"M17.143 16q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339-0.804-0.339-0.339-0.804 0.339-0.804 0.804-0.339zM22.5 17.143l9.054 7.107q0.5 0.357 0.446 1-0.089 0.625-0.625 0.911l-2.286 1.143q-0.232 0.125-0.518 0.125-0.304 0-0.554-0.143l-12.321-6.911-1.964 1.179q-0.143 0.071-0.214 0.089 0.25 0.875 0.179 1.732-0.125 1.375-1 2.634t-2.357 2.205q-2.357 1.5-4.946 1.5-2.429 0-3.964-1.393-1.607-1.5-1.411-3.696 0.125-1.357 1-2.625t2.339-2.214q2.357-1.5 4.964-1.5 1.482 0 2.696 0.554 0.161-0.232 0.393-0.393l2.179-1.304-2.179-1.304q-0.232-0.161-0.393-0.393-1.214 0.554-2.696 0.554-2.607 0-4.964-1.5-1.464-0.946-2.339-2.214t-1-2.625q-0.089-1.054 0.277-2.018t1.134-1.661q1.518-1.411 3.964-1.411 2.589 0 4.946 1.5 1.482 0.929 2.357 2.196t1 2.643q0.071 0.857-0.179 1.732 0.071 0.018 0.214 0.089l1.964 1.179 12.321-6.911q0.25-0.143 0.554-0.143 0.286 0 0.518 0.125l2.286 1.143q0.536 0.286 0.625 0.911 0.054 0.643-0.446 1zM10.339 12.5q0.821-0.75 0.375-1.929t-1.893-2.089q-1.643-1.054-3.429-1.054-1.321 0-2.018 0.643-0.821 0.75-0.375 1.929t1.893 2.089q1.643 1.054 3.429 1.054 1.321 0 2.018-0.643zM8.821 25.804q1.446-0.911 1.893-2.089t-0.375-1.929q-0.696-0.643-2.018-0.643-1.786 0-3.429 1.054-1.446 0.911-1.893 2.089t0.375 1.929q0.696 0.643 2.018 0.643 1.786 0 3.429-1.054zM12 14.857l1.714 1.036v-0.196q0-0.643 0.589-1l0.25-0.143-1.411-0.839-0.464 0.464q-0.054 0.054-0.179 0.196t-0.214 0.214q-0.036 0.036-0.071 0.063t-0.054 0.045zM16 18.857l1.714 0.571 13.143-10.286-2.286-1.143-13.714 7.696v2.018l-2.857 1.714 0.161 0.143q0.036 0.036 0.125 0.107 0.071 0.071 0.196 0.214t0.196 0.214l0.464 0.464zM28.571 26.286l2.286-1.143-9.286-7.286-3.161 2.464q-0.036 0.054-0.232 0.125z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-copy\" viewBox=\"0 0 32 32\">\r\n            <title>copy</title>\r\n            <path d=\"M30.286 6.857q0.714 0 1.214 0.5t0.5 1.214v21.714q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-5.143h-9.714q-0.714 0-1.214-0.5t-0.5-1.214v-12q0-0.714 0.357-1.571t0.857-1.357l7.286-7.286q0.5-0.5 1.357-0.857t1.571-0.357h7.429q0.714 0 1.214 0.5t0.5 1.214v5.857q1.214-0.714 2.286-0.714h7.429zM20.571 10.661l-5.339 5.339h5.339v-5.339zM9.143 3.804l-5.339 5.339h5.339v-5.339zM12.643 15.357l5.643-5.643v-7.429h-6.857v7.429q0 0.714-0.5 1.214t-1.214 0.5h-7.429v11.429h9.143v-4.571q0-0.714 0.357-1.571t0.857-1.357zM29.714 29.714v-20.571h-6.857v7.429q0 0.714-0.5 1.214t-1.214 0.5h-7.429v11.429h16z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paperclip\" viewBox=\"0 0 25 32\">\r\n            <title>paperclip</title>\r\n            <path d=\"M25.071 24.732q0 2.089-1.411 3.5t-3.5 1.411q-2.411 0-4.196-1.786l-13.875-13.857q-2.018-2.054-2.018-4.839 0-2.839 1.964-4.821t4.804-1.982q2.821 0 4.875 2.018l10.804 10.821q0.179 0.179 0.179 0.393 0 0.286-0.545 0.83t-0.83 0.545q-0.232 0-0.411-0.179l-10.821-10.839q-1.411-1.375-3.232-1.375-1.893 0-3.196 1.339t-1.304 3.232q0 1.875 1.357 3.232l13.857 13.875q1.125 1.125 2.589 1.125 1.143 0 1.893-0.75t0.75-1.893q0-1.464-1.125-2.589l-10.375-10.375q-0.464-0.429-1.071-0.429-0.518 0-0.857 0.339t-0.339 0.857q0 0.571 0.446 1.054l7.321 7.321q0.179 0.179 0.179 0.393 0 0.286-0.554 0.839t-0.839 0.554q-0.214 0-0.393-0.179l-7.321-7.321q-1.125-1.089-1.125-2.661 0-1.464 1.018-2.482t2.482-1.018q1.571 0 2.661 1.125l10.375 10.375q1.786 1.75 1.786 4.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-save\" viewBox=\"0 0 32 32\">\r\n            <title>save</title>\r\n            <path d=\"M6.857 27.429h13.714v-6.857h-13.714v6.857zM22.857 27.429h2.286v-16q0-0.25-0.179-0.688t-0.357-0.616l-5.018-5.018q-0.179-0.179-0.607-0.357t-0.696-0.179v7.429q0 0.714-0.5 1.214t-1.214 0.5h-10.286q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-2.286v22.857h2.286v-7.429q0-0.714 0.5-1.214t1.214-0.5h14.857q0.714 0 1.214 0.5t0.5 1.214v7.429zM16 10.857v-5.714q0-0.232-0.17-0.402t-0.402-0.17h-3.429q-0.232 0-0.402 0.17t-0.17 0.402v5.714q0 0.232 0.17 0.402t0.402 0.17h3.429q0.232 0 0.402-0.17t0.17-0.402zM27.429 11.429v16.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-24q0-0.714 0.5-1.214t1.214-0.5h16.571q0.714 0 1.571 0.357t1.357 0.857l5 5q0.5 0.5 0.857 1.357t0.357 1.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-square\" viewBox=\"0 0 32 32\">\r\n            <title>square</title>\r\n            <path d=\"M27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bars\" viewBox=\"0 0 32 32\">\r\n            <title>bars</title>\r\n            <path d=\"M27.429 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM27.429 14.857v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM27.429 5.714v2.286q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-list-ul\" viewBox=\"0 0 32 32\">\r\n            <title>list-ul</title>\r\n            <path d=\"M6.857 25.143q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM6.857 16q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM32 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h21.714q0.232 0 0.402 0.17t0.17 0.402zM6.857 6.857q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM32 14.286v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h21.714q0.232 0 0.402 0.17t0.17 0.402zM32 5.143v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h21.714q0.232 0 0.402 0.17t0.17 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-list-ol\" viewBox=\"0 0 32 32\">\r\n            <title>list-ol</title>\r\n            <path d=\"M6.804 28.929q0 1.429-0.973 2.25t-2.42 0.821q-1.893 0-3.071-1.179l1.018-1.571q0.875 0.804 1.893 0.804 0.518 0 0.902-0.259t0.384-0.759q0-1.143-1.875-1l-0.464-1q0.143-0.179 0.58-0.777t0.759-0.964 0.661-0.688v-0.018q-0.286 0-0.866 0.018t-0.866 0.018v0.946h-1.893v-2.714h5.946v1.571l-1.696 2.054q0.911 0.214 1.446 0.875t0.536 1.571zM6.839 17.732v2.839h-6.464q-0.107-0.643-0.107-0.964 0-0.911 0.42-1.661t1.009-1.214 1.179-0.848 1.009-0.777 0.42-0.804q0-0.446-0.259-0.688t-0.705-0.241q-0.821 0-1.446 1.036l-1.518-1.054q0.429-0.911 1.277-1.42t1.884-0.509q1.304 0 2.196 0.741t0.893 2.009q0 0.893-0.607 1.634t-1.339 1.152-1.348 0.902-0.634 0.938h2.268v-1.071h1.875zM32 23.429v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.25 0.161-0.411t0.411-0.161h21.714q0.232 0 0.402 0.17t0.17 0.402zM6.857 7.375v1.768h-5.982v-1.768h1.911q0-0.732 0.009-2.179t0.009-2.161v-0.214h-0.036q-0.143 0.304-0.893 0.964l-1.268-1.357 2.429-2.268h1.893v7.214h1.929zM32 14.286v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.25 0.161-0.411t0.411-0.161h21.714q0.232 0 0.402 0.17t0.17 0.402zM32 5.143v3.429q0 0.232-0.17 0.402t-0.402 0.17h-21.714q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h21.714q0.232 0 0.402 0.17t0.17 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-strikethrough\" viewBox=\"0 0 32 32\">\r\n            <title>strikethrough</title>\r\n            <path d=\"M31.429 16q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-30.857q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h30.857zM8.625 14.857q-0.5-0.625-0.911-1.429-0.857-1.732-0.857-3.357 0-3.232 2.393-5.518 2.375-2.268 7.018-2.268 0.893 0 2.982 0.339 1.179 0.214 3.161 0.857 0.179 0.679 0.375 2.107 0.25 2.196 0.25 3.268 0 0.321-0.089 0.804l-0.214 0.054-1.5-0.107-0.25-0.036q-0.893-2.661-1.839-3.661-1.571-1.625-3.75-1.625-2.036 0-3.25 1.054-1.196 1.036-1.196 2.607 0 1.304 1.179 2.5t4.982 2.304q1.232 0.357 3.089 1.179 1.036 0.5 1.696 0.929h-13.268zM17.679 19.429h7.339q0.125 0.696 0.125 1.643 0 1.982-0.732 3.786-0.411 0.982-1.268 1.857-0.661 0.625-1.946 1.446-1.429 0.857-2.732 1.179-1.429 0.375-3.625 0.375-2.036 0-3.482-0.411l-2.5-0.714q-1.018-0.286-1.286-0.5-0.143-0.143-0.143-0.393v-0.232q0-1.929-0.036-2.786-0.018-0.536 0-1.214l0.036-0.661v-0.786l1.821-0.036q0.268 0.607 0.536 1.268t0.402 1 0.223 0.482q0.625 1.018 1.429 1.679 0.768 0.643 1.875 1.018 1.054 0.393 2.357 0.393 1.143 0 2.482-0.482 1.375-0.464 2.179-1.536 0.839-1.089 0.839-2.304 0-1.5-1.446-2.804-0.607-0.518-2.446-1.268z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-underline\" viewBox=\"0 0 32 32\">\r\n            <title>underline</title>\r\n            <path d=\"M0.857 3.982q-0.661-0.036-0.804-0.071l-0.054-1.571q0.232-0.018 0.714-0.018 1.071 0 2 0.071 2.357 0.125 2.964 0.125 1.536 0 3-0.054 2.071-0.071 2.607-0.089 1 0 1.536-0.036l-0.018 0.25 0.036 1.143v0.161q-1.071 0.161-2.214 0.161-1.071 0-1.411 0.446-0.232 0.25-0.232 2.357 0 0.232 0.009 0.58t0.009 0.455l0.018 4.089 0.25 5q0.107 2.214 0.911 3.607 0.625 1.054 1.714 1.643 1.571 0.839 3.161 0.839 1.857 0 3.411-0.5 1-0.321 1.768-0.911 0.857-0.643 1.161-1.143 0.643-1 0.946-2.036 0.375-1.304 0.375-4.089 0-1.411-0.063-2.286t-0.196-2.188-0.241-2.848l-0.071-1.054q-0.089-1.196-0.429-1.571-0.607-0.625-1.375-0.607l-1.786 0.036-0.25-0.054 0.036-1.536h1.5l3.661 0.179q1.357 0.054 3.5-0.179l0.321 0.036q0.107 0.679 0.107 0.911 0 0.125-0.071 0.554-0.804 0.214-1.5 0.232-1.304 0.196-1.411 0.304-0.268 0.268-0.268 0.732 0 0.125 0.027 0.482t0.027 0.554q0.143 0.339 0.393 7.071 0.107 3.482-0.268 5.429-0.268 1.357-0.732 2.179-0.679 1.161-2 2.196-1.339 1.018-3.25 1.589-1.946 0.589-4.554 0.589-2.982 0-5.071-0.821-2.125-0.839-3.196-2.179-1.089-1.357-1.482-3.482-0.286-1.429-0.286-4.232v-5.946q0-3.357-0.304-3.804-0.446-0.643-2.625-0.696zM27.429 29.143v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-26.286q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h26.286q0.25 0 0.411-0.161t0.161-0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-table\" viewBox=\"0 0 30 32\">\r\n            <title>table</title>\r\n            <path d=\"M9.143 24.571v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM9.143 17.714v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM18.286 24.571v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM9.143 10.857v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM18.286 17.714v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM27.429 24.571v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM18.286 10.857v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM27.429 17.714v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM27.429 10.857v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM29.714 5.143v19.429q0 1.179-0.839 2.018t-2.018 0.839h-24q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h24q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-magic\" viewBox=\"0 0 30 32\">\r\n            <title>magic</title>\r\n            <path d=\"M21.25 10.375l5.232-5.232-1.911-1.911-5.232 5.232zM29.232 5.143q0 0.482-0.321 0.804l-22.964 22.964q-0.321 0.321-0.804 0.321t-0.804-0.321l-3.536-3.536q-0.321-0.321-0.321-0.804t0.321-0.804l22.964-22.964q0.321-0.321 0.804-0.321t0.804 0.321l3.536 3.536q0.321 0.321 0.321 0.804zM5.107 1.75l1.75 0.536-1.75 0.536-0.536 1.75-0.536-1.75-1.75-0.536 1.75-0.536 0.536-1.75zM11.357 4.643l3.5 1.071-3.5 1.071-1.071 3.5-1.071-3.5-3.5-1.071 3.5-1.071 1.071-3.5zM27.964 13.179l1.75 0.536-1.75 0.536-0.536 1.75-0.536-1.75-1.75-0.536 1.75-0.536 0.536-1.75zM16.536 1.75l1.75 0.536-1.75 0.536-0.536 1.75-0.536-1.75-1.75-0.536 1.75-0.536 0.536-1.75z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-truck\" viewBox=\"0 0 32 32\">\r\n            <title>truck</title>\r\n            <path d=\"M11.429 25.143q0-0.929-0.679-1.607t-1.607-0.679-1.607 0.679-0.679 1.607 0.679 1.607 1.607 0.679 1.607-0.679 0.679-1.607zM4.571 16h6.857v-4.571h-2.821q-0.232 0-0.393 0.161l-3.482 3.482q-0.161 0.161-0.161 0.393v0.536zM27.429 25.143q0-0.929-0.679-1.607t-1.607-0.679-1.607 0.679-0.679 1.607 0.679 1.607 1.607 0.679 1.607-0.679 0.679-1.607zM32 5.714v18.286q0 0.268-0.071 0.473t-0.241 0.33-0.295 0.205-0.42 0.107-0.402 0.036-0.455 0-0.402-0.009q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-6.857q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-1.143q-0.054 0-0.402 0.009t-0.455 0-0.402-0.036-0.42-0.107-0.295-0.205-0.241-0.33-0.071-0.473q0-0.464 0.339-0.804t0.804-0.339v-5.714q0-0.143-0.009-0.625t0-0.679 0.045-0.616 0.116-0.661 0.25-0.545 0.402-0.536l3.536-3.536q0.339-0.339 0.902-0.571t1.045-0.232h2.857v-3.429q0-0.464 0.339-0.804t0.804-0.339h18.286q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pinterest\" viewBox=\"0 0 32 32\">\r\n            <title>pinterest</title>\r\n            <path d=\"M27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839q-1.982 0-3.893-0.571 1.054-1.661 1.393-2.929 0.161-0.607 0.964-3.768 0.357 0.696 1.304 1.205t2.036 0.509q2.161 0 3.857-1.223t2.625-3.366 0.929-4.821q0-2.036-1.063-3.821t-3.080-2.911-4.554-1.125q-1.875 0-3.5 0.518t-2.759 1.375-1.946 1.973-1.196 2.313-0.384 2.393q0 1.857 0.714 3.268t2.089 1.982q0.536 0.214 0.679-0.357 0.036-0.125 0.143-0.554t0.143-0.536q0.107-0.411-0.196-0.768-0.911-1.089-0.911-2.696 0-2.696 1.866-4.634t4.884-1.938q2.696 0 4.205 1.464t1.509 3.804q0 3.036-1.223 5.161t-3.134 2.125q-1.089 0-1.75-0.777t-0.411-1.866q0.143-0.625 0.473-1.67t0.536-1.839 0.205-1.348q0-0.893-0.482-1.482t-1.375-0.589q-1.107 0-1.875 1.018t-0.768 2.536q0 1.304 0.446 2.179l-1.768 7.464q-0.304 1.25-0.232 3.161-3.679-1.625-5.946-5.018t-2.268-7.554q0-3.732 1.839-6.884t4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pinterest-square\" viewBox=\"0 0 32 32\">\r\n            <title>pinterest-square</title>\r\n            <path d=\"M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-12.946q1.518-2.179 1.929-3.75 0.161-0.607 0.946-3.732 0.375 0.696 1.313 1.196t2.009 0.5q3.232 0 5.277-2.634t2.045-6.67q0-1.5-0.625-2.902t-1.723-2.482-2.723-1.732-3.518-0.652q-1.857 0-3.473 0.509t-2.732 1.366-1.92 1.955-1.188 2.286-0.384 2.366q0 1.821 0.705 3.214t2.080 1.964q0.232 0.089 0.42 0t0.259-0.339q0.179-0.786 0.268-1.089 0.107-0.411-0.196-0.75-0.893-1.107-0.893-2.679 0-2.679 1.848-4.58t4.83-1.902q2.661 0 4.152 1.446t1.491 3.75q0 3-1.205 5.107t-3.098 2.107q-1.071 0-1.732-0.777t-0.411-1.848q0.143-0.607 0.473-1.652t0.527-1.821 0.196-1.33q0-0.875-0.473-1.455t-1.348-0.58q-1.089 0-1.848 1.009t-0.759 2.491q0 1.286 0.429 2.161l-1.75 7.393q-0.429 1.786-0.125 4.536h-3.268q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-google-plus-square\" viewBox=\"0 0 32 32\">\r\n            <title>google-plus-square</title>\r\n            <path d=\"M14.804 21.75q0 1.357-1.045 2.009t-2.491 0.652q-0.732 0-1.438-0.17t-1.348-0.509-1.036-0.946-0.393-1.393q0-0.821 0.446-1.429t1.17-0.92 1.464-0.446 1.509-0.134q0.357 0 0.554 0.036 0.036 0.018 0.411 0.295t0.464 0.339 0.411 0.321 0.438 0.393 0.339 0.402 0.304 0.464 0.161 0.473 0.080 0.563zM13.482 12.018q0 1.071-0.589 1.777t-1.643 0.705q-0.946 0-1.661-0.759t-1.027-1.723-0.313-1.893q0-1.089 0.571-1.857t1.643-0.768q0.946 0 1.67 0.804t1.036 1.804 0.313 1.911zM15.375 7.429l1.571-1.143h-4.732q-1.518 0-2.875 0.571t-2.277 1.75-0.92 2.732q0 1.661 1.152 2.759t2.83 1.098q0.393 0 0.768-0.054-0.232 0.518-0.232 0.964 0 0.786 0.714 1.679-3.125 0.214-4.589 1.125-0.839 0.518-1.348 1.304t-0.509 1.696q0 0.768 0.33 1.384t0.866 1.009 1.232 0.661 1.384 0.375 1.366 0.107q1.071 0 2.152-0.277t2.027-0.821 1.536-1.473 0.589-2.089q0-0.875-0.357-1.598t-0.875-1.188-1.036-0.848-0.875-0.786-0.357-0.795 0.277-0.759 0.67-0.705 0.786-0.75 0.67-1.063 0.277-1.473q0-1.071-0.402-1.777t-1.295-1.616h1.482zM20.571 15.429h2.286v-1.143h-2.286v-2.286h-1.143v2.286h-2.286v1.143h2.286v2.857h1.143v-2.857zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-google-plus\" viewBox=\"0 0 30 32\">\r\n            <title>google-plus</title>\r\n            <path d=\"M13.125 14.214q0 0.643 0.571 1.259t1.384 1.214 1.616 1.313 1.375 1.857 0.571 2.536q0 1.607-0.857 3.089-1.286 2.179-3.768 3.205t-5.321 1.027q-2.357 0-4.402-0.741t-3.063-2.455q-0.661-1.071-0.661-2.339 0-1.446 0.795-2.679t2.116-2.054q2.339-1.464 7.214-1.786-0.571-0.75-0.848-1.321t-0.277-1.304q0-0.643 0.375-1.518-0.821 0.071-1.214 0.071-2.643 0-4.455-1.723t-1.813-4.366q0-1.464 0.643-2.839t1.768-2.339q1.375-1.179 3.259-1.75t3.884-0.571h7.464l-2.464 1.571h-2.339q1.321 1.125 2 2.375t0.679 2.857q0 1.286-0.438 2.312t-1.054 1.661-1.241 1.161-1.063 1.098-0.438 1.179zM10.518 12.5q0.679 0 1.393-0.295t1.179-0.777q0.946-1.018 0.946-2.839 0-1.036-0.304-2.232t-0.866-2.313-1.509-1.848-2.089-0.732q-0.75 0-1.473 0.348t-1.17 0.938q-0.839 1.054-0.839 2.857 0 0.821 0.179 1.741t0.563 1.839 0.929 1.652 1.339 1.196 1.723 0.464zM10.554 28.089q1.036 0 1.991-0.232t1.768-0.696 1.304-1.304 0.491-1.946q0-0.446-0.125-0.875t-0.259-0.75-0.482-0.741-0.527-0.625-0.688-0.616-0.652-0.518-0.741-0.536-0.652-0.464q-0.286-0.036-0.857-0.036-0.946 0-1.875 0.125t-1.92 0.446-1.732 0.821-1.223 1.33-0.482 1.884q0 1.25 0.625 2.205t1.634 1.482 2.125 0.786 2.277 0.259zM25.018 12.446h3.804v1.929h-3.804v3.911h-1.875v-3.911h-3.786v-1.929h3.786v-3.875h1.875v3.875z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-money\" viewBox=\"0 0 34 32\">\r\n            <title>money</title>\r\n            <path d=\"M13.714 20.571h6.857v-1.714h-2.286v-8h-2.036l-2.643 2.446 1.375 1.429q0.75-0.661 0.982-1.018h0.036v5.143h-2.286v1.714zM22.857 16q0 1.25-0.375 2.536t-1.063 2.393-1.813 1.804-2.464 0.696-2.464-0.696-1.813-1.804-1.063-2.393-0.375-2.536 0.375-2.536 1.063-2.393 1.813-1.804 2.464-0.696 2.464 0.696 1.813 1.804 1.063 2.393 0.375 2.536zM32 20.571v-9.143q-1.893 0-3.232-1.339t-1.339-3.232h-20.571q0 1.893-1.339 3.232t-3.232 1.339v9.143q1.893 0 3.232 1.339t1.339 3.232h20.571q0-1.893 1.339-3.232t3.232-1.339zM34.286 5.714v20.571q0 0.464-0.339 0.804t-0.804 0.339h-32q-0.464 0-0.804-0.339t-0.339-0.804v-20.571q0-0.464 0.339-0.804t0.804-0.339h32q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-down\" viewBox=\"0 0 18 32\">\r\n            <title>caret-down</title>\r\n            <path d=\"M18.286 12.571q0 0.464-0.339 0.804l-8 8q-0.339 0.339-0.804 0.339t-0.804-0.339l-8-8q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h16q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-up\" viewBox=\"0 0 18 32\">\r\n            <title>caret-up</title>\r\n            <path d=\"M18.286 21.714q0 0.464-0.339 0.804t-0.804 0.339h-16q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l8-8q0.339-0.339 0.804-0.339t0.804 0.339l8 8q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-left\" viewBox=\"0 0 11 32\">\r\n            <title>caret-left</title>\r\n            <path d=\"M11.429 8v16q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-8-8q-0.339-0.339-0.339-0.804t0.339-0.804l8-8q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-right\" viewBox=\"0 0 11 32\">\r\n            <title>caret-right</title>\r\n            <path d=\"M10.286 16q0 0.464-0.339 0.804l-8 8q-0.339 0.339-0.804 0.339t-0.804-0.339-0.339-0.804v-16q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339l8 8q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-columns\" viewBox=\"0 0 30 32\">\r\n            <title>columns</title>\r\n            <path d=\"M2.857 27.429h10.857v-20.571h-11.429v20q0 0.232 0.17 0.402t0.402 0.17zM27.429 26.857v-20h-11.429v20.571h10.857q0.232 0 0.402-0.17t0.17-0.402zM29.714 5.143v21.714q0 1.179-0.839 2.018t-2.018 0.839h-24q-1.179 0-2.018-0.839t-0.839-2.018v-21.714q0-1.179 0.839-2.018t2.018-0.839h24q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort\" viewBox=\"0 0 18 32\">\r\n            <title>sort</title>\r\n            <path d=\"M18.286 19.429q0 0.464-0.339 0.804l-8 8q-0.339 0.339-0.804 0.339t-0.804-0.339l-8-8q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h16q0.464 0 0.804 0.339t0.339 0.804zM18.286 12.571q0 0.464-0.339 0.804t-0.804 0.339h-16q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l8-8q0.339-0.339 0.804-0.339t0.804 0.339l8 8q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-down\" viewBox=\"0 0 18 32\">\r\n            <title>sort-down</title>\r\n            <path d=\"M18.286 19.429q0 0.464-0.339 0.804l-8 8q-0.339 0.339-0.804 0.339t-0.804-0.339l-8-8q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339h16q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-up\" viewBox=\"0 0 18 32\">\r\n            <title>sort-up</title>\r\n            <path d=\"M18.286 12.571q0 0.464-0.339 0.804t-0.804 0.339h-16q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l8-8q0.339-0.339 0.804-0.339t0.804 0.339l8 8q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-envelope\" viewBox=\"0 0 32 32\">\r\n            <title>envelope</title>\r\n            <path d=\"M32 12.679v14.179q0 1.179-0.839 2.018t-2.018 0.839h-26.286q-1.179 0-2.018-0.839t-0.839-2.018v-14.179q0.786 0.875 1.804 1.554 6.464 4.393 8.875 6.161 1.018 0.75 1.652 1.17t1.688 0.857 1.964 0.438h0.036q0.911 0 1.964-0.438t1.688-0.857 1.652-1.17q3.036-2.196 8.893-6.161 1.018-0.696 1.786-1.554zM32 7.429q0 1.411-0.875 2.696t-2.179 2.196q-6.714 4.661-8.357 5.804-0.179 0.125-0.759 0.545t-0.964 0.679-0.929 0.58-1.027 0.482-0.893 0.161h-0.036q-0.411 0-0.893-0.161t-1.027-0.482-0.929-0.58-0.964-0.679-0.759-0.545q-1.625-1.143-4.679-3.259t-3.661-2.545q-1.107-0.75-2.089-2.063t-0.982-2.438q0-1.393 0.741-2.321t2.116-0.929h26.286q1.161 0 2.009 0.839t0.848 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-linkedin\" viewBox=\"0 0 32 32\">\r\n            <title>linkedin</title>\r\n            <path d=\"M6.232 11.161v17.696h-5.893v-17.696h5.893zM6.607 5.696q0.018 1.304-0.902 2.179t-2.42 0.875h-0.036q-1.464 0-2.357-0.875t-0.893-2.179q0-1.321 0.92-2.188t2.402-0.866 2.375 0.866 0.911 2.188zM27.429 18.714v10.143h-5.875v-9.464q0-1.875-0.723-2.938t-2.259-1.063q-1.125 0-1.884 0.616t-1.134 1.527q-0.196 0.536-0.196 1.446v9.875h-5.875q0.036-7.125 0.036-11.554t-0.018-5.286l-0.018-0.857h5.875v2.571h-0.036q0.357-0.571 0.732-1t1.009-0.929 1.554-0.777 2.045-0.277q3.054 0 4.911 2.027t1.857 5.938z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rotate-left\" viewBox=\"0 0 32 32\">\r\n            <title>rotate-left</title>\r\n            <path d=\"M27.429 16q0 2.786-1.089 5.321t-2.929 4.375-4.375 2.929-5.321 1.089q-3.071 0-5.839-1.295t-4.714-3.652q-0.125-0.179-0.116-0.402t0.152-0.366l2.446-2.464q0.179-0.161 0.446-0.161 0.286 0.036 0.411 0.214 1.304 1.696 3.196 2.625t4.018 0.929q1.857 0 3.545-0.723t2.92-1.955 1.955-2.92 0.723-3.545-0.723-3.545-1.955-2.92-2.92-1.955-3.545-0.723q-1.75 0-3.357 0.634t-2.857 1.813l2.446 2.464q0.554 0.536 0.25 1.232-0.304 0.714-1.054 0.714h-8q-0.464 0-0.804-0.339t-0.339-0.804v-8q0-0.75 0.714-1.054 0.696-0.304 1.232 0.25l2.321 2.304q1.911-1.804 4.366-2.795t5.080-0.991q2.786 0 5.321 1.089t4.375 2.929 2.929 4.375 1.089 5.321z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-legal\" viewBox=\"0 0 32 32\">\r\n            <title>legal</title>\r\n            <path d=\"M31.625 27.429q0 0.946-0.661 1.607l-1.911 1.929q-0.696 0.661-1.625 0.661-0.946 0-1.607-0.661l-6.482-6.5q-0.679-0.643-0.679-1.607 0-0.946 0.768-1.714l-4.571-4.571-2.25 2.25q-0.25 0.25-0.607 0.25t-0.607-0.25q0.036 0.036 0.223 0.214t0.223 0.232 0.179 0.205 0.179 0.241 0.107 0.241 0.098 0.295 0.027 0.321q0 0.679-0.5 1.214-0.054 0.054-0.295 0.321t-0.339 0.366-0.33 0.295-0.393 0.277-0.393 0.161-0.464 0.080q-0.714 0-1.214-0.5l-7.286-7.286q-0.5-0.5-0.5-1.214 0-0.232 0.080-0.464t0.161-0.393 0.277-0.393 0.295-0.33 0.366-0.339 0.321-0.295q0.536-0.5 1.214-0.5 0.179 0 0.321 0.027t0.295 0.098 0.241 0.107 0.241 0.179 0.205 0.179 0.232 0.223 0.214 0.223q-0.25-0.25-0.25-0.607t0.25-0.607l6.214-6.214q0.25-0.25 0.607-0.25t0.607 0.25q-0.036-0.036-0.223-0.214t-0.223-0.232-0.179-0.205-0.179-0.241-0.107-0.241-0.098-0.295-0.027-0.321q0-0.679 0.5-1.214 0.054-0.054 0.295-0.321t0.339-0.366 0.33-0.295 0.393-0.277 0.393-0.161 0.464-0.080q0.714 0 1.214 0.5l7.286 7.286q0.5 0.5 0.5 1.214 0 0.232-0.080 0.464t-0.161 0.393-0.277 0.393-0.295 0.33-0.366 0.339-0.321 0.295q-0.536 0.5-1.214 0.5-0.179 0-0.321-0.027t-0.295-0.098-0.241-0.107-0.241-0.179-0.205-0.179-0.232-0.223-0.214-0.223q0.25 0.25 0.25 0.607t-0.25 0.607l-2.25 2.25 4.571 4.571q0.768-0.768 1.714-0.768 0.929 0 1.625 0.661l6.482 6.482q0.661 0.696 0.661 1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tachometer\" viewBox=\"0 0 32 32\">\r\n            <title>tachometer</title>\r\n            <path d=\"M6.857 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM10.286 12.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM17.929 21.161l1.804-6.821q0.107-0.464-0.134-0.866t-0.688-0.527-0.857 0.116-0.536 0.705l-1.804 6.821q-1.071 0.089-1.911 0.777t-1.125 1.759q-0.357 1.375 0.357 2.607t2.089 1.589 2.607-0.357 1.589-2.089q0.286-1.071-0.107-2.089t-1.286-1.625zM29.714 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM18.286 9.143q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM26.286 12.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM32 20.571q0 4.661-2.518 8.625-0.339 0.518-0.964 0.518h-25.036q-0.625 0-0.964-0.518-2.518-3.946-2.518-8.625 0-3.25 1.268-6.214t3.411-5.107 5.107-3.411 6.214-1.268 6.214 1.268 5.107 3.411 3.411 5.107 1.268 6.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-comment-o\" viewBox=\"0 0 32 32\">\r\n            <title>comment-o</title>\r\n            <path d=\"M16 6.857q-3.643 0-6.813 1.241t-5.036 3.348-1.866 4.554q0 2 1.277 3.813t3.598 3.134l1.554 0.893-0.482 1.714q-0.429 1.625-1.25 3.071 2.714-1.125 4.911-3.054l0.768-0.679 1.018 0.107q1.232 0.143 2.321 0.143 3.643 0 6.812-1.241t5.036-3.348 1.866-4.554-1.866-4.554-5.036-3.348-6.813-1.241zM32 16q0 3.107-2.143 5.741t-5.821 4.161-8.036 1.527q-1.25 0-2.589-0.143-3.536 3.125-8.214 4.321-0.875 0.25-2.036 0.393h-0.089q-0.268 0-0.482-0.188t-0.286-0.491v-0.018q-0.054-0.071-0.009-0.214t0.036-0.179 0.080-0.17l0.107-0.161t0.125-0.152 0.143-0.161q0.125-0.143 0.554-0.616t0.616-0.679 0.554-0.705 0.58-0.911 0.482-1.054 0.464-1.357q-2.804-1.589-4.42-3.929t-1.616-5.018q0-3.107 2.143-5.741t5.821-4.161 8.036-1.527 8.036 1.527 5.821 4.161 2.143 5.741z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-comments-o\" viewBox=\"0 0 32 32\">\r\n            <title>comments-o</title>\r\n            <path d=\"M12.571 6.857q-2.732 0-5.107 0.929t-3.777 2.518-1.402 3.411q0 1.464 0.946 2.821t2.661 2.357l1.732 1-0.625 1.5q0.607-0.357 1.107-0.696l0.786-0.554 0.946 0.179q1.393 0.25 2.732 0.25 2.732 0 5.107-0.929t3.777-2.518 1.402-3.411-1.402-3.411-3.777-2.518-5.107-0.929zM12.571 4.571q3.411 0 6.313 1.223t4.58 3.33 1.679 4.589-1.679 4.589-4.58 3.33-6.313 1.223q-1.536 0-3.143-0.286-2.214 1.571-4.964 2.286-0.643 0.161-1.536 0.286h-0.054q-0.196 0-0.366-0.143t-0.205-0.375q-0.018-0.054-0.018-0.116t0.009-0.116 0.036-0.107l0.045-0.089t0.063-0.098 0.071-0.089 0.080-0.089 0.071-0.080q0.089-0.107 0.411-0.446t0.464-0.527 0.402-0.518 0.446-0.688 0.366-0.786q-2.214-1.286-3.482-3.161t-1.268-4q0-2.482 1.679-4.589t4.58-3.33 6.312-1.223zM27.25 25.446q0.179 0.429 0.366 0.786t0.446 0.688 0.402 0.518 0.464 0.527 0.411 0.446q0.018 0.018 0.071 0.080t0.080 0.089 0.071 0.089 0.063 0.098l0.045 0.089t0.036 0.107 0.009 0.116-0.018 0.116q-0.054 0.25-0.232 0.393t-0.393 0.125q-0.893-0.125-1.536-0.286-2.75-0.714-4.964-2.286-1.607 0.286-3.143 0.286-4.839 0-8.429-2.357 1.036 0.071 1.571 0.071 2.875 0 5.518-0.804t4.714-2.304q2.232-1.643 3.429-3.786t1.196-4.536q0-1.375-0.411-2.714 2.304 1.268 3.643 3.179t1.339 4.107q0 2.143-1.268 4.009t-3.482 3.152z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flash\" viewBox=\"0 0 16 32\">\r\n            <title>flash</title>\r\n            <path d=\"M15.804 10.107q0.321 0.357 0.125 0.786l-9.643 20.661q-0.232 0.446-0.75 0.446-0.071 0-0.25-0.036-0.304-0.089-0.455-0.339t-0.080-0.536l3.518-14.429-7.25 1.804q-0.071 0.018-0.214 0.018-0.321 0-0.554-0.196-0.321-0.268-0.232-0.696l3.589-14.732q0.071-0.25 0.286-0.411t0.5-0.161h5.857q0.339 0 0.571 0.223t0.232 0.527q0 0.143-0.089 0.321l-3.054 8.268 7.071-1.75q0.143-0.036 0.214-0.036 0.339 0 0.607 0.268z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sitemap\" viewBox=\"0 0 32 32\">\r\n            <title>sitemap</title>\r\n            <path d=\"M32 22.286v5.714q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h1.714v-3.429h-9.143v3.429h1.714q0.714 0 1.214 0.5t0.5 1.214v5.714q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h1.714v-3.429h-9.143v3.429h1.714q0.714 0 1.214 0.5t0.5 1.214v5.714q0 0.714-0.5 1.214t-1.214 0.5h-5.714q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h1.714v-3.429q0-0.929 0.679-1.607t1.607-0.679h9.143v-3.429h-1.714q-0.714 0-1.214-0.5t-0.5-1.214v-5.714q0-0.714 0.5-1.214t1.214-0.5h5.714q0.714 0 1.214 0.5t0.5 1.214v5.714q0 0.714-0.5 1.214t-1.214 0.5h-1.714v3.429h9.143q0.929 0 1.607 0.679t0.679 1.607v3.429h1.714q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-umbrella\" viewBox=\"0 0 30 32\">\r\n            <title>umbrella</title>\r\n            <path d=\"M16 14.786v10.357q0 1.857-1.357 3.214t-3.214 1.357-3.214-1.357-1.357-3.214q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804q0 0.893 0.696 1.589t1.589 0.696 1.589-0.696 0.696-1.589v-10.357q0.589-0.196 1.143-0.196t1.143 0.196zM29.714 15.268q0 0.232-0.17 0.402t-0.402 0.17q-0.196 0-0.411-0.179-0.875-0.821-1.661-1.232t-1.821-0.411q-1.214 0-2.286 0.661t-1.839 1.732q-0.125 0.179-0.313 0.5t-0.259 0.429q-0.196 0.304-0.5 0.304-0.321 0-0.518-0.304-0.071-0.107-0.259-0.429t-0.313-0.5q-0.768-1.071-1.83-1.732t-2.277-0.661-2.277 0.661-1.83 1.732q-0.125 0.179-0.313 0.5t-0.259 0.429q-0.196 0.304-0.518 0.304-0.304 0-0.5-0.304-0.071-0.107-0.259-0.429t-0.313-0.5q-0.768-1.071-1.839-1.732t-2.286-0.661q-1.036 0-1.821 0.411t-1.661 1.232q-0.214 0.179-0.411 0.179-0.232 0-0.402-0.17t-0.17-0.402q0-0.089 0.018-0.125 0.804-3.268 3.080-5.705t5.321-3.652 6.438-1.214q2.5 0 4.902 0.714t4.402 2.027 3.473 3.339 2.063 4.491q0.018 0.036 0.018 0.125zM16 2.286v1.75q-0.75-0.036-1.143-0.036t-1.143 0.036v-1.75q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-clipboard\" viewBox=\"0 0 32 32\">\r\n            <title>clipboard</title>\r\n            <path d=\"M13.714 29.714h16v-11.429h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-6.857v20.571zM18.286 4v-1.143q0-0.232-0.17-0.402t-0.402-0.17h-12.571q-0.232 0-0.402 0.17t-0.17 0.402v1.143q0 0.232 0.17 0.402t0.402 0.17h12.571q0.232 0 0.402-0.17t0.17-0.402zM22.857 16h5.339l-5.339-5.339v5.339zM32 18.286v12q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-2.857h-9.714q-0.714 0-1.214-0.5t-0.5-1.214v-24q0-0.714 0.5-1.214t1.214-0.5h19.429q0.714 0 1.214 0.5t0.5 1.214v5.857q0.375 0.232 0.643 0.5l7.286 7.286q0.5 0.5 0.857 1.357t0.357 1.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-lightbulb-o\" viewBox=\"0 0 18 32\">\r\n            <title>lightbulb-o</title>\r\n            <path d=\"M13.143 10.286q0 0.232-0.17 0.402t-0.402 0.17-0.402-0.17-0.17-0.402q0-0.821-0.964-1.268t-1.893-0.446q-0.232 0-0.402-0.17t-0.17-0.402 0.17-0.402 0.402-0.17q0.893 0 1.777 0.286t1.554 0.964 0.67 1.607zM16 10.286q0-1.286-0.616-2.393t-1.607-1.813-2.196-1.107-2.438-0.402-2.438 0.402-2.196 1.107-1.607 1.813-0.616 2.393q0 1.804 1.214 3.214 0.179 0.196 0.545 0.589t0.545 0.589q2.286 2.732 2.518 5.321h4.071q0.232-2.589 2.518-5.321 0.179-0.196 0.545-0.589t0.545-0.589q1.214-1.411 1.214-3.214zM18.286 10.286q0 2.768-1.839 4.786-0.804 0.875-1.33 1.554t-1.063 1.705-0.607 1.92q0.839 0.5 0.839 1.464 0 0.661-0.446 1.143 0.446 0.482 0.446 1.143 0 0.929-0.804 1.446 0.232 0.411 0.232 0.839 0 0.821-0.563 1.268t-1.384 0.446q-0.357 0.786-1.071 1.25t-1.554 0.464-1.554-0.464-1.071-1.25q-0.821 0-1.384-0.446t-0.563-1.268q0-0.429 0.232-0.839-0.804-0.518-0.804-1.446 0-0.661 0.446-1.143-0.446-0.482-0.446-1.143 0-0.964 0.839-1.464-0.071-0.893-0.607-1.92t-1.063-1.705-1.33-1.554q-1.839-2.018-1.839-4.786 0-1.768 0.795-3.295t2.089-2.536 2.929-1.589 3.33-0.58 3.33 0.58 2.929 1.589 2.089 2.536 0.795 3.295z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-exchange\" viewBox=\"0 0 32 32\">\r\n            <title>exchange</title>\r\n            <path d=\"M32 21.143v3.429q0 0.232-0.17 0.402t-0.402 0.17h-24.571v3.429q0 0.232-0.17 0.402t-0.402 0.17q-0.214 0-0.429-0.179l-5.696-5.714q-0.161-0.161-0.161-0.393 0-0.25 0.161-0.411l5.714-5.714q0.161-0.161 0.411-0.161 0.232 0 0.402 0.17t0.17 0.402v3.429h24.571q0.232 0 0.402 0.17t0.17 0.402zM32 11.429q0 0.25-0.161 0.411l-5.714 5.714q-0.161 0.161-0.411 0.161-0.232 0-0.402-0.17t-0.17-0.402v-3.429h-24.571q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h24.571v-3.429q0-0.25 0.161-0.411t0.411-0.161q0.214 0 0.429 0.179l5.696 5.696q0.161 0.161 0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cloud-download\" viewBox=\"0 0 34 32\">\r\n            <title>cloud-download</title>\r\n            <path d=\"M22.857 16.571q0-0.25-0.161-0.411t-0.411-0.161h-4v-6.286q0-0.232-0.17-0.402t-0.402-0.17h-3.429q-0.232 0-0.402 0.17t-0.17 0.402v6.286h-4q-0.232 0-0.402 0.17t-0.17 0.402q0 0.25 0.161 0.411l6.286 6.286q0.161 0.161 0.411 0.161t0.411-0.161l6.268-6.268q0.179-0.214 0.179-0.429zM34.286 20.571q0 2.839-2.009 4.848t-4.848 2.009h-19.429q-3.304 0-5.652-2.348t-2.348-5.652q0-2.321 1.25-4.286t3.357-2.946q-0.036-0.536-0.036-0.768 0-3.786 2.679-6.464t6.464-2.679q2.786 0 5.098 1.554t3.366 4.125q1.268-1.107 2.964-1.107 1.893 0 3.232 1.339t1.339 3.232q0 1.357-0.732 2.464 2.321 0.554 3.813 2.42t1.491 4.259z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cloud-upload\" viewBox=\"0 0 34 32\">\r\n            <title>cloud-upload</title>\r\n            <path d=\"M22.857 15.429q0-0.25-0.161-0.411l-6.286-6.286q-0.161-0.161-0.411-0.161t-0.411 0.161l-6.268 6.268q-0.179 0.214-0.179 0.429 0 0.25 0.161 0.411t0.411 0.161h4v6.286q0 0.232 0.17 0.402t0.402 0.17h3.429q0.232 0 0.402-0.17t0.17-0.402v-6.286h4q0.232 0 0.402-0.17t0.17-0.402zM34.286 20.571q0 2.839-2.009 4.848t-4.848 2.009h-19.429q-3.304 0-5.652-2.348t-2.348-5.652q0-2.321 1.25-4.286t3.357-2.946q-0.036-0.536-0.036-0.768 0-3.786 2.679-6.464t6.464-2.679q2.786 0 5.098 1.554t3.366 4.125q1.268-1.107 2.964-1.107 1.893 0 3.232 1.339t1.339 3.232q0 1.357-0.732 2.464 2.321 0.554 3.813 2.42t1.491 4.259z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-user-md\" viewBox=\"0 0 25 32\">\r\n            <title>user-md</title>\r\n            <path d=\"M6.857 24q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339-0.339-0.804 0.339-0.804 0.804-0.339 0.804 0.339 0.339 0.804zM25.143 25.089q0 2.161-1.304 3.393t-3.464 1.232h-15.607q-2.161 0-3.464-1.232t-1.304-3.393q0-1.214 0.098-2.339t0.429-2.464 0.848-2.366 1.446-1.839 2.143-1.080q-0.393 0.929-0.393 2.143v3.625q-1.036 0.357-1.661 1.25t-0.625 1.982q0 1.429 1 2.429t2.429 1 2.429-1 1-2.429q0-1.089-0.634-1.982t-1.652-1.25v-3.625q0-1.107 0.446-1.661 2.357 1.857 5.268 1.857t5.268-1.857q0.446 0.554 0.446 1.661v1.143q-1.893 0-3.232 1.339t-1.339 3.232v1.589q-0.571 0.518-0.571 1.268 0 0.714 0.5 1.214t1.214 0.5 1.214-0.5 0.5-1.214q0-0.75-0.571-1.268v-1.589q0-0.929 0.679-1.607t1.607-0.679 1.607 0.679 0.679 1.607v1.589q-0.571 0.518-0.571 1.268 0 0.714 0.5 1.214t1.214 0.5 1.214-0.5 0.5-1.214q0-0.75-0.571-1.268v-1.589q0-1.214-0.616-2.277t-1.67-1.67q0-0.179 0.009-0.759t0-0.857-0.045-0.741-0.125-0.839-0.232-0.714q1.214 0.268 2.143 1.080t1.446 1.839 0.848 2.366 0.429 2.464 0.098 2.339zM19.429 9.143q0 2.839-2.009 4.848t-4.848 2.009-4.848-2.009-2.009-4.848 2.009-4.848 4.848-2.009 4.848 2.009 2.009 4.848z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stethoscope\" viewBox=\"0 0 25 32\">\r\n            <title>stethoscope</title>\r\n            <path d=\"M22.857 12.571q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM25.143 12.571q0 1.107-0.634 1.982t-1.652 1.25v7.054q0 2.839-2.348 4.848t-5.652 2.009-5.652-2.009-2.348-4.848v-2.357q-2.929-0.357-4.893-2.286t-1.964-4.5v-9.143q0-0.464 0.339-0.804t0.804-0.339q0.107 0 0.286 0.036 0.304-0.536 0.839-0.857t1.161-0.321q0.946 0 1.616 0.67t0.67 1.616-0.67 1.616-1.616 0.67q-0.589 0-1.143-0.321v7.179q0 1.893 1.679 3.232t4.036 1.339 4.036-1.339 1.679-3.232v-7.179q-0.554 0.321-1.143 0.321-0.946 0-1.616-0.67t-0.67-1.616 0.67-1.616 1.616-0.67q0.625 0 1.161 0.321t0.839 0.857q0.179-0.036 0.286-0.036 0.464 0 0.804 0.339t0.339 0.804v9.143q0 2.571-1.964 4.5t-4.893 2.286v2.357q0 1.893 1.679 3.232t4.036 1.339 4.036-1.339 1.679-3.232v-7.054q-1.018-0.375-1.652-1.25t-0.634-1.982q0-1.429 1-2.429t2.429-1 2.429 1 1 2.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-suitcase\" viewBox=\"0 0 32 32\">\r\n            <title>suitcase</title>\r\n            <path d=\"M11.429 6.857h9.143v-2.286h-9.143v2.286zM5.143 6.857v22.857h-1.143q-1.643 0-2.821-1.179t-1.179-2.821v-14.857q0-1.643 1.179-2.821t2.821-1.179h1.143zM25.143 6.857v22.857h-18.286v-22.857h2.286v-2.857q0-0.714 0.5-1.214t1.214-0.5h10.286q0.714 0 1.214 0.5t0.5 1.214v2.857h2.286zM32 10.857v14.857q0 1.643-1.179 2.821t-2.821 1.179h-1.143v-22.857h1.143q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bell-o\" viewBox=\"0 0 32 32\">\r\n            <title>bell-o</title>\r\n            <path d=\"M16.286 30.286q0-0.286-0.286-0.286-1.054 0-1.813-0.759t-0.759-1.813q0-0.286-0.286-0.286t-0.286 0.286q0 1.304 0.92 2.223t2.223 0.92q0.286 0 0.286-0.286zM30.857 25.143q0 0.929-0.679 1.607t-1.607 0.679h-8q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-8q-0.929 0-1.607-0.679t-0.679-1.607q0.893-0.75 1.625-1.571t1.518-2.134 1.33-2.83 0.893-3.679 0.348-4.643q0-2.714 2.089-5.045t5.482-2.83q-0.143-0.339-0.143-0.696 0-0.714 0.5-1.214t1.214-0.5 1.214 0.5 0.5 1.214q0 0.357-0.143 0.696 3.393 0.5 5.482 2.83t2.089 5.045q0 2.482 0.348 4.643t0.893 3.679 1.33 2.83 1.518 2.134 1.625 1.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-coffee\" viewBox=\"0 0 34 32\">\r\n            <title>coffee</title>\r\n            <path d=\"M29.714 11.429q0-1.429-1-2.429t-2.429-1h-1.143v6.857h1.143q1.429 0 2.429-1t1-2.429zM0 25.143h32q0 1.893-1.339 3.232t-3.232 1.339h-22.857q-1.893 0-3.232-1.339t-1.339-3.232zM33.143 11.429q0 2.839-2.009 4.848t-4.848 2.009h-1.143v0.571q0 1.643-1.179 2.821t-2.821 1.179h-12.571q-1.643 0-2.821-1.179t-1.179-2.821v-13.143q0-0.464 0.339-0.804t0.804-0.339h20.571q2.839 0 4.848 2.009t2.009 4.848z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cutlery\" viewBox=\"0 0 25 32\">\r\n            <title>cutlery</title>\r\n            <path d=\"M11.429 1.143v11.429q0 1.089-0.634 1.982t-1.652 1.25v13.911q0 0.929-0.679 1.607t-1.607 0.679h-2.286q-0.929 0-1.607-0.679t-0.679-1.607v-13.911q-1.018-0.357-1.652-1.25t-0.634-1.982v-11.429q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804v7.429q0 0.464 0.339 0.804t0.804 0.339 0.804-0.339 0.339-0.804v-7.429q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804v7.429q0 0.464 0.339 0.804t0.804 0.339 0.804-0.339 0.339-0.804v-7.429q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804zM25.143 1.143v28.571q0 0.929-0.679 1.607t-1.607 0.679h-2.286q-0.929 0-1.607-0.679t-0.679-1.607v-9.143h-4q-0.232 0-0.402-0.17t-0.17-0.402v-14.286q0-2.357 1.679-4.036t4.036-1.679h4.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-text-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-text-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM6.857 14.286q0-0.25 0.161-0.411t0.411-0.161h12.571q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-12.571q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM20 18.286q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-12.571q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h12.571zM20 22.857q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-12.571q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h12.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-building-o\" viewBox=\"0 0 25 32\">\r\n            <title>building-o</title>\r\n            <path d=\"M6.857 23.429v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 23.429v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 9.714v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 9.714v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 5.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 9.714v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 5.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 9.714v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 5.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 5.143v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 29.714h6.857v-27.429h-20.571v27.429h6.857v-4q0-0.232 0.17-0.402t0.402-0.17h5.714q0.232 0 0.402 0.17t0.17 0.402v4zM25.143 1.143v29.714q0 0.464-0.339 0.804t-0.804 0.339h-22.857q-0.464 0-0.804-0.339t-0.339-0.804v-29.714q0-0.464 0.339-0.804t0.804-0.339h22.857q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hospital-o\" viewBox=\"0 0 25 32\">\r\n            <title>hospital-o</title>\r\n            <path d=\"M6.857 23.429v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM6.857 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 23.429v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM11.429 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 18.857v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM20.571 14.286v1.143q0 0.232-0.17 0.402t-0.402 0.17h-1.143q-0.232 0-0.402-0.17t-0.17-0.402v-1.143q0-0.232 0.17-0.402t0.402-0.17h1.143q0.232 0 0.402 0.17t0.17 0.402zM16 29.714h6.857v-20.571h-4.571v0.571q0 0.714-0.5 1.214t-1.214 0.5h-8q-0.714 0-1.214-0.5t-0.5-1.214v-0.571h-4.571v20.571h6.857v-4q0-0.232 0.17-0.402t0.402-0.17h5.714q0.232 0 0.402 0.17t0.17 0.402v4zM16 8.571v-5.714q0-0.232-0.17-0.402t-0.402-0.17h-1.143q-0.232 0-0.402 0.17t-0.17 0.402v1.714h-2.286v-1.714q0-0.232-0.17-0.402t-0.402-0.17h-1.143q-0.232 0-0.402 0.17t-0.17 0.402v5.714q0 0.232 0.17 0.402t0.402 0.17h1.143q0.232 0 0.402-0.17t0.17-0.402v-1.714h2.286v1.714q0 0.232 0.17 0.402t0.402 0.17h1.143q0.232 0 0.402-0.17t0.17-0.402zM25.143 8v22.857q0 0.464-0.339 0.804t-0.804 0.339h-22.857q-0.464 0-0.804-0.339t-0.339-0.804v-22.857q0-0.464 0.339-0.804t0.804-0.339h5.714v-5.143q0-0.714 0.5-1.214t1.214-0.5h8q0.714 0 1.214 0.5t0.5 1.214v5.143h5.714q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ambulance\" viewBox=\"0 0 34 32\">\r\n            <title>ambulance</title>\r\n            <path d=\"M11.429 25.143q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM4.571 16h6.857v-4.571h-2.821q-0.25 0.036-0.393 0.161l-3.482 3.482q-0.125 0.214-0.161 0.393v0.536zM27.429 25.143q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM29.714 13.143v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-4v-4q0-0.25-0.161-0.411t-0.411-0.161h-3.429q-0.25 0-0.411 0.161t-0.161 0.411v4h-4q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h4v4q0 0.25 0.161 0.411t0.411 0.161h3.429q0.25 0 0.411-0.161t0.161-0.411v-4h4q0.25 0 0.411-0.161t0.161-0.411zM34.286 3.429v20.571q0 0.464-0.339 0.804t-0.804 0.339h-3.429q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-6.857q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232h-2.286q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339v-7.429q0-0.464 0.232-1.036t0.571-0.911l3.536-3.536q0.339-0.339 0.911-0.571t1.036-0.232h2.857v-5.714q0-0.464 0.339-0.804t0.804-0.339h20.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-medkit\" viewBox=\"0 0 32 32\">\r\n            <title>medkit</title>\r\n            <path d=\"M22.857 20v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-4v-4q0-0.25-0.161-0.411t-0.411-0.161h-3.429q-0.25 0-0.411 0.161t-0.161 0.411v4h-4q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h4v4q0 0.25 0.161 0.411t0.411 0.161h3.429q0.25 0 0.411-0.161t0.161-0.411v-4h4q0.25 0 0.411-0.161t0.161-0.411zM11.429 6.857h9.143v-2.286h-9.143v2.286zM4.571 6.857v22.857h-0.571q-1.643 0-2.821-1.179t-1.179-2.821v-14.857q0-1.643 1.179-2.821t2.821-1.179h0.571zM25.714 6.857v22.857h-19.429v-22.857h2.857v-2.857q0-0.714 0.5-1.214t1.214-0.5h10.286q0.714 0 1.214 0.5t0.5 1.214v2.857h2.857zM32 10.857v14.857q0 1.643-1.179 2.821t-2.821 1.179h-0.571v-22.857h0.571q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fighter-jet\" viewBox=\"0 0 34 32\">\r\n            <title>fighter-jet</title>\r\n            <path d=\"M34.286 17.143q-0.018 0.571-5.143 1.714l-6.286 0.571-4 1.143h-1.143l-5.232 6.286h1.232q0.464 0 0.804 0.080t0.339 0.205-0.339 0.205-0.804 0.080h-5.714v-0.571h1.143v-7.429h-2.857l-3.429 4h-1.714l-0.571-0.571v-3.429h0.571v-0.571h2.286v-0.143l-3.429-0.429v-2.286l3.429-0.429v-0.143h-2.286v-0.571h-0.571v-3.429l0.571-0.571h1.714l3.429 4h2.857v-7.429h-1.143v-0.571h5.714q0.464 0 0.804 0.080t0.339 0.205-0.339 0.205-0.804 0.080h-1.232l5.232 6.286h1.143l4 1.143 6.286 0.571q4.661 1.036 5.125 1.661z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-beer\" viewBox=\"0 0 30 32\">\r\n            <title>beer</title>\r\n            <path d=\"M11.429 16v-6.857h-4.571v4.571q0 0.946 0.67 1.616t1.616 0.67h2.286zM29.714 24v3.429h-20.571v-3.429l2.286-3.429h-2.286q-2.839 0-4.848-2.009t-2.009-4.848v-5.714l-1.143-1.143 0.571-2.286h8.571l0.571-2.286h17.143l0.571 3.429-1.143 0.571v14.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-h-square\" viewBox=\"0 0 32 32\">\r\n            <title>h-square</title>\r\n            <path d=\"M22.857 24v-16q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v5.714h-9.143v-5.714q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v16q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804v-5.714h9.143v5.714q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plus-square\" viewBox=\"0 0 32 32\">\r\n            <title>plus-square</title>\r\n            <path d=\"M22.857 17.143v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-5.714v-5.714q0-0.464-0.339-0.804t-0.804-0.339h-2.286q-0.464 0-0.804 0.339t-0.339 0.804v5.714h-5.714q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h5.714v5.714q0 0.464 0.339 0.804t0.804 0.339h2.286q0.464 0 0.804-0.339t0.339-0.804v-5.714h5.714q0.464 0 0.804-0.339t0.339-0.804zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-double-left\" viewBox=\"0 0 18 32\">\r\n            <title>angle-double-left</title>\r\n            <path d=\"M11.196 24.571q0 0.232-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411t-0.179 0.411l-7.018 7.018 7.018 7.018q0.179 0.179 0.179 0.411zM18.054 24.571q0 0.232-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411t-0.179 0.411l-7.018 7.018 7.018 7.018q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-double-right\" viewBox=\"0 0 18 32\">\r\n            <title>angle-double-right</title>\r\n            <path d=\"M10.625 17.143q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l7.018-7.018-7.018-7.018q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411zM17.482 17.143q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l7.018-7.018-7.018-7.018q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-double-up\" viewBox=\"0 0 21 32\">\r\n            <title>angle-double-up</title>\r\n            <path d=\"M19.196 23.429q0 0.232-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-7.018-7.018-7.018 7.018q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411zM19.196 16.571q0 0.232-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-7.018-7.018-7.018 7.018q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-double-down\" viewBox=\"0 0 21 32\">\r\n            <title>angle-double-down</title>\r\n            <path d=\"M19.196 15.429q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l7.018 7.018 7.018-7.018q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411zM19.196 8.571q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l7.018 7.018 7.018-7.018q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-left\" viewBox=\"0 0 11 32\">\r\n            <title>angle-left</title>\r\n            <path d=\"M11.196 9.714q0 0.232-0.179 0.411l-7.018 7.018 7.018 7.018q0.179 0.179 0.179 0.411t-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-right\" viewBox=\"0 0 11 32\">\r\n            <title>angle-right</title>\r\n            <path d=\"M10.625 17.143q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l7.018-7.018-7.018-7.018q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-up\" viewBox=\"0 0 21 32\">\r\n            <title>angle-up</title>\r\n            <path d=\"M19.196 21.143q0 0.232-0.179 0.411l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-7.018-7.018-7.018 7.018q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angle-down\" viewBox=\"0 0 21 32\">\r\n            <title>angle-down</title>\r\n            <path d=\"M19.196 13.143q0 0.232-0.179 0.411l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l7.018 7.018 7.018-7.018q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-desktop\" viewBox=\"0 0 34 32\">\r\n            <title>desktop</title>\r\n            <path d=\"M32 17.714v-14.857q0-0.232-0.17-0.402t-0.402-0.17h-28.571q-0.232 0-0.402 0.17t-0.17 0.402v14.857q0 0.232 0.17 0.402t0.402 0.17h28.571q0.232 0 0.402-0.17t0.17-0.402zM34.286 2.857v19.429q0 1.179-0.839 2.018t-2.018 0.839h-9.714q0 0.661 0.286 1.384t0.571 1.268 0.286 0.777q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804q0-0.25 0.286-0.786t0.571-1.25 0.286-1.393h-9.714q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h28.571q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-laptop\" viewBox=\"0 0 34 32\">\r\n            <title>laptop</title>\r\n            <path d=\"M7.429 22.857q-1.179 0-2.018-0.839t-0.839-2.018v-12.571q0-1.179 0.839-2.018t2.018-0.839h19.429q1.179 0 2.018 0.839t0.839 2.018v12.571q0 1.179-0.839 2.018t-2.018 0.839h-19.429zM6.857 7.429v12.571q0 0.232 0.17 0.402t0.402 0.17h19.429q0.232 0 0.402-0.17t0.17-0.402v-12.571q0-0.232-0.17-0.402t-0.402-0.17h-19.429q-0.232 0-0.402 0.17t-0.17 0.402zM31.429 24h2.857v1.714q0 0.714-0.839 1.214t-2.018 0.5h-28.571q-1.179 0-2.018-0.5t-0.839-1.214v-1.714h31.429zM18.571 25.714q0.286 0 0.286-0.286t-0.286-0.286h-2.857q-0.286 0-0.286 0.286t0.286 0.286h2.857z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tablet\" viewBox=\"0 0 21 32\">\r\n            <title>tablet</title>\r\n            <path d=\"M11.429 25.143q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM18.286 22.286v-17.143q0-0.232-0.17-0.402t-0.402-0.17h-14.857q-0.232 0-0.402 0.17t-0.17 0.402v17.143q0 0.232 0.17 0.402t0.402 0.17h14.857q0.232 0 0.402-0.17t0.17-0.402zM20.571 5.143v19.429q0 1.179-0.839 2.018t-2.018 0.839h-14.857q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h14.857q1.179 0 2.018 0.839t0.839 2.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mobile-phone\" viewBox=\"0 0 14 32\">\r\n            <title>mobile-phone</title>\r\n            <path d=\"M8.286 25.143q0-0.589-0.42-1.009t-1.009-0.42-1.009 0.42-0.42 1.009 0.42 1.009 1.009 0.42 1.009-0.42 0.42-1.009zM12 22.286v-12.571q0-0.232-0.17-0.402t-0.402-0.17h-9.143q-0.232 0-0.402 0.17t-0.17 0.402v12.571q0 0.232 0.17 0.402t0.402 0.17h9.143q0.232 0 0.402-0.17t0.17-0.402zM8.571 7.143q0-0.286-0.286-0.286h-2.857q-0.286 0-0.286 0.286t0.286 0.286h2.857q0.286 0 0.286-0.286zM13.714 6.857v18.286q0 0.929-0.679 1.607t-1.607 0.679h-9.143q-0.929 0-1.607-0.679t-0.679-1.607v-18.286q0-0.929 0.679-1.607t1.607-0.679h9.143q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-circle-o\" viewBox=\"0 0 32 32\">\r\n            <title>circle-o</title>\r\n            <path d=\"M13.714 6.286q-2.643 0-4.875 1.304t-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875-1.304-4.875-3.536-3.536-4.875-1.304zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-quote-left\" viewBox=\"0 0 30 32\">\r\n            <title>quote-left</title>\r\n            <path d=\"M13.714 17.143v6.857q0 1.429-1 2.429t-2.429 1h-6.857q-1.429 0-2.429-1t-1-2.429v-12.571q0-1.857 0.723-3.545t1.955-2.92 2.92-1.955 3.545-0.723h1.143q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.464-0.339 0.804t-0.804 0.339h-1.143q-1.893 0-3.232 1.339t-1.339 3.232v0.571q0 0.714 0.5 1.214t1.214 0.5h4q1.429 0 2.429 1t1 2.429zM29.714 17.143v6.857q0 1.429-1 2.429t-2.429 1h-6.857q-1.429 0-2.429-1t-1-2.429v-12.571q0-1.857 0.723-3.545t1.955-2.92 2.92-1.955 3.545-0.723h1.143q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.464-0.339 0.804t-0.804 0.339h-1.143q-1.893 0-3.232 1.339t-1.339 3.232v0.571q0 0.714 0.5 1.214t1.214 0.5h4q1.429 0 2.429 1t1 2.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-quote-right\" viewBox=\"0 0 30 32\">\r\n            <title>quote-right</title>\r\n            <path d=\"M13.714 5.714v12.571q0 1.857-0.723 3.545t-1.955 2.92-2.92 1.955-3.545 0.723h-1.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h1.143q1.893 0 3.232-1.339t1.339-3.232v-0.571q0-0.714-0.5-1.214t-1.214-0.5h-4q-1.429 0-2.429-1t-1-2.429v-6.857q0-1.429 1-2.429t2.429-1h6.857q1.429 0 2.429 1t1 2.429zM29.714 5.714v12.571q0 1.857-0.723 3.545t-1.955 2.92-2.92 1.955-3.545 0.723h-1.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h1.143q1.893 0 3.232-1.339t1.339-3.232v-0.571q0-0.714-0.5-1.214t-1.214-0.5h-4q-1.429 0-2.429-1t-1-2.429v-6.857q0-1.429 1-2.429t2.429-1h6.857q1.429 0 2.429 1t1 2.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-spinner\" viewBox=\"0 0 32 32\">\r\n            <title>spinner</title>\r\n            <path d=\"M9.393 24.893q0 0.946-0.67 1.616t-1.616 0.67q-0.929 0-1.607-0.679t-0.679-1.607q0-0.946 0.67-1.616t1.616-0.67 1.616 0.67 0.67 1.616zM18.286 28.571q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM5.714 16q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM27.179 24.893q0 0.929-0.679 1.607t-1.607 0.679q-0.946 0-1.616-0.67t-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM9.964 7.107q0 1.179-0.839 2.018t-2.018 0.839-2.018-0.839-0.839-2.018 0.839-2.018 2.018-0.839 2.018 0.839 0.839 2.018zM30.857 16q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM19.429 3.429q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429zM28.893 7.107q0 1.661-1.179 2.83t-2.821 1.17q-1.661 0-2.83-1.17t-1.17-2.83q0-1.643 1.17-2.821t2.83-1.179q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-circle\" viewBox=\"0 0 32 32\">\r\n            <title>circle</title>\r\n            <path d=\"M27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-reply\" viewBox=\"0 0 32 32\">\r\n            <title>reply</title>\r\n            <path d=\"M32 20q0 2.964-2.268 8.054-0.054 0.125-0.188 0.429t-0.241 0.536-0.232 0.393q-0.214 0.304-0.5 0.304-0.268 0-0.42-0.179t-0.152-0.446q0-0.161 0.045-0.473t0.045-0.42q0.089-1.214 0.089-2.196 0-1.804-0.313-3.232t-0.866-2.473-1.429-1.804-1.884-1.241-2.375-0.759-2.75-0.384-3.134-0.107h-4v4.571q0 0.464-0.339 0.804t-0.804 0.339-0.804-0.339l-9.143-9.143q-0.339-0.339-0.339-0.804t0.339-0.804l9.143-9.143q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804v4.571h4q12.732 0 15.625 7.196 0.946 2.393 0.946 5.946z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-github-alt\" viewBox=\"0 0 30 32\">\r\n            <title>github-alt</title>\r\n            <path d=\"M11.429 21.714q0 0.714-0.223 1.464t-0.768 1.357-1.295 0.607-1.295-0.607-0.768-1.357-0.223-1.464 0.223-1.464 0.768-1.357 1.295-0.607 1.295 0.607 0.768 1.357 0.223 1.464zM22.857 21.714q0 0.714-0.223 1.464t-0.768 1.357-1.295 0.607-1.295-0.607-0.768-1.357-0.223-1.464 0.223-1.464 0.768-1.357 1.295-0.607 1.295 0.607 0.768 1.357 0.223 1.464zM25.714 21.714q0-2.143-1.232-3.643t-3.339-1.5q-0.732 0-3.482 0.375-1.268 0.196-2.804 0.196t-2.804-0.196q-2.714-0.375-3.482-0.375-2.107 0-3.339 1.5t-1.232 3.643q0 1.571 0.571 2.741t1.446 1.839 2.179 1.071 2.5 0.527 2.661 0.125h3q1.464 0 2.661-0.125t2.5-0.527 2.179-1.071 1.446-1.839 0.571-2.741zM29.714 18.571q0 3.696-1.089 5.911-0.679 1.375-1.884 2.375t-2.518 1.536-3.036 0.848-3.063 0.393-2.982 0.080q-1.393 0-2.536-0.054t-2.634-0.223-2.723-0.536-2.446-0.92-2.161-1.446-1.536-2.054q-1.107-2.196-1.107-5.911 0-4.232 2.429-7.071-0.482-1.464-0.482-3.036 0-2.071 0.911-3.893 1.929 0 3.393 0.705t3.375 2.205q2.625-0.625 5.518-0.625 2.643 0 5 0.571 1.875-1.464 3.339-2.161t3.375-0.696q0.911 1.821 0.911 3.893 0 1.554-0.482 3 2.429 2.857 2.429 7.107z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-folder-o\" viewBox=\"0 0 30 32\">\r\n            <title>folder-o</title>\r\n            <path d=\"M27.429 23.429v-12.571q0-0.714-0.5-1.214t-1.214-0.5h-12.571q-0.714 0-1.214-0.5t-0.5-1.214v-1.143q0-0.714-0.5-1.214t-1.214-0.5h-5.714q-0.714 0-1.214 0.5t-0.5 1.214v17.143q0 0.714 0.5 1.214t1.214 0.5h21.714q0.714 0 1.214-0.5t0.5-1.214zM29.714 10.857v12.571q0 1.643-1.179 2.821t-2.821 1.179h-21.714q-1.643 0-2.821-1.179t-1.179-2.821v-17.143q0-1.643 1.179-2.821t2.821-1.179h5.714q1.643 0 2.821 1.179t1.179 2.821v0.571h12q1.643 0 2.821 1.179t1.179 2.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-folder-open-o\" viewBox=\"0 0 34 32\">\r\n            <title>folder-open-o</title>\r\n            <path d=\"M31.804 16.625q0-0.625-0.946-0.625h-19.429q-0.714 0-1.527 0.384t-1.277 0.938l-5.25 6.482q-0.321 0.429-0.321 0.714 0 0.625 0.946 0.625h19.429q0.714 0 1.536-0.393t1.268-0.946l5.25-6.482q0.321-0.393 0.321-0.696zM11.429 13.714h13.714v-2.857q0-0.714-0.5-1.214t-1.214-0.5h-10.286q-0.714 0-1.214-0.5t-0.5-1.214v-1.143q0-0.714-0.5-1.214t-1.214-0.5h-5.714q-0.714 0-1.214 0.5t-0.5 1.214v15.232l4.571-5.625q0.786-0.946 2.071-1.563t2.5-0.616zM34.089 16.625q0 1.107-0.821 2.143l-5.268 6.482q-0.768 0.946-2.071 1.563t-2.5 0.616h-19.429q-1.643 0-2.821-1.179t-1.179-2.821v-17.143q0-1.643 1.179-2.821t2.821-1.179h5.714q1.643 0 2.821 1.179t1.179 2.821v0.571h9.714q1.643 0 2.821 1.179t1.179 2.821v2.857h3.429q0.964 0 1.768 0.438t1.196 1.259q0.268 0.571 0.268 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-a-smile-o\" viewBox=\"0 0 32 32\">\r\n            <title>a-smile-o</title>\r\n            <path d=\"M20.25 19.196q-0.661 2.161-2.464 3.482t-4.071 1.321-4.071-1.321-2.464-3.482q-0.143-0.446 0.071-0.866t0.679-0.563q0.446-0.143 0.866 0.071t0.563 0.679q0.446 1.429 1.652 2.313t2.705 0.884 2.705-0.884 1.652-2.313q0.143-0.464 0.571-0.679t0.875-0.071 0.661 0.563 0.071 0.866zM11.429 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM20.571 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM25.143 16q0-2.321-0.911-4.438t-2.438-3.643-3.643-2.438-4.438-0.911-4.438 0.911-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.438-0.911 3.643-2.438 2.438-3.643 0.911-4.438zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-frown-o\" viewBox=\"0 0 32 32\">\r\n            <title>frown-o</title>\r\n            <path d=\"M20.25 21.946q0.143 0.446-0.071 0.866t-0.661 0.563-0.875-0.071-0.571-0.679q-0.446-1.429-1.652-2.313t-2.705-0.884-2.705 0.884-1.652 2.313q-0.143 0.464-0.563 0.679t-0.866 0.071q-0.464-0.143-0.679-0.563t-0.071-0.866q0.661-2.161 2.464-3.482t4.071-1.321 4.071 1.321 2.464 3.482zM11.429 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM20.571 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM25.143 16q0-2.321-0.911-4.438t-2.438-3.643-3.643-2.438-4.438-0.911-4.438 0.911-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.438-0.911 3.643-2.438 2.438-3.643 0.911-4.438zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-meh-o\" viewBox=\"0 0 32 32\">\r\n            <title>meh-o</title>\r\n            <path d=\"M20.571 19.429q0 0.464-0.339 0.804t-0.804 0.339h-11.429q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h11.429q0.464 0 0.804 0.339t0.339 0.804zM11.429 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM20.571 11.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM25.143 16q0-2.321-0.911-4.438t-2.438-3.643-3.643-2.438-4.438-0.911-4.438 0.911-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.438-0.911 3.643-2.438 2.438-3.643 0.911-4.438zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gamepad\" viewBox=\"0 0 34 32\">\r\n            <title>gamepad</title>\r\n            <path d=\"M14.857 19.429v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-3.429v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v3.429h-3.429q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h3.429v3.429q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411v-3.429h3.429q0.25 0 0.411-0.161t0.161-0.411zM25.143 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM29.714 16q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM34.286 18.286q0 3.786-2.679 6.464t-6.464 2.679q-3.429 0-6.036-2.286h-3.929q-2.607 2.286-6.036 2.286-3.786 0-6.464-2.679t-2.679-6.464 2.679-6.464 6.464-2.679h16q3.786 0 6.464 2.679t2.679 6.464z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-keyboard-o\" viewBox=\"0 0 34 32\">\r\n            <title>keyboard-o</title>\r\n            <path d=\"M6.857 20.857v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM9.143 16.286v1.714q0 0.286-0.286 0.286h-4q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h4q0.286 0 0.286 0.286zM6.857 11.714v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM25.143 20.857v1.714q0 0.286-0.286 0.286h-15.429q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h15.429q0.286 0 0.286 0.286zM13.714 16.286v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM11.429 11.714v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM18.286 16.286v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM16 11.714v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM22.857 16.286v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM29.714 20.857v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM20.571 11.714v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM25.143 11.714v1.714q0 0.286-0.286 0.286h-1.714q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM29.714 11.714v6.286q0 0.286-0.286 0.286h-4q-0.286 0-0.286-0.286v-1.714q0-0.286 0.286-0.286h2v-4.286q0-0.286 0.286-0.286h1.714q0.286 0 0.286 0.286zM32 25.143v-16h-29.714v16h29.714zM34.286 9.143v16q0 0.946-0.67 1.616t-1.616 0.67h-29.714q-0.946 0-1.616-0.67t-0.67-1.616v-16q0-0.946 0.67-1.616t1.616-0.67h29.714q0.946 0 1.616 0.67t0.67 1.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flag-o\" viewBox=\"0 0 32 32\">\r\n            <title>flag-o</title>\r\n            <path d=\"M29.714 18.661v-11q-3.018 1.625-5.464 1.625-1.464 0-2.589-0.571-1.786-0.875-3.286-1.366t-3.179-0.491q-3.089 0-7.196 2.268v10.696q4.375-2.018 7.732-2.018 0.982 0 1.848 0.134t1.75 0.464 1.375 0.554 1.473 0.705l0.5 0.25q0.786 0.393 1.804 0.393 2.143 0 5.232-1.643zM5.714 4.571q0 0.625-0.313 1.143t-0.83 0.821v22.607q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-22.607q-0.518-0.304-0.83-0.821t-0.313-1.143q0-0.946 0.67-1.616t1.616-0.67 1.616 0.67 0.67 1.616zM32 5.714v13.625q0 0.696-0.625 1.018-0.179 0.089-0.304 0.161-3.893 2.071-6.589 2.071-1.571 0-2.821-0.625l-0.5-0.25q-1.143-0.589-1.768-0.857t-1.625-0.518-2.036-0.25q-1.821 0-4.205 0.786t-4.080 1.821q-0.268 0.161-0.589 0.161-0.286 0-0.571-0.143-0.571-0.339-0.571-1v-13.25q0-0.625 0.554-0.982 0.625-0.375 1.402-0.759t2.036-0.929 2.723-0.884 2.768-0.339q2 0 3.732 0.554t3.732 1.536q0.679 0.339 1.589 0.339 2.179 0 5.536-2 0.393-0.214 0.554-0.304 0.554-0.286 1.107 0.036 0.554 0.357 0.554 0.982z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flag-checkered\" viewBox=\"0 0 32 32\">\r\n            <title>flag-checkered</title>\r\n            <path d=\"M14.857 17.857v-3.429q-3.232 0.286-6.857 2.089v3.304q3.661-1.714 6.857-1.964zM14.857 10.393v-3.518q-3.071 0.143-6.857 2.25v3.375q3.839-1.982 6.857-2.107zM29.714 18.661v-3.286q-4.196 2.071-6.857 1.268v-4q-0.357-0.107-0.696-0.268-0.089-0.054-0.589-0.304t-0.616-0.304-0.563-0.268-0.616-0.277-0.58-0.232-0.643-0.223-0.625-0.152-0.705-0.134-0.705-0.071-0.786-0.036q-0.411 0-0.875 0.054v3.964h0.339q1.821 0 3.438 0.518t3.527 1.464q0.339 0.161 0.696 0.268v3.357q0.75 0.304 1.625 0.304 2.143 0 5.232-1.643zM29.714 11.036v-3.375q-3.018 1.625-5.464 1.625-0.804 0-1.393-0.143v3.5q2.643 0.75 6.857-1.607zM5.714 4.571q0 0.625-0.313 1.143t-0.83 0.821v22.607q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-22.607q-0.518-0.304-0.83-0.821t-0.313-1.143q0-0.946 0.67-1.616t1.616-0.67 1.616 0.67 0.67 1.616zM32 5.714v13.625q0 0.696-0.625 1.018-0.179 0.089-0.304 0.161-3.893 2.071-6.589 2.071-1.571 0-2.821-0.625l-0.5-0.25q-1.143-0.589-1.768-0.857t-1.625-0.518-2.036-0.25q-1.821 0-4.205 0.786t-4.080 1.821q-0.268 0.161-0.589 0.161-0.286 0-0.571-0.143-0.571-0.339-0.571-1v-13.25q0-0.625 0.554-0.982 0.625-0.375 1.402-0.759t2.036-0.929 2.723-0.884 2.768-0.339q2 0 3.732 0.554t3.732 1.536q0.679 0.339 1.589 0.339 2.179 0 5.536-2 0.393-0.214 0.554-0.304 0.554-0.286 1.107 0.036 0.554 0.357 0.554 0.982z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-terminal\" viewBox=\"0 0 30 32\">\r\n            <title>terminal</title>\r\n            <path d=\"M10.446 17.554l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l7.018-7.018-7.018-7.018q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411t-0.179 0.411zM29.714 25.714v1.143q0 0.25-0.161 0.411t-0.411 0.161h-17.143q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h17.143q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-code\" viewBox=\"0 0 34 32\">\r\n            <title>code</title>\r\n            <path d=\"M11.018 24.982l-0.893 0.893q-0.179 0.179-0.411 0.179t-0.411-0.179l-8.321-8.321q-0.179-0.179-0.179-0.411t0.179-0.411l8.321-8.321q0.179-0.179 0.411-0.179t0.411 0.179l0.893 0.893q0.179 0.179 0.179 0.411t-0.179 0.411l-7.018 7.018 7.018 7.018q0.179 0.179 0.179 0.411t-0.179 0.411zM21.571 5.929l-6.661 23.054q-0.071 0.232-0.277 0.348t-0.42 0.045l-1.107-0.304q-0.232-0.071-0.348-0.277t-0.045-0.438l6.661-23.054q0.071-0.232 0.277-0.348t0.42-0.045l1.107 0.304q0.232 0.071 0.348 0.277t0.045 0.438zM33.304 17.554l-8.321 8.321q-0.179 0.179-0.411 0.179t-0.411-0.179l-0.893-0.893q-0.179-0.179-0.179-0.411t0.179-0.411l7.018-7.018-7.018-7.018q-0.179-0.179-0.179-0.411t0.179-0.411l0.893-0.893q0.179-0.179 0.411-0.179t0.411 0.179l8.321 8.321q0.179 0.179 0.179 0.411t-0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-reply-all\" viewBox=\"0 0 32 32\">\r\n            <title>reply-all</title>\r\n            <path d=\"M11.429 19.321v1.25q0 0.75-0.696 1.054-0.232 0.089-0.446 0.089-0.482 0-0.804-0.339l-9.143-9.143q-0.339-0.339-0.339-0.804t0.339-0.804l9.143-9.143q0.518-0.554 1.25-0.25 0.696 0.304 0.696 1.054v1.232l-7.089 7.107q-0.339 0.339-0.339 0.804t0.339 0.804zM32 20q0 1.036-0.304 2.384t-0.688 2.464-0.857 2.232-0.723 1.616l-0.357 0.714q-0.143 0.304-0.5 0.304-0.107 0-0.161-0.018-0.446-0.143-0.411-0.607 0.768-7.143-1.893-10.089-1.143-1.268-3.045-1.973t-4.777-0.938v4.482q0 0.75-0.696 1.054-0.232 0.089-0.446 0.089-0.482 0-0.804-0.339l-9.143-9.143q-0.339-0.339-0.339-0.804t0.339-0.804l9.143-9.143q0.518-0.554 1.25-0.25 0.696 0.304 0.696 1.054v4.679q7.339 0.5 10.696 3.946 3.018 3.089 3.018 9.089z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-star-half-o\" viewBox=\"0 0 30 32\">\r\n            <title>star-half-o</title>\r\n            <path d=\"M21.179 17.089l4.589-4.464-7.536-1.107-0.536-1.071-2.839-5.75v17.196l1.054 0.554 5.679 3-1.071-6.339-0.214-1.179zM29.25 12.411l-6.482 6.321 1.536 8.929q0.089 0.589-0.107 0.92t-0.607 0.33q-0.304 0-0.714-0.214l-8.018-4.214-8.018 4.214q-0.411 0.214-0.714 0.214-0.411 0-0.607-0.33t-0.107-0.92l1.536-8.929-6.5-6.321q-0.571-0.571-0.411-1.063t0.964-0.616l8.964-1.304 4.018-8.125q0.357-0.732 0.875-0.732 0.5 0 0.875 0.732l4.018 8.125 8.964 1.304q0.804 0.125 0.964 0.616t-0.429 1.063z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-location-arrow\" viewBox=\"0 0 25 32\">\r\n            <title>location-arrow</title>\r\n            <path d=\"M25.018 6.232l-11.429 22.857q-0.304 0.625-1.018 0.625-0.089 0-0.268-0.036-0.393-0.089-0.634-0.402t-0.241-0.705v-10.286h-10.286q-0.393 0-0.705-0.241t-0.402-0.634 0.071-0.75 0.518-0.536l22.857-11.429q0.232-0.125 0.518-0.125 0.482 0 0.804 0.339 0.268 0.25 0.33 0.616t-0.116 0.705z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-crop\" viewBox=\"0 0 30 32\">\r\n            <title>crop</title>\r\n            <path d=\"M9.946 22.857h10.625v-10.625zM9.143 22.054l10.625-10.625h-10.625v10.625zM29.714 23.429v3.429q0 0.25-0.161 0.411t-0.411 0.161h-4v4q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-4h-15.429q-0.25 0-0.411-0.161t-0.161-0.411v-15.429h-4q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h4v-4q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v4h15.196l4.393-4.411q0.179-0.161 0.411-0.161t0.411 0.161q0.161 0.179 0.161 0.411t-0.161 0.411l-4.411 4.393v15.196h4q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-code-fork\" viewBox=\"0 0 18 32\">\r\n            <title>code-fork</title>\r\n            <path d=\"M5.143 26.286q0-0.714-0.5-1.214t-1.214-0.5-1.214 0.5-0.5 1.214 0.5 1.214 1.214 0.5 1.214-0.5 0.5-1.214zM5.143 5.714q0-0.714-0.5-1.214t-1.214-0.5-1.214 0.5-0.5 1.214 0.5 1.214 1.214 0.5 1.214-0.5 0.5-1.214zM16.571 8q0-0.714-0.5-1.214t-1.214-0.5-1.214 0.5-0.5 1.214 0.5 1.214 1.214 0.5 1.214-0.5 0.5-1.214zM18.286 8q0 0.929-0.464 1.723t-1.25 1.241q-0.036 5.125-4.036 7.393-1.214 0.679-3.625 1.446-2.286 0.714-3.027 1.268t-0.741 1.786v0.464q0.786 0.446 1.25 1.241t0.464 1.723q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429q0-0.929 0.464-1.723t1.25-1.241v-14.643q-0.786-0.446-1.25-1.241t-0.464-1.723q0-1.429 1-2.429t2.429-1 2.429 1 1 2.429q0 0.929-0.464 1.723t-1.25 1.241v8.875q0.964-0.464 2.75-1.018 0.982-0.304 1.562-0.527t1.259-0.554 1.054-0.705 0.723-0.911 0.5-1.241 0.152-1.634q-0.786-0.446-1.25-1.241t-0.464-1.723q0-1.429 1-2.429t2.429-1 2.429 1 1 2.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chain-broken\" viewBox=\"0 0 30 32\">\r\n            <title>chain-broken</title>\r\n            <path d=\"M7.839 22.696l-4.571 4.571q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161-0.161-0.179-0.161-0.411t0.161-0.411l4.571-4.571q0.179-0.161 0.411-0.161t0.411 0.161q0.161 0.179 0.161 0.411t-0.161 0.411zM10.857 23.429v5.714q0 0.25-0.161 0.411t-0.411 0.161-0.411-0.161-0.161-0.411v-5.714q0-0.25 0.161-0.411t0.411-0.161 0.411 0.161 0.161 0.411zM6.857 19.429q0 0.25-0.161 0.411t-0.411 0.161h-5.714q-0.25 0-0.411-0.161t-0.161-0.411 0.161-0.411 0.411-0.161h5.714q0.25 0 0.411 0.161t0.161 0.411zM29.429 21.714q0 2.143-1.518 3.625l-2.625 2.607q-1.482 1.482-3.625 1.482-2.161 0-3.643-1.518l-5.964-5.982q-0.375-0.375-0.75-1l4.268-0.321 4.875 4.893q0.482 0.482 1.214 0.491t1.214-0.473l2.625-2.607q0.5-0.5 0.5-1.196 0-0.714-0.5-1.214l-4.893-4.911 0.321-4.268q0.625 0.375 1 0.75l6 6q1.5 1.536 1.5 3.643zM18.411 8.786l-4.268 0.321-4.875-4.893q-0.5-0.5-1.214-0.5-0.696 0-1.214 0.482l-2.625 2.607q-0.5 0.5-0.5 1.196 0 0.714 0.5 1.214l4.893 4.893-0.321 4.286q-0.625-0.375-1-0.75l-6-6q-1.5-1.536-1.5-3.643 0-2.143 1.518-3.625l2.625-2.607q1.482-1.482 3.625-1.482 2.161 0 3.643 1.518l5.964 5.982q0.375 0.375 0.75 1zM29.714 10.286q0 0.25-0.161 0.411t-0.411 0.161h-5.714q-0.25 0-0.411-0.161t-0.161-0.411 0.161-0.411 0.411-0.161h5.714q0.25 0 0.411 0.161t0.161 0.411zM20 0.571v5.714q0 0.25-0.161 0.411t-0.411 0.161-0.411-0.161-0.161-0.411v-5.714q0-0.25 0.161-0.411t0.411-0.161 0.411 0.161 0.161 0.411zM27.268 3.268l-4.571 4.571q-0.196 0.161-0.411 0.161t-0.411-0.161q-0.161-0.179-0.161-0.411t0.161-0.411l4.571-4.571q0.179-0.161 0.411-0.161t0.411 0.161q0.161 0.179 0.161 0.411t-0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-question\" viewBox=\"0 0 18 32\">\r\n            <title>question</title>\r\n            <path d=\"M12.571 22.429v4.286q0 0.286-0.214 0.5t-0.5 0.214h-4.286q-0.286 0-0.5-0.214t-0.214-0.5v-4.286q0-0.286 0.214-0.5t0.5-0.214h4.286q0.286 0 0.5 0.214t0.214 0.5zM18.214 11.714q0 0.964-0.277 1.804t-0.625 1.366-0.982 1.063-1.027 0.777-1.089 0.634q-0.732 0.411-1.223 1.161t-0.491 1.196q0 0.304-0.214 0.58t-0.5 0.277h-4.286q-0.268 0-0.455-0.33t-0.188-0.67v-0.804q0-1.482 1.161-2.795t2.554-1.938q1.054-0.482 1.5-1t0.446-1.357q0-0.75-0.83-1.321t-1.92-0.571q-1.161 0-1.929 0.518-0.625 0.446-1.911 2.054-0.232 0.286-0.554 0.286-0.214 0-0.446-0.143l-2.929-2.232q-0.232-0.179-0.277-0.446t0.098-0.5q2.857-4.75 8.286-4.75 1.429 0 2.875 0.554t2.607 1.482 1.893 2.277 0.732 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-info\" viewBox=\"0 0 11 32\">\r\n            <title>info</title>\r\n            <path d=\"M11.429 24v2.286q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h1.143v-6.857h-1.143q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h6.857q0.464 0 0.804 0.339t0.339 0.804v10.286h1.143q0.464 0 0.804 0.339t0.339 0.804zM9.143 3.429v3.429q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-3.429q0-0.464 0.339-0.804t0.804-0.339h4.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-exclamation\" viewBox=\"0 0 11 32\">\r\n            <title>exclamation</title>\r\n            <path d=\"M9.143 22.286v4q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-4q0-0.464 0.339-0.804t0.804-0.339h4.571q0.464 0 0.804 0.339t0.339 0.804zM9.679 3.429l-0.5 13.714q-0.018 0.464-0.366 0.804t-0.813 0.339h-4.571q-0.464 0-0.813-0.339t-0.366-0.804l-0.5-13.714q-0.018-0.464 0.313-0.804t0.795-0.339h5.714q0.464 0 0.795 0.339t0.313 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-superscript\" viewBox=\"0 0 32 32\">\r\n            <title>superscript</title>\r\n            <path d=\"M16.018 24.446v2.982h-4.429l-2.839-4.5-0.429-0.75q-0.143-0.161-0.196-0.375h-0.054l-0.161 0.375q-0.179 0.357-0.446 0.786l-2.768 4.464h-4.607v-2.982h2.286l3.518-5.196-3.304-4.857h-2.446v-3h4.929l2.482 4.071q0.036 0.071 0.411 0.75 0.143 0.161 0.196 0.375h0.054q0.054-0.161 0.196-0.375l0.446-0.75 2.5-4.071h4.589v3h-2.232l-3.286 4.768 3.643 5.286h1.946zM27.393 12.321v3.679h-9.179l-0.054-0.482q-0.071-0.5-0.071-0.821 0-1.143 0.464-2.089t1.161-1.545 1.5-1.161 1.5-0.973 1.161-0.964 0.464-1.143q0-0.679-0.527-1.116t-1.259-0.438q-0.911 0-1.732 0.696-0.25 0.196-0.643 0.679l-1.875-1.643q0.464-0.661 1.125-1.179 1.482-1.161 3.357-1.161 1.964 0 3.179 1.063t1.214 2.83q0 1-0.438 1.839t-1.107 1.366-1.455 1.045-1.464 0.902-1.17 0.92-0.545 1.125h4.143v-1.429h2.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-subscript\" viewBox=\"0 0 32 32\">\r\n            <title>subscript</title>\r\n            <path d=\"M16.018 24.446v2.982h-4.429l-2.839-4.5-0.429-0.75q-0.143-0.161-0.196-0.375h-0.054l-0.161 0.375q-0.179 0.357-0.446 0.786l-2.768 4.464h-4.607v-2.982h2.286l3.518-5.196-3.304-4.857h-2.446v-3h4.929l2.482 4.071q0.036 0.071 0.411 0.75 0.143 0.161 0.196 0.375h0.054q0.054-0.161 0.196-0.375l0.446-0.75 2.5-4.071h4.589v3h-2.232l-3.286 4.768 3.643 5.286h1.946zM27.429 28.321v3.679h-9.179l-0.071-0.482q-0.054-0.804-0.054-0.821 0-1.143 0.464-2.089t1.161-1.545 1.5-1.161 1.5-0.973 1.161-0.964 0.464-1.143q0-0.679-0.527-1.116t-1.259-0.438q-0.911 0-1.732 0.696-0.25 0.196-0.643 0.679l-1.875-1.643q0.464-0.661 1.125-1.179 1.429-1.161 3.357-1.161 1.964 0 3.179 1.063t1.214 2.83q0 1.179-0.616 2.116t-1.5 1.536-1.777 1.116-1.554 1.125-0.732 1.304h4.143v-1.429h2.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-eraser\" viewBox=\"0 0 34 32\">\r\n            <title>eraser</title>\r\n            <path d=\"M16 25.143l6-6.857h-13.714l-6 6.857h13.714zM34.089 5.911q0.268 0.607 0.17 1.277t-0.545 1.17l-16 18.286q-0.679 0.786-1.714 0.786h-13.714q-0.679 0-1.241-0.366t-0.848-0.973q-0.268-0.607-0.17-1.277t0.545-1.17l16-18.286q0.679-0.786 1.714-0.786h13.714q0.679 0 1.241 0.366t0.848 0.973z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-puzzle-piece\" viewBox=\"0 0 30 32\">\r\n            <title>puzzle-piece</title>\r\n            <path d=\"M29.714 19.607q0 1.446-0.795 2.411t-2.205 0.964q-0.732 0-1.384-0.313t-1.054-0.679-1.009-0.679-1.268-0.313q-1.964 0-1.964 2.214 0 0.696 0.286 2.054t0.268 2.054v0.089q-0.393 0-0.589 0.018-0.607 0.054-1.741 0.205t-2.063 0.241-1.75 0.089q-1.089 0-1.839-0.473t-0.75-1.491q0-0.661 0.313-1.268t0.679-1.009 0.679-1.054 0.313-1.384q0-1.411-0.964-2.205t-2.411-0.795q-1.5 0-2.554 0.813t-1.054 2.277q0 0.768 0.268 1.482t0.598 1.152 0.598 0.946 0.268 0.902q0 0.804-0.821 1.589-0.661 0.625-2.089 0.625-1.696 0-4.375-0.429-0.161-0.036-0.491-0.071t-0.491-0.071l-0.232-0.036q-0.018 0-0.054-0.018-0.036 0-0.036-0.018v-18.286q0.036 0.018 0.313 0.063t0.607 0.089 0.384 0.063q2.679 0.429 4.375 0.429 1.429 0 2.089-0.625 0.821-0.786 0.821-1.589 0-0.393-0.268-0.902t-0.598-0.946-0.598-1.152-0.268-1.482q0-1.464 1.054-2.277t2.571-0.813q1.429 0 2.393 0.795t0.964 2.205q0 0.732-0.313 1.384t-0.679 1.054-0.679 1.009-0.313 1.268q0 1.018 0.75 1.491t1.839 0.473q1.143 0 3.214-0.268t2.911-0.304v0.036q-0.018 0.036-0.063 0.313t-0.089 0.607-0.063 0.384q-0.429 2.679-0.429 4.375 0 1.429 0.625 2.089 0.786 0.821 1.589 0.821 0.393 0 0.902-0.268t0.946-0.598 1.152-0.598 1.482-0.268q1.464 0 2.277 1.054t0.813 2.554z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-microphone\" viewBox=\"0 0 21 32\">\r\n            <title>microphone</title>\r\n            <path d=\"M20.571 12.571v2.286q0 3.946-2.634 6.866t-6.509 3.348v2.357h4.571q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-11.429q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571v-2.357q-3.875-0.429-6.509-3.348t-2.634-6.866v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804v2.286q0 3.304 2.348 5.652t5.652 2.348 5.652-2.348 2.348-5.652v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804zM16 5.714v9.143q0 2.357-1.679 4.036t-4.036 1.679-4.036-1.679-1.679-4.036v-9.143q0-2.357 1.679-4.036t4.036-1.679 4.036 1.679 1.679 4.036z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-microphone-slash\" viewBox=\"0 0 25 32\">\r\n            <title>microphone-slash</title>\r\n            <path d=\"M4.839 16.875l-1.804 1.804q-0.75-1.839-0.75-3.821v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804v2.286q0 0.946 0.268 2.018zM24.732 6.125l-6.446 6.446v2.286q0 2.357-1.679 4.036t-4.036 1.679q-0.982 0-1.946-0.339l-1.714 1.714q1.732 0.911 3.661 0.911 3.304 0 5.652-2.348t2.348-5.652v-2.286q0-0.464 0.339-0.804t0.804-0.339 0.804 0.339 0.339 0.804v2.286q0 3.946-2.634 6.866t-6.509 3.348v2.357h4.571q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-11.429q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571v-2.357q-2.232-0.232-4.196-1.446l-4.536 4.536q-0.179 0.179-0.411 0.179t-0.411-0.179l-1.464-1.464q-0.179-0.179-0.179-0.411t0.179-0.411l22.036-22.036q0.179-0.179 0.411-0.179t0.411 0.179l1.464 1.464q0.179 0.179 0.179 0.411t-0.179 0.411zM17.946 3.768l-11.089 11.089v-9.143q0-2.357 1.679-4.036t4.036-1.679q1.821 0 3.295 1.054t2.080 2.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-shield\" viewBox=\"0 0 23 32\">\r\n            <title>shield</title>\r\n            <path d=\"M19.429 17.143v-11.429h-8v20.304q2.125-1.125 3.804-2.446 4.196-3.286 4.196-6.429zM22.857 3.429v13.714q0 1.536-0.598 3.045t-1.482 2.679-2.107 2.277-2.259 1.839-2.161 1.384-1.598 0.884-0.759 0.357q-0.214 0.107-0.464 0.107t-0.464-0.107q-0.286-0.125-0.759-0.357t-1.598-0.884-2.161-1.384-2.259-1.839-2.107-2.277-1.482-2.679-0.598-3.045v-13.714q0-0.464 0.339-0.804t0.804-0.339h20.571q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-calendar-o\" viewBox=\"0 0 30 32\">\r\n            <title>calendar-o</title>\r\n            <path d=\"M2.286 29.714h25.143v-18.286h-25.143v18.286zM9.143 8v-5.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v5.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM22.857 8v-5.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v5.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM29.714 6.857v22.857q0 0.929-0.679 1.607t-1.607 0.679h-25.143q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h2.286v-1.714q0-1.179 0.839-2.018t2.018-0.839h1.143q1.179 0 2.018 0.839t0.839 2.018v1.714h6.857v-1.714q0-1.179 0.839-2.018t2.018-0.839h1.143q1.179 0 2.018 0.839t0.839 2.018v1.714h2.286q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fire-extinguisher\" viewBox=\"0 0 25 32\">\r\n            <title>fire-extinguisher</title>\r\n            <path d=\"M9.143 3.429q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM25.143 2.857v5.714q0 0.286-0.214 0.446-0.143 0.125-0.357 0.125-0.071 0-0.125-0.018l-8-1.714q-0.196-0.036-0.321-0.196t-0.125-0.357h-4.571v1.821q1.982 0.411 3.277 1.982t1.295 3.625v14.286q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-14.286q0-1.893 1.116-3.402t2.884-2.045v-1.982h-0.571q-1.054 0-2.054 0.42t-1.634 0.946-1.179 1.188-0.723 0.955-0.25 0.438q-0.304 0.625-1.018 0.625-0.286 0-0.518-0.125-0.411-0.214-0.563-0.661t0.063-0.875q0.089-0.179 0.259-0.464t0.67-0.955 1.080-1.25 1.518-1.196 1.938-0.938q-0.446-0.75-0.446-1.536 0-1.179 0.839-2.018t2.018-0.839 2.018 0.839 0.839 2.018q0 0.589-0.25 1.143h5.393q0-0.196 0.125-0.357t0.321-0.196l8-1.714q0.054-0.018 0.125-0.018 0.214 0 0.357 0.125 0.214 0.161 0.214 0.446z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rocket\" viewBox=\"0 0 30 32\">\r\n            <title>rocket</title>\r\n            <path d=\"M25.714 8q0-0.714-0.5-1.214t-1.214-0.5-1.214 0.5-0.5 1.214 0.5 1.214 1.214 0.5 1.214-0.5 0.5-1.214zM29.714 2.857q0 4.446-1.348 7.687t-4.527 6.438q-1.446 1.429-3.482 3.143l-0.357 6.768q-0.036 0.286-0.286 0.464l-6.857 4q-0.125 0.071-0.286 0.071-0.214 0-0.411-0.161l-1.143-1.143q-0.232-0.25-0.143-0.571l1.518-4.929-5.018-5.018-4.929 1.518q-0.054 0.018-0.161 0.018-0.25 0-0.411-0.161l-1.143-1.143q-0.304-0.339-0.089-0.696l4-6.857q0.179-0.25 0.464-0.286l6.768-0.357q1.714-2.036 3.143-3.482 3.357-3.339 6.393-4.607t7.696-1.268q0.25 0 0.429 0.17t0.179 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-maxcdn\" viewBox=\"0 0 32 32\">\r\n            <title>maxcdn</title>\r\n            <path d=\"M31.161 13.804l-2.929 13.625h-5.964l3.179-14.857q0.232-1-0.268-1.571-0.482-0.589-1.482-0.589h-3.018l-3.643 17.018h-5.964l3.643-17.018h-5.107l-3.643 17.018h-5.964l3.643-17.018-2.732-5.839h22.786q1.804 0 3.384 0.723t2.634 2.027q1.071 1.304 1.446 3.009t0 3.473z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-circle-left\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-circle-left</title>\r\n            <path d=\"M16.232 24.911l1.821-1.821q0.339-0.339 0.339-0.804t-0.339-0.804l-5.482-5.482 5.482-5.482q0.339-0.339 0.339-0.804t-0.339-0.804l-1.821-1.821q-0.339-0.339-0.804-0.339t-0.804 0.339l-8.107 8.107q-0.339 0.339-0.339 0.804t0.339 0.804l8.107 8.107q0.339 0.339 0.804 0.339t0.804-0.339zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-circle-right\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-circle-right</title>\r\n            <path d=\"M12.804 24.911l8.107-8.107q0.339-0.339 0.339-0.804t-0.339-0.804l-8.107-8.107q-0.339-0.339-0.804-0.339t-0.804 0.339l-1.821 1.821q-0.339 0.339-0.339 0.804t0.339 0.804l5.482 5.482-5.482 5.482q-0.339 0.339-0.339 0.804t0.339 0.804l1.821 1.821q0.339 0.339 0.804 0.339t0.804-0.339zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-circle-up\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-circle-up</title>\r\n            <path d=\"M20.804 20.339l1.821-1.821q0.339-0.339 0.339-0.804t-0.339-0.804l-8.107-8.107q-0.339-0.339-0.804-0.339t-0.804 0.339l-8.107 8.107q-0.339 0.339-0.339 0.804t0.339 0.804l1.821 1.821q0.339 0.339 0.804 0.339t0.804-0.339l5.482-5.482 5.482 5.482q0.339 0.339 0.804 0.339t0.804-0.339zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-chevron-circle-down\" viewBox=\"0 0 32 32\">\r\n            <title>chevron-circle-down</title>\r\n            <path d=\"M14.518 23.196l8.107-8.107q0.339-0.339 0.339-0.804t-0.339-0.804l-1.821-1.821q-0.339-0.339-0.804-0.339t-0.804 0.339l-5.482 5.482-5.482-5.482q-0.339-0.339-0.804-0.339t-0.804 0.339l-1.821 1.821q-0.339 0.339-0.339 0.804t0.339 0.804l8.107 8.107q0.339 0.339 0.804 0.339t0.804-0.339zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-html5\" viewBox=\"0 0 25 32\">\r\n            <title>html5</title>\r\n            <path d=\"M20.179 10.661l0.286-3.125h-15.786l0.839 9.536h10.929l-0.393 4.071-3.518 0.946-3.5-0.946-0.232-2.5h-3.125l0.393 4.964 6.464 1.786h0.071v-0.018l6.411-1.768 0.893-9.714h-11.5l-0.268-3.232h12.036zM0 2.286h25.143l-2.286 25.679-10.321 2.893-10.25-2.893z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-css3\" viewBox=\"0 0 32 32\">\r\n            <title>css3</title>\r\n            <path d=\"M4.911 2.286h26.875l-4.75 23.804-14.357 4.768-12.464-4.768 1.268-6.357h5.304l-0.518 2.625 7.536 2.875 8.679-2.875 1.214-6.054h-21.571l1.036-5.304h21.589l0.679-3.411h-21.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-anchor\" viewBox=\"0 0 32 32\">\r\n            <title>anchor</title>\r\n            <path d=\"M17.143 4.571q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804 0.339 0.804 0.804 0.339 0.804-0.339 0.339-0.804zM32 21.143v6.286q0 0.393-0.357 0.536-0.143 0.036-0.214 0.036-0.232 0-0.411-0.161l-1.661-1.661q-2.125 2.554-5.688 4.045t-7.67 1.491-7.67-1.491-5.688-4.045l-1.661 1.661q-0.161 0.161-0.411 0.161-0.071 0-0.214-0.036-0.357-0.143-0.357-0.536v-6.286q0-0.25 0.161-0.411t0.411-0.161h6.286q0.393 0 0.536 0.357 0.143 0.339-0.125 0.625l-1.786 1.786q1.196 1.625 3.384 2.741t4.848 1.473v-11.554h-3.429q-0.464 0-0.804-0.339t-0.339-0.804v-2.286q0-0.464 0.339-0.804t0.804-0.339h3.429v-2.911q-1.036-0.607-1.661-1.652t-0.625-2.295q0-1.893 1.339-3.232t3.232-1.339 3.232 1.339 1.339 3.232q0 1.25-0.625 2.295t-1.661 1.652v2.911h3.429q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.464-0.339 0.804t-0.804 0.339h-3.429v11.554q2.661-0.357 4.848-1.473t3.384-2.741l-1.786-1.786q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h6.286q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-unlock-alt\" viewBox=\"0 0 21 32\">\r\n            <title>unlock-alt</title>\r\n            <path d=\"M18.857 13.714q0.714 0 1.214 0.5t0.5 1.214v10.286q0 0.714-0.5 1.214t-1.214 0.5h-17.143q-0.714 0-1.214-0.5t-0.5-1.214v-10.286q0-0.714 0.5-1.214t1.214-0.5h0.571v-5.714q0-3.304 2.348-5.652t5.652-2.348 5.652 2.348 2.348 5.652q0 0.464-0.339 0.804t-0.804 0.339h-1.143q-0.464 0-0.804-0.339t-0.339-0.804q0-1.893-1.339-3.232t-3.232-1.339-3.232 1.339-1.339 3.232v5.714h13.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bullseye\" viewBox=\"0 0 32 32\">\r\n            <title>bullseye</title>\r\n            <path d=\"M18.286 16q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232 1.339-3.232 3.232-1.339 3.232 1.339 1.339 3.232zM20.571 16q0-2.839-2.009-4.848t-4.848-2.009-4.848 2.009-2.009 4.848 2.009 4.848 4.848 2.009 4.848-2.009 2.009-4.848zM22.857 16q0 3.786-2.679 6.464t-6.464 2.679-6.464-2.679-2.679-6.464 2.679-6.464 6.464-2.679 6.464 2.679 2.679 6.464zM25.143 16q0-2.321-0.911-4.438t-2.438-3.643-3.643-2.438-4.438-0.911-4.438 0.911-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.438-0.911 3.643-2.438 2.438-3.643 0.911-4.438zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ellipsis-h\" viewBox=\"0 0 25 32\">\r\n            <title>ellipsis-h</title>\r\n            <path d=\"M6.857 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214zM16 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214zM25.143 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ellipsis-v\" viewBox=\"0 0 7 32\">\r\n            <title>ellipsis-v</title>\r\n            <path d=\"M6.857 22.286v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214zM6.857 13.143v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214zM6.857 4v3.429q0 0.714-0.5 1.214t-1.214 0.5h-3.429q-0.714 0-1.214-0.5t-0.5-1.214v-3.429q0-0.714 0.5-1.214t1.214-0.5h3.429q0.714 0 1.214 0.5t0.5 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rss-square\" viewBox=\"0 0 32 32\">\r\n            <title>rss-square</title>\r\n            <path d=\"M9.143 22.857q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM15.411 24.536q-0.232-4.143-3.161-7.071t-7.071-3.161q-0.25-0.018-0.429 0.161t-0.179 0.411v2.286q0 0.232 0.152 0.393t0.384 0.179q2.75 0.196 4.714 2.161t2.161 4.714q0.018 0.232 0.179 0.384t0.393 0.152h2.286q0.232 0 0.411-0.179t0.161-0.429zM22.268 24.554q-0.089-2.75-1-5.313t-2.491-4.643-3.661-3.661-4.643-2.491-5.313-1q-0.25-0.018-0.411 0.161-0.179 0.179-0.179 0.411v2.286q0 0.232 0.161 0.393t0.393 0.179q3.643 0.125 6.75 1.991t4.973 4.973 1.991 6.75q0.018 0.232 0.179 0.393t0.393 0.161h2.286q0.232 0 0.411-0.179 0.196-0.161 0.161-0.411zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-play-circle\" viewBox=\"0 0 32 32\">\r\n            <title>play-circle</title>\r\n            <path d=\"M13.714 2.286q3.732 0 6.884 1.839t4.991 4.991 1.839 6.884-1.839 6.884-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839zM20.571 16.982q0.571-0.321 0.571-0.982t-0.571-0.982l-9.714-5.714q-0.554-0.339-1.143-0.018-0.571 0.339-0.571 1v11.429q0 0.661 0.571 1 0.286 0.143 0.571 0.143 0.304 0 0.571-0.161z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ticket\" viewBox=\"0 0 32 32\">\r\n            <title>ticket</title>\r\n            <path d=\"M18.286 8.071l5.643 5.643-10.214 10.214-5.643-5.643zM14.518 25.554l11.036-11.036q0.339-0.339 0.339-0.804t-0.339-0.804l-6.464-6.464q-0.321-0.321-0.804-0.321t-0.804 0.321l-11.036 11.036q-0.339 0.339-0.339 0.804t0.339 0.804l6.464 6.464q0.321 0.321 0.804 0.321t0.804-0.321zM30.393 14.179l-16.196 16.214q-0.661 0.661-1.616 0.661t-1.616-0.661l-2.25-2.25q1-1 1-2.429t-1-2.429-2.429-1-2.429 1l-2.232-2.25q-0.661-0.661-0.661-1.616t0.661-1.616l16.196-16.179q0.661-0.661 1.616-0.661t1.616 0.661l2.232 2.232q-1 1-1 2.429t1 2.429 2.429 1 2.429-1l2.25 2.232q0.661 0.661 0.661 1.616t-0.661 1.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-minus-square\" viewBox=\"0 0 32 32\">\r\n            <title>minus-square</title>\r\n            <path d=\"M22.857 17.143v-2.286q0-0.464-0.339-0.804t-0.804-0.339h-16q-0.464 0-0.804 0.339t-0.339 0.804v2.286q0 0.464 0.339 0.804t0.804 0.339h16q0.464 0 0.804-0.339t0.339-0.804zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-minus-square-o\" viewBox=\"0 0 25 32\">\r\n            <title>minus-square-o</title>\r\n            <path d=\"M20.571 14.286v1.143q0 0.25-0.161 0.411t-0.411 0.161h-14.857q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h14.857q0.25 0 0.411 0.161t0.161 0.411zM22.857 22.286v-14.857q0-1.179-0.839-2.018t-2.018-0.839h-14.857q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018zM25.143 7.429v14.857q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h14.857q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-level-up\" viewBox=\"0 0 18 32\">\r\n            <title>level-up</title>\r\n            <path d=\"M18.179 10.768q-0.321 0.661-1.036 0.661h-3.429v15.429q0 0.25-0.161 0.411t-0.411 0.161h-12.571q-0.375 0-0.518-0.321-0.143-0.357 0.071-0.625l2.857-3.429q0.161-0.196 0.446-0.196h5.714v-11.429h-3.429q-0.714 0-1.036-0.661-0.304-0.661 0.161-1.214l5.714-6.857q0.321-0.393 0.875-0.393t0.875 0.393l5.714 6.857q0.482 0.571 0.161 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-level-down\" viewBox=\"0 0 18 32\">\r\n            <title>level-down</title>\r\n            <path d=\"M0.571 4.571h12.571q0.232 0 0.402 0.17t0.17 0.42v15.411h3.429q0.714 0 1.036 0.661t-0.161 1.232l-5.714 6.857q-0.321 0.393-0.875 0.393t-0.875-0.393l-5.714-6.857q-0.464-0.554-0.161-1.232 0.321-0.661 1.036-0.661h3.429v-11.429h-5.714q-0.25 0-0.446-0.196l-2.857-3.429q-0.232-0.25-0.071-0.607 0.161-0.339 0.518-0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-check-square\" viewBox=\"0 0 32 32\">\r\n            <title>check-square</title>\r\n            <path d=\"M12.232 23.196l10.964-10.964q0.339-0.339 0.339-0.804t-0.339-0.804l-1.821-1.821q-0.339-0.339-0.804-0.339t-0.804 0.339l-8.339 8.339-3.768-3.768q-0.339-0.339-0.804-0.339t-0.804 0.339l-1.821 1.821q-0.339 0.339-0.339 0.804t0.339 0.804l6.393 6.393q0.339 0.339 0.804 0.339t0.804-0.339zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pencil-square\" viewBox=\"0 0 32 32\">\r\n            <title>pencil-square</title>\r\n            <path d=\"M7.214 19.786l2.714 2.714-0.929 0.929h-1v-1.714h-1.714v-1zM14.607 12.821q0.25 0.232-0.054 0.536l-5.196 5.196q-0.304 0.304-0.536 0.054-0.25-0.232 0.054-0.536l5.196-5.196q0.304-0.304 0.536-0.054zM9.714 25.143l9.714-9.714-5.143-5.143-9.714 9.714v5.143h5.143zM20.571 14.286l1.643-1.643q0.5-0.5 0.5-1.214t-0.5-1.214l-2.714-2.714q-0.5-0.5-1.214-0.5t-1.214 0.5l-1.643 1.643zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-external-link-square\" viewBox=\"0 0 32 32\">\r\n            <title>external-link-square</title>\r\n            <path d=\"M22.857 16.571v-8.571q0-0.464-0.339-0.804t-0.804-0.339h-8.571q-0.75 0-1.054 0.696-0.304 0.732 0.25 1.25l2.571 2.571-9.536 9.536q-0.339 0.339-0.339 0.804t0.339 0.804l1.821 1.821q0.339 0.339 0.804 0.339t0.804-0.339l9.536-9.536 2.571 2.571q0.321 0.339 0.804 0.339 0.214 0 0.446-0.089 0.696-0.304 0.696-1.054zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-share-square\" viewBox=\"0 0 32 32\">\r\n            <title>share-square</title>\r\n            <path d=\"M17.946 19.661l6.286-6.286q0.339-0.339 0.339-0.804t-0.339-0.804l-6.286-6.286q-0.536-0.554-1.232-0.25-0.714 0.304-0.714 1.054v2.857q-2.125 0-3.857 0.348t-2.902 0.911-2.036 1.411-1.366 1.705-0.795 1.946-0.384 1.991-0.089 1.973q0 3.232 2.982 7.214 0.179 0.214 0.446 0.214 0.125 0 0.232-0.054 0.393-0.161 0.339-0.589-0.786-6.321 1.107-8.446 0.821-0.929 2.321-1.348t4-0.42v2.857q0 0.75 0.714 1.054 0.214 0.089 0.429 0.089 0.464 0 0.804-0.339zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>        \r\n        <svg id=\"icon-taxi\" viewBox=\"0 0 37 32\">\r\n            <title>taxi</title>\r\n            <path d=\"M32.571 16q1.661 0 2.83 1.17t1.17 2.83v6.857q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.143q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-1.143h-18.286v1.143q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-1.143h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-6.857q0-1.661 1.17-2.83t2.83-1.17h0.5l1.875-7.482q0.411-1.679 1.857-2.813t3.196-1.134h2.286v-4q0-0.25 0.161-0.411t0.411-0.161h8q0.25 0 0.411 0.161t0.161 0.411v4h2.286q1.75 0 3.196 1.134t1.857 2.813l1.875 7.482h0.5zM5.714 24.571q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839zM9.214 16h18.143l-1.589-6.375q-0.036-0.143-0.25-0.313t-0.375-0.17h-13.714q-0.161 0-0.375 0.17t-0.25 0.313zM30.857 24.571q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839z\"></path>\r\n        </svg>\r\n        <symbol id=\"icon-compass\" viewBox=\"0 0 32 32\">\r\n            <title>compass</title>\r\n            <path d=\"M11.429 19.429l4.571-2.286-4.571-2.286v4.571zM18.286 8.875v9.679l-9.143 4.571v-9.679zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-square-o-down\" viewBox=\"0 0 32 32\">\r\n            <title>caret-square-o-down</title>\r\n            <path d=\"M20.446 12.054q0.321 0.625-0.089 1.179l-5.714 8q-0.339 0.482-0.929 0.482t-0.929-0.482l-5.714-8q-0.411-0.554-0.089-1.179 0.304-0.625 1.018-0.625h11.429q0.714 0 1.018 0.625zM22.857 24.571v-17.143q0-0.232-0.17-0.402t-0.402-0.17h-17.143q-0.232 0-0.402 0.17t-0.17 0.402v17.143q0 0.232 0.17 0.402t0.402 0.17h17.143q0.232 0 0.402-0.17t0.17-0.402zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-square-o-up\" viewBox=\"0 0 32 32\">\r\n            <title>caret-square-o-up</title>\r\n            <path d=\"M20.446 19.946q-0.304 0.625-1.018 0.625h-11.429q-0.714 0-1.018-0.625-0.321-0.625 0.089-1.179l5.714-8q0.339-0.482 0.929-0.482t0.929 0.482l5.714 8q0.411 0.554 0.089 1.179zM22.857 24.571v-17.143q0-0.232-0.17-0.402t-0.402-0.17h-17.143q-0.232 0-0.402 0.17t-0.17 0.402v17.143q0 0.232 0.17 0.402t0.402 0.17h17.143q0.232 0 0.402-0.17t0.17-0.402zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-square-o-right\" viewBox=\"0 0 32 32\">\r\n            <title>caret-square-o-right</title>\r\n            <path d=\"M19.429 16q0 0.589-0.482 0.929l-8 5.714q-0.554 0.411-1.179 0.089-0.625-0.304-0.625-1.018v-11.429q0-0.714 0.625-1.018 0.625-0.321 1.179 0.089l8 5.714q0.482 0.339 0.482 0.929zM22.857 24.571v-17.143q0-0.25-0.161-0.411t-0.411-0.161h-17.143q-0.25 0-0.411 0.161t-0.161 0.411v17.143q0 0.25 0.161 0.411t0.411 0.161h17.143q0.25 0 0.411-0.161t0.161-0.411zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-euro\" viewBox=\"0 0 18 32\">\r\n            <title>euro</title>\r\n            <path d=\"M17.429 23.339l0.625 2.839q0.054 0.214-0.054 0.402t-0.304 0.259l-0.089 0.018q-0.071 0.036-0.188 0.063t-0.286 0.080-0.384 0.098-0.455 0.089-0.536 0.089-0.598 0.080-0.652 0.054-0.688 0.018q-4.179 0-7.304-2.33t-4.25-6.277h-1.696q-0.232 0-0.402-0.17t-0.17-0.402v-2.018q0-0.232 0.17-0.402t0.402-0.17h1.179q-0.036-1.018 0.018-1.875h-1.196q-0.25 0-0.411-0.161t-0.161-0.411v-2.036q0-0.25 0.161-0.411t0.411-0.161h1.75q1.196-3.75 4.348-6.036t7.152-2.286q1.821 0 3.464 0.411 0.196 0.054 0.357 0.268 0.107 0.196 0.054 0.429l-0.768 2.839q-0.054 0.232-0.25 0.348t-0.429 0.045l-0.071-0.018q-0.071-0.018-0.205-0.045l-0.313-0.063t-0.402-0.063-0.464-0.054-0.518-0.045-0.527-0.018q-2.25 0-4.036 1.143t-2.679 3.143h8.357q0.286 0 0.446 0.214 0.179 0.214 0.125 0.464l-0.429 2.036q-0.089 0.464-0.571 0.464h-8.714q-0.054 0.661 0 1.875h8.196q0.268 0 0.446 0.214 0.161 0.214 0.107 0.482l-0.429 2q-0.036 0.196-0.196 0.33t-0.357 0.134h-6.911q0.857 2.089 2.67 3.313t4.080 1.223q0.321 0 0.643-0.027t0.598-0.063 0.527-0.080 0.438-0.089 0.33-0.080l0.214-0.054 0.089-0.036q0.232-0.089 0.464 0.036 0.214 0.125 0.268 0.375z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gbp\" viewBox=\"0 0 18 32\">\r\n            <title>gbp</title>\r\n            <path d=\"M18.214 20.304v6.554q0 0.25-0.161 0.411t-0.411 0.161h-17.071q-0.25 0-0.411-0.161t-0.161-0.411v-2.679q0-0.232 0.17-0.402t0.402-0.17h1.732v-6.839h-1.696q-0.25 0-0.411-0.17t-0.161-0.402v-2.339q0-0.25 0.161-0.411t0.411-0.161h1.696v-3.982q0-3.054 2.205-5.036t5.616-1.982q3.304 0 5.982 2.232 0.161 0.143 0.179 0.366t-0.125 0.402l-1.839 2.268q-0.161 0.196-0.393 0.214-0.232 0.036-0.411-0.125-0.089-0.089-0.464-0.339t-1.232-0.571-1.661-0.321q-1.518 0-2.446 0.839t-0.929 2.196v3.839h5.446q0.232 0 0.402 0.161t0.17 0.411v2.339q0 0.232-0.17 0.402t-0.402 0.17h-5.446v6.768h7.393v-3.232q0-0.232 0.161-0.402t0.411-0.17h2.893q0.25 0 0.411 0.17t0.161 0.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-dollar\" viewBox=\"0 0 18 32\">\r\n            <title>dollar</title>\r\n            <path d=\"M17.464 21.161q0 2.732-1.777 4.705t-4.616 2.438v3.125q0 0.25-0.161 0.411t-0.411 0.161h-2.411q-0.232 0-0.402-0.17t-0.17-0.402v-3.125q-1.179-0.161-2.277-0.554t-1.813-0.795-1.321-0.857-0.83-0.67-0.313-0.321q-0.304-0.375-0.036-0.732l1.839-2.411q0.125-0.179 0.411-0.214 0.268-0.036 0.429 0.161l0.036 0.036q2.018 1.768 4.339 2.232 0.661 0.143 1.321 0.143 1.446 0 2.545-0.768t1.098-2.179q0-0.5-0.268-0.946t-0.598-0.75-1.045-0.67-1.179-0.571-1.429-0.58q-0.696-0.286-1.098-0.446t-1.098-0.473-1.116-0.554-1.009-0.634-0.955-0.759-0.777-0.875-0.634-1.036-0.375-1.188-0.152-1.393q0-2.464 1.75-4.321t4.554-2.393v-3.214q0-0.232 0.17-0.402t0.402-0.17h2.411q0.25 0 0.411 0.161t0.161 0.411v3.143q1.018 0.107 1.973 0.411t1.554 0.598 1.134 0.67 0.696 0.518 0.268 0.25q0.304 0.321 0.089 0.679l-1.446 2.607q-0.143 0.268-0.411 0.286-0.25 0.054-0.482-0.125-0.054-0.054-0.259-0.214t-0.696-0.473-1.045-0.571-1.33-0.464-1.527-0.205q-1.696 0-2.768 0.768t-1.071 1.982q0 0.464 0.152 0.857t0.527 0.741 0.705 0.589 1 0.554 1.080 0.482 1.25 0.491q0.946 0.357 1.446 0.563t1.357 0.625 1.348 0.759 1.107 0.893 0.946 1.134 0.563 1.366 0.232 1.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rupee\" viewBox=\"0 0 16 32\">\r\n            <title>rupee</title>\r\n            <path d=\"M16.036 8.393v1.821q0 0.25-0.161 0.411t-0.411 0.161h-3q-0.411 2.571-2.304 4.179t-4.929 1.964q2.982 3.179 8.196 9.571 0.25 0.286 0.071 0.607-0.143 0.321-0.518 0.321h-3.482q-0.286 0-0.446-0.214-5.464-6.554-8.893-10.196-0.161-0.161-0.161-0.393v-2.268q0-0.232 0.17-0.402t0.402-0.17h2q2.357 0 3.795-0.768t1.83-2.232h-7.625q-0.25 0-0.411-0.161t-0.161-0.411v-1.821q0-0.25 0.161-0.411t0.411-0.161h7.375q-1.018-2.018-4.786-2.018h-2.589q-0.232 0-0.402-0.17t-0.17-0.402v-2.375q0-0.25 0.161-0.411t0.411-0.161h14.857q0.25 0 0.411 0.161t0.161 0.411v1.821q0 0.25-0.161 0.411t-0.411 0.161h-4.161q0.839 1.089 1.143 2.571h3.054q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-yen\" viewBox=\"0 0 18 32\">\r\n            <title>yen</title>\r\n            <path d=\"M10.768 27.429h-3.071q-0.232 0-0.402-0.161t-0.17-0.411v-5.893h-5.143q-0.232 0-0.402-0.161t-0.17-0.411v-1.839q0-0.232 0.17-0.402t0.402-0.17h5.143v-1.518h-5.143q-0.232 0-0.402-0.161t-0.17-0.411v-1.857q0-0.232 0.17-0.402t0.402-0.17h3.821l-5.732-10.321q-0.143-0.286 0-0.571 0.179-0.286 0.5-0.286h3.464q0.339 0 0.518 0.321l3.839 7.589q0.339 0.679 1 2.232 0.179-0.429 0.545-1.214t0.491-1.089l3.411-7.5q0.143-0.339 0.518-0.339h3.411q0.304 0 0.482 0.286 0.161 0.25 0.018 0.554l-5.589 10.339h3.839q0.232 0 0.402 0.17t0.17 0.402v1.857q0 0.25-0.17 0.411t-0.402 0.161h-5.179v1.518h5.179q0.232 0 0.402 0.17t0.17 0.402v1.839q0 0.25-0.17 0.411t-0.402 0.161h-5.179v5.893q0 0.232-0.17 0.402t-0.402 0.17z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rub\" viewBox=\"0 0 23 32\">\r\n            <title>rub</title>\r\n            <path d=\"M18.625 10.089q0-1.786-1.161-2.893t-3.054-1.107h-5.714v8h5.714q1.893 0 3.054-1.107t1.161-2.893zM22.857 10.089q0 3.446-2.259 5.625t-5.83 2.179h-6.071v2.107h9.018q0.25 0 0.411 0.161t0.161 0.411v2.286q0 0.25-0.161 0.411t-0.411 0.161h-9.018v3.429q0 0.25-0.17 0.411t-0.402 0.161h-2.982q-0.25 0-0.411-0.161t-0.161-0.411v-3.429h-4q-0.25 0-0.411-0.161t-0.161-0.411v-2.286q0-0.25 0.161-0.411t0.411-0.161h4v-2.107h-4q-0.25 0-0.411-0.161t-0.161-0.411v-2.661q0-0.232 0.161-0.402t0.411-0.17h4v-11.232q0-0.25 0.161-0.411t0.411-0.161h9.625q3.571 0 5.83 2.179t2.259 5.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-won\" viewBox=\"0 0 32 32\">\r\n            <title>won</title>\r\n            <path d=\"M9.179 21.339l1.446-5.339h-2.839l1.339 5.357q0.018 0.018 0.018 0.054t0.018 0.054q0-0.018 0.009-0.063t0.009-0.063zM11.25 13.714l0.625-2.286h-5.214l0.571 2.286h4.018zM14.679 13.714h2.482l-0.625-2.286h-1.25zM22.696 21.357l1.393-5.357h-2.893l1.446 5.339q0 0.018 0.009 0.063t0.027 0.063q0-0.018 0.009-0.054t0.009-0.054zM24.679 13.714l0.589-2.286h-5.304l0.607 2.286h4.107zM32 14.286v1.143q0 0.25-0.161 0.411t-0.411 0.161h-3.804l-2.929 11q-0.125 0.429-0.554 0.429h-2.839q-0.429 0-0.554-0.429l-2.964-11h-3.732l-2.982 11q-0.125 0.429-0.554 0.429h-2.839q-0.196 0-0.348-0.125t-0.188-0.304l-2.857-11h-3.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h3.125l-0.589-2.286h-2.536q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h1.946l-1.589-6.143q-0.089-0.268 0.089-0.5 0.179-0.214 0.464-0.214h2.446q0.464 0 0.554 0.429l1.607 6.429h6.411l1.732-6.429q0.125-0.429 0.554-0.429h2.25q0.429 0 0.554 0.429l1.75 6.429h6.518l1.661-6.429q0.089-0.429 0.554-0.429h2.446q0.286 0 0.464 0.214 0.179 0.232 0.089 0.5l-1.625 6.143h1.982q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-2.589l-0.607 2.286h3.196q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bitcoin\" viewBox=\"0 0 23 32\">\r\n            <title>bitcoin</title>\r\n            <path d=\"M20.839 11.429q0.321 3.25-2.339 4.607 2.089 0.5 3.125 1.839t0.804 3.821q-0.125 1.268-0.58 2.232t-1.152 1.589-1.732 1.045-2.17 0.616-2.598 0.268v4.554h-2.75v-4.482q-1.429 0-2.179-0.018v4.5h-2.75v-4.554q-0.321 0-0.964-0.009t-0.982-0.009h-3.571l0.554-3.268h1.982q0.893 0 1.036-0.911v-7.179h0.286q-0.107-0.018-0.286-0.018v-5.125q-0.232-1.214-1.589-1.214h-1.982v-2.929l3.786 0.018q1.143 0 1.732-0.018v-4.5h2.75v4.411q1.464-0.036 2.179-0.036v-4.375h2.75v4.5q1.411 0.125 2.5 0.402t2.018 0.804 1.473 1.393 0.652 2.045zM17 21.161q0-0.643-0.268-1.143t-0.661-0.821-1.027-0.545-1.17-0.33-1.321-0.161-1.232-0.054-1.152 0.018-0.848 0.018v6.036q0.143 0 0.661 0.009t0.857 0.009 0.946-0.027 1.045-0.071 1.018-0.152 0.991-0.25 0.848-0.375 0.705-0.536 0.438-0.714 0.17-0.911zM15.732 12.661q0-0.589-0.223-1.045t-0.545-0.75-0.857-0.5-0.982-0.295-1.098-0.143-1.036-0.045-0.964 0.018-0.705 0.009v5.482q0.089 0 0.616 0.009t0.83 0 0.893-0.036 0.982-0.098 0.92-0.196 0.866-0.33 0.661-0.482 0.482-0.688 0.161-0.911z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file\" viewBox=\"0 0 32 32\">\r\n            <title>file</title>\r\n            <path d=\"M18.286 9.143v-8.429q0.393 0.25 0.643 0.5l7.286 7.286q0.25 0.25 0.5 0.643h-8.429zM16 9.714q0 0.714 0.5 1.214t1.214 0.5h9.714v18.857q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h14.286v9.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-text\" viewBox=\"0 0 32 32\">\r\n            <title>file-text</title>\r\n            <path d=\"M26.214 8.5q0.25 0.25 0.5 0.643h-8.429v-8.429q0.393 0.25 0.643 0.5zM17.714 11.429h9.714v18.857q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h14.286v9.714q0 0.714 0.5 1.214t1.214 0.5zM20.571 24.571v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-12.571q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h12.571q0.25 0 0.411-0.161t0.161-0.411zM20.571 20v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-12.571q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h12.571q0.25 0 0.411-0.161t0.161-0.411zM20.571 15.429v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-12.571q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h12.571q0.25 0 0.411-0.161t0.161-0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-alpha-asc\" viewBox=\"0 0 30 32\">\r\n            <title>sort-alpha-asc</title>\r\n            <path d=\"M21.268 7.286h3.161l-1.286-3.893-0.214-0.839q-0.036-0.286-0.036-0.357h-0.071l-0.054 0.357q0 0.018-0.063 0.321t-0.134 0.518zM13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM28.071 27.839v4.161h-10.429v-1.607l6.589-9.446q0.214-0.321 0.375-0.482l0.196-0.161v-0.054q-0.036 0-0.116 0.009t-0.134 0.009q-0.214 0.054-0.536 0.054h-4.143v2.054h-2.143v-4.089h10.125v1.589l-6.589 9.464q-0.107 0.143-0.375 0.464l-0.196 0.196v0.036l0.25-0.036q0.161-0.036 0.536-0.036h4.429v-2.125h2.161zM29.661 11.821v1.893h-5.143v-1.893h1.339l-0.839-2.571h-4.339l-0.839 2.571h1.339v1.893h-5.125v-1.893h1.25l4.107-11.821h2.893l4.107 11.821h1.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-alpha-desc\" viewBox=\"0 0 30 32\">\r\n            <title>sort-alpha-desc</title>\r\n            <path d=\"M21.268 25.571h3.161l-1.286-3.893-0.214-0.839q-0.036-0.286-0.036-0.357h-0.071l-0.054 0.357q0 0.018-0.063 0.321t-0.134 0.518zM13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM29.661 30.107v1.893h-5.143v-1.893h1.339l-0.839-2.571h-4.339l-0.839 2.571h1.339v1.893h-5.125v-1.893h1.25l4.107-11.821h2.893l4.107 11.821h1.25zM28.071 9.554v4.161h-10.429v-1.607l6.589-9.446q0.214-0.321 0.375-0.482l0.196-0.161v-0.054q-0.036 0-0.116 0.009t-0.134 0.009q-0.214 0.054-0.536 0.054h-4.143v2.054h-2.143v-4.089h10.125v1.589l-6.589 9.464q-0.107 0.143-0.375 0.464l-0.196 0.179v0.054l0.25-0.054q0.161-0.018 0.536-0.018h4.429v-2.125h2.161z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-amount-asc\" viewBox=\"0 0 32 32\">\r\n            <title>sort-amount-asc</title>\r\n            <path d=\"M13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM32 28v3.429q0 0.25-0.161 0.411t-0.411 0.161h-14.857q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h14.857q0.25 0 0.411 0.161t0.161 0.411zM28.571 18.857v3.429q0 0.25-0.161 0.411t-0.411 0.161h-11.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h11.429q0.25 0 0.411 0.161t0.161 0.411zM25.143 9.714v3.429q0 0.25-0.161 0.411t-0.411 0.161h-8q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h8q0.25 0 0.411 0.161t0.161 0.411zM21.714 0.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-4.571q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h4.571q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-amount-desc\" viewBox=\"0 0 32 32\">\r\n            <title>sort-amount-desc</title>\r\n            <path d=\"M21.714 28v3.429q0 0.25-0.161 0.411t-0.411 0.161h-4.571q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h4.571q0.25 0 0.411 0.161t0.161 0.411zM13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM25.143 18.857v3.429q0 0.25-0.161 0.411t-0.411 0.161h-8q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h8q0.25 0 0.411 0.161t0.161 0.411zM28.571 9.714v3.429q0 0.25-0.161 0.411t-0.411 0.161h-11.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h11.429q0.25 0 0.411 0.161t0.161 0.411zM32 0.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-14.857q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h14.857q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-numeric-asc\" viewBox=\"0 0 32 32\">\r\n            <title>sort-numeric-asc</title>\r\n            <path d=\"M24.036 23.446q0-1.125-0.786-2.071t-1.839-0.946q-0.929 0-1.482 0.661t-0.554 1.679 0.652 1.696 1.866 0.679q0.893 0 1.518-0.482t0.625-1.214zM13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM26.536 24.482q0 1.107-0.232 2.17t-0.732 2.036-1.214 1.705-1.759 1.17-2.277 0.438q-1.107 0-1.929-0.286-0.429-0.143-0.75-0.268l0.696-2.018q0.268 0.125 0.554 0.196 0.661 0.232 1.339 0.232 1.5 0 2.402-1.045t1.188-2.598h-0.036q-0.375 0.411-1.098 0.661t-1.509 0.25q-1.893 0-3.089-1.277t-1.196-3.080q0-1.875 1.286-3.179t3.232-1.304q2.196 0 3.661 1.688t1.464 4.509zM26 11.679v2.036h-8.375v-2.036h2.982v-7.714q0-0.125 0.009-0.339t0.009-0.304v-0.286h-0.036l-0.125 0.214q-0.143 0.232-0.464 0.554l-1.107 1.036-1.464-1.536 3.429-3.304h2.196v11.679h2.946z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sort-numeric-desc\" viewBox=\"0 0 32 32\">\r\n            <title>sort-numeric-desc</title>\r\n            <path d=\"M24.036 5.161q0-1.125-0.786-2.071t-1.839-0.946q-0.929 0-1.482 0.661t-0.554 1.679 0.652 1.696 1.866 0.679q0.893 0 1.518-0.482t0.625-1.214zM13.143 25.714q0 0.214-0.179 0.429l-5.696 5.696q-0.179 0.161-0.411 0.161-0.214 0-0.411-0.161l-5.714-5.714q-0.268-0.286-0.125-0.625 0.143-0.357 0.536-0.357h3.429v-24.571q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v24.571h3.429q0.25 0 0.411 0.161t0.161 0.411zM26 29.964v2.036h-8.375v-2.036h2.982v-7.714q0-0.125 0.009-0.339t0.009-0.304v-0.286h-0.036l-0.125 0.214q-0.143 0.232-0.464 0.554l-1.107 1.036-1.464-1.536 3.429-3.304h2.196v11.679h2.946zM26.536 6.196q0 1.107-0.232 2.17t-0.732 2.036-1.214 1.705-1.759 1.17-2.277 0.438q-1.107 0-1.929-0.286-0.429-0.143-0.75-0.268l0.696-2.018q0.268 0.125 0.554 0.196 0.661 0.232 1.339 0.232 1.5 0 2.402-1.045t1.188-2.598h-0.036q-0.375 0.411-1.098 0.661t-1.509 0.25q-1.893 0-3.089-1.277t-1.196-3.080q0-1.875 1.286-3.179t3.232-1.304q2.196 0 3.661 1.688t1.464 4.509z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-thumbs-up\" viewBox=\"0 0 30 32\">\r\n            <title>thumbs-up</title>\r\n            <path d=\"M4.571 24q0-0.464-0.339-0.804t-0.804-0.339q-0.482 0-0.813 0.339t-0.33 0.804q0 0.482 0.33 0.813t0.813 0.33q0.464 0 0.804-0.33t0.339-0.813zM7.429 14.857v11.429q0 0.464-0.339 0.804t-0.804 0.339h-5.143q-0.464 0-0.804-0.339t-0.339-0.804v-11.429q0-0.464 0.339-0.804t0.804-0.339h5.143q0.464 0 0.804 0.339t0.339 0.804zM28.571 14.857q0 1.536-0.982 2.661 0.268 0.786 0.268 1.357 0.054 1.357-0.768 2.446 0.304 1 0 2.089-0.268 1.018-0.964 1.679 0.161 2-0.875 3.232-1.143 1.357-3.518 1.393h-2.304q-1.179 0-2.571-0.277t-2.17-0.518-2.152-0.705q-2.196-0.768-2.821-0.786-0.464-0.018-0.804-0.348t-0.339-0.795v-11.446q0-0.446 0.321-0.777t0.768-0.366q0.429-0.036 1.357-1.054t1.804-2.161q1.214-1.554 1.804-2.143 0.321-0.321 0.554-0.857t0.313-0.866 0.241-1.080q0.125-0.696 0.223-1.089t0.348-0.929 0.607-0.893q0.339-0.339 0.804-0.339 0.821 0 1.473 0.188t1.071 0.464 0.714 0.723 0.429 0.804 0.214 0.893 0.089 0.804 0.009 0.696q0 0.679-0.17 1.357t-0.339 1.071-0.491 1q-0.054 0.107-0.179 0.321t-0.196 0.393-0.143 0.429h4.946q1.393 0 2.411 1.018t1.018 2.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-thumbs-down\" viewBox=\"0 0 30 32\">\r\n            <title>thumbs-down</title>\r\n            <path d=\"M4.571 10.286q0 0.464-0.339 0.804t-0.804 0.339q-0.482 0-0.813-0.339t-0.33-0.804q0-0.482 0.33-0.813t0.813-0.33q0.464 0 0.804 0.33t0.339 0.813zM7.429 19.429v-11.429q0-0.464-0.339-0.804t-0.804-0.339h-5.143q-0.464 0-0.804 0.339t-0.339 0.804v11.429q0 0.464 0.339 0.804t0.804 0.339h5.143q0.464 0 0.804-0.339t0.339-0.804zM27.589 16.768q0.982 1.089 0.982 2.661-0.018 1.393-1.027 2.411t-2.402 1.018h-4.946q0.071 0.25 0.143 0.429t0.196 0.393 0.179 0.321q0.321 0.661 0.482 1.018t0.339 1.045 0.179 1.366q0 0.429-0.009 0.696t-0.089 0.804-0.214 0.893-0.429 0.804-0.714 0.723-1.071 0.464-1.473 0.188q-0.464 0-0.804-0.339-0.357-0.357-0.607-0.893t-0.348-0.929-0.223-1.089q-0.161-0.75-0.241-1.080t-0.313-0.866-0.554-0.857q-0.589-0.589-1.804-2.143-0.875-1.143-1.804-2.161t-1.357-1.054q-0.446-0.036-0.768-0.366t-0.321-0.777v-11.446q0-0.464 0.339-0.795t0.804-0.348q0.625-0.018 2.821-0.786 1.375-0.464 2.152-0.705t2.17-0.518 2.571-0.277h2.304q2.375 0.036 3.518 1.393 1.036 1.232 0.875 3.232 0.696 0.661 0.964 1.679 0.304 1.089 0 2.089 0.821 1.089 0.768 2.446 0 0.571-0.268 1.357z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-youtube-square\" viewBox=\"0 0 32 32\">\r\n            <title>youtube-square</title>\r\n            <path d=\"M16.411 23.268v-2.804q0-0.893-0.518-0.893-0.304 0-0.589 0.286v4q0.286 0.286 0.589 0.286 0.518 0 0.518-0.875zM19.696 21.089h1.179v-0.607q0-0.911-0.589-0.911t-0.589 0.911v0.607zM9.5 16.339v1.25h-1.429v7.554h-1.321v-7.554h-1.393v-1.25h4.143zM13.089 18.589v6.554h-1.196v-0.714q-0.696 0.804-1.357 0.804-0.589 0-0.75-0.5-0.107-0.286-0.107-0.964v-5.179h1.179v4.821q0 0.429 0.018 0.464 0.018 0.268 0.268 0.268 0.357 0 0.75-0.554v-5h1.196zM17.589 20.571v2.607q0 0.929-0.125 1.304-0.214 0.75-0.946 0.75-0.625 0-1.214-0.732v0.643h-1.196v-8.804h1.196v2.875q0.571-0.714 1.214-0.714 0.732 0 0.946 0.75 0.125 0.375 0.125 1.321zM22.071 22.875v0.161q0 0.518-0.036 0.768-0.054 0.393-0.268 0.714-0.482 0.714-1.429 0.714-0.929 0-1.446-0.679-0.375-0.482-0.375-1.536v-2.304q0-1.054 0.357-1.536 0.518-0.679 1.429-0.679t1.393 0.679q0.375 0.5 0.375 1.536v1.357h-2.375v1.161q0 0.911 0.607 0.911 0.429 0 0.536-0.464 0-0.018 0.009-0.125t0.009-0.295v-0.384h1.214zM14.018 8.161v2.786q0 0.911-0.571 0.911t-0.571-0.911v-2.786q0-0.929 0.571-0.929t0.571 0.929zM23.536 20.893q0-3.161-0.339-4.643-0.179-0.786-0.768-1.313t-1.357-0.616q-2.429-0.268-7.357-0.268-4.911 0-7.339 0.268-0.786 0.089-1.366 0.616t-0.759 1.313q-0.357 1.554-0.357 4.643 0 3.143 0.357 4.643 0.179 0.768 0.759 1.304t1.348 0.625q2.446 0.268 7.357 0.268t7.357-0.268q0.768-0.089 1.348-0.625t0.759-1.304q0.357-1.5 0.357-4.643zM10.054 9.268l1.607-5.286h-1.339l-0.911 3.482-0.946-3.482h-1.393l0.429 1.232t0.411 1.232q0.625 1.839 0.821 2.821v3.589h1.321v-3.589zM15.214 10.714v-2.321q0-1.036-0.375-1.554-0.518-0.679-1.393-0.679-0.911 0-1.393 0.679-0.375 0.518-0.375 1.554v2.321q0 1.036 0.375 1.554 0.482 0.679 1.393 0.679 0.875 0 1.393-0.679 0.375-0.482 0.375-1.554zM18.446 12.857h1.196v-6.607h-1.196v5.054q-0.393 0.554-0.75 0.554-0.268 0-0.286-0.286-0.018-0.036-0.018-0.464v-4.857h-1.196v5.232q0 0.661 0.107 0.982 0.196 0.482 0.768 0.482 0.643 0 1.375-0.804v0.714zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-youtube\" viewBox=\"0 0 32 32\">\r\n            <title>youtube</title>\r\n            <path d=\"M17.339 22.214v3.768q0 1.196-0.696 1.196-0.411 0-0.804-0.393v-5.375q0.393-0.393 0.804-0.393 0.696 0 0.696 1.196zM23.375 22.232v0.821h-1.607v-0.821q0-1.214 0.804-1.214t0.804 1.214zM6.125 18.339h1.911v-1.679h-5.571v1.679h1.875v10.161h1.786v-10.161zM11.268 28.5h1.589v-8.821h-1.589v6.75q-0.536 0.75-1.018 0.75-0.321 0-0.375-0.375-0.018-0.054-0.018-0.625v-6.5h-1.589v6.982q0 0.875 0.143 1.304 0.214 0.661 1.036 0.661 0.857 0 1.821-1.089v0.964zM18.929 25.857v-3.518q0-1.304-0.161-1.768-0.304-1-1.268-1-0.893 0-1.661 0.964v-3.875h-1.589v11.839h1.589v-0.857q0.804 0.982 1.661 0.982 0.964 0 1.268-0.982 0.161-0.482 0.161-1.786zM24.964 25.679v-0.232h-1.625q0 0.911-0.036 1.089-0.125 0.643-0.714 0.643-0.821 0-0.821-1.232v-1.554h3.196v-1.839q0-1.411-0.482-2.071-0.696-0.911-1.893-0.911-1.214 0-1.911 0.911-0.5 0.661-0.5 2.071v3.089q0 1.411 0.518 2.071 0.696 0.911 1.929 0.911 1.286 0 1.929-0.946 0.321-0.482 0.375-0.964 0.036-0.161 0.036-1.036zM14.107 9.375v-3.75q0-1.232-0.768-1.232t-0.768 1.232v3.75q0 1.25 0.768 1.25t0.768-1.25zM26.946 22.786q0 4.179-0.464 6.25-0.25 1.054-1.036 1.768t-1.821 0.821q-3.286 0.375-9.911 0.375t-9.911-0.375q-1.036-0.107-1.83-0.821t-1.027-1.768q-0.464-2-0.464-6.25 0-4.179 0.464-6.25 0.25-1.054 1.036-1.768t1.839-0.839q3.268-0.357 9.893-0.357t9.911 0.357q1.036 0.125 1.83 0.839t1.027 1.768q0.464 2 0.464 6.25zM9.125 0h1.821l-2.161 7.125v4.839h-1.786v-4.839q-0.25-1.321-1.089-3.786-0.661-1.839-1.161-3.339h1.893l1.268 4.696zM15.732 5.946v3.125q0 1.446-0.5 2.107-0.661 0.911-1.893 0.911-1.196 0-1.875-0.911-0.5-0.679-0.5-2.107v-3.125q0-1.429 0.5-2.089 0.679-0.911 1.875-0.911 1.232 0 1.893 0.911 0.5 0.661 0.5 2.089zM21.714 3.054v8.911h-1.625v-0.982q-0.946 1.107-1.839 1.107-0.821 0-1.054-0.661-0.143-0.429-0.143-1.339v-7.036h1.625v6.554q0 0.589 0.018 0.625 0.054 0.393 0.375 0.393 0.482 0 1.018-0.768v-6.804h1.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-xing\" viewBox=\"0 0 25 32\">\r\n            <title>xing</title>\r\n            <path d=\"M10.661 11.911q-0.179 0.321-4.589 8.143-0.482 0.821-1.161 0.821h-4.268q-0.375 0-0.554-0.304t0-0.643l4.518-8q0.018 0 0-0.018l-2.875-4.982q-0.214-0.393-0.018-0.661 0.161-0.268 0.571-0.268h4.268q0.714 0 1.179 0.804zM25.054 0.446q0.196 0.286 0 0.661l-9.429 16.679v0.018l6 10.982q0.196 0.357 0.018 0.661-0.179 0.268-0.571 0.268h-4.268q-0.75 0-1.179-0.804l-6.054-11.107q0.321-0.571 9.482-16.821 0.446-0.804 1.143-0.804h4.304q0.393 0 0.554 0.268z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-xing-square\" viewBox=\"0 0 32 32\">\r\n            <title>xing-square</title>\r\n            <path d=\"M12.232 13.661q0-0.018-2.25-3.964-0.375-0.607-0.929-0.607h-3.286q-0.321 0-0.464 0.196-0.125 0.214 0.018 0.518l2.232 3.857v0.018l-3.5 6.179q-0.161 0.25 0 0.5 0.143 0.232 0.429 0.232h3.304q0.554 0 0.893-0.643zM23.375 4.786q-0.125-0.214-0.429-0.214h-3.339q-0.536 0-0.875 0.625l-7.339 13.018q0.018 0.036 4.679 8.589 0.357 0.625 0.929 0.625h3.286q0.321 0 0.446-0.214 0.143-0.232-0.018-0.5l-4.643-8.5v-0.018l7.304-12.911q0.143-0.286 0-0.5zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-youtube-play\" viewBox=\"0 0 32 32\">\r\n            <title>youtube-play</title>\r\n            <path d=\"M22.857 16q0-0.661-0.536-0.964l-9.143-5.714q-0.554-0.357-1.161-0.036-0.589 0.321-0.589 1v11.429q0 0.679 0.589 1 0.286 0.143 0.554 0.143 0.357 0 0.607-0.179l9.143-5.714q0.536-0.304 0.536-0.964zM32 16q0 1.714-0.018 2.679t-0.152 2.438-0.402 2.634q-0.286 1.304-1.232 2.196t-2.214 1.036q-3.964 0.446-11.982 0.446t-11.982-0.446q-1.268-0.143-2.223-1.036t-1.241-2.196q-0.25-1.161-0.384-2.634t-0.152-2.438-0.018-2.679 0.018-2.679 0.152-2.438 0.402-2.634q0.286-1.304 1.232-2.196t2.214-1.036q3.964-0.446 11.982-0.446t11.982 0.446q1.268 0.143 2.223 1.036t1.241 2.196q0.25 1.161 0.384 2.634t0.152 2.438 0.018 2.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-dropbox\" viewBox=\"0 0 32 32\">\r\n            <title>dropbox</title>\r\n            <path d=\"M7.179 12.625l8.821 5.446-6.107 5.089-8.75-5.696zM24.786 22.536v1.929l-8.75 5.232v0.018l-0.018-0.018-0.018 0.018v-0.018l-8.732-5.232v-1.929l2.625 1.714 6.107-5.071v-0.036l0.018 0.018 0.018-0.018v0.036l6.125 5.071zM9.893 2.107l6.107 5.089-8.821 5.429-6.036-4.821zM24.821 12.625l6.036 4.839-8.732 5.696-6.125-5.089zM22.125 2.107l8.732 5.696-6.036 4.821-8.821-5.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stack-overflow\" viewBox=\"0 0 25 32\">\r\n            <title>stack-overflow</title>\r\n            <path d=\"M16.571 25.018v2.696l-12.625 0.018v-2.696zM20.875 18.839v12.518l-0.018 0.625v0.018l-20.857-0.018v-13.143h2.161v11.036h16.571v-11.036h2.143zM4.304 20.411l12.571 1.161-0.232 2.679-12.589-1.161zM5.518 14.768l12.196 3.268-0.696 2.607-12.196-3.268zM8.429 8.536l10.875 6.429-1.375 2.321-10.875-6.429zM14.857 2.625l7.107 10.446-2.214 1.518-7.125-10.429zM22.946 0l2.161 12.446-2.661 0.464-2.161-12.446z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-instagram\" viewBox=\"0 0 32 32\">\r\n            <title>instagram</title>\r\n            <path d=\"M24.321 25.464v-11.571h-2.411q0.357 1.125 0.357 2.339 0 2.25-1.143 4.152t-3.107 3.009-4.286 1.107q-3.518 0-6.018-2.42t-2.5-5.848q0-1.214 0.357-2.339h-2.518v11.571q0 0.464 0.313 0.777t0.777 0.313h19.089q0.446 0 0.768-0.313t0.321-0.777zM19.25 15.946q0-2.214-1.616-3.777t-3.902-1.563q-2.268 0-3.884 1.563t-1.616 3.777 1.616 3.777 3.884 1.563q2.286 0 3.902-1.563t1.616-3.777zM24.321 9.518v-2.946q0-0.5-0.357-0.866t-0.875-0.366h-3.107q-0.518 0-0.875 0.366t-0.357 0.866v2.946q0 0.518 0.357 0.875t0.875 0.357h3.107q0.518 0 0.875-0.357t0.357-0.875zM27.429 5.804v20.393q0 1.446-1.036 2.482t-2.482 1.036h-20.393q-1.446 0-2.482-1.036t-1.036-2.482v-20.393q0-1.446 1.036-2.482t2.482-1.036h20.393q1.446 0 2.482 1.036t1.036 2.482z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-flickr\" viewBox=\"0 0 32 32\">\r\n            <title>flickr</title>\r\n            <path d=\"M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143zM12.464 16q0-1.571-1.107-2.679t-2.679-1.107-2.679 1.107-1.107 2.679 1.107 2.679 2.679 1.107 2.679-1.107 1.107-2.679zM22.536 16q0-1.571-1.107-2.679t-2.679-1.107-2.679 1.107-1.107 2.679 1.107 2.679 2.679 1.107 2.679-1.107 1.107-2.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-adn\" viewBox=\"0 0 32 32\">\r\n            <title>adn</title>\r\n            <path d=\"M13.714 11.107l3.589 5.464h-7.179zM20.232 20.571h1.679l-8.196-12.339-8.196 12.339h1.679l1.857-2.857h9.321zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bitbucket\" viewBox=\"0 0 25 32\">\r\n            <title>bitbucket</title>\r\n            <path d=\"M14.554 15.339q0.143 1.125-0.902 1.804t-1.991 0.107q-0.696-0.304-0.955-1.036t-0.009-1.464 0.929-1.036q0.643-0.321 1.295-0.214t1.143 0.634 0.491 1.205zM16.536 14.964q-0.25-1.911-2.018-2.929t-3.518-0.232q-1.125 0.5-1.795 1.58t-0.616 2.313q0.071 1.625 1.384 2.768t2.955 1q1.625-0.143 2.714-1.5t0.893-3zM20.804 5.286q-0.357-0.482-1-0.795t-1.036-0.393-1.268-0.223q-5.196-0.839-10.107 0.036-0.768 0.125-1.179 0.214t-0.982 0.393-0.893 0.768q0.536 0.5 1.357 0.813t1.313 0.393 1.563 0.205q4.071 0.518 8 0.018 1.125-0.143 1.598-0.214t1.295-0.384 1.339-0.83zM21.821 23.768q-0.143 0.464-0.277 1.366t-0.25 1.5-0.509 1.25-1.036 1.009q-1.536 0.857-3.384 1.277t-3.607 0.393-3.598-0.33q-0.821-0.143-1.455-0.321t-1.366-0.482-1.304-0.777-0.929-1.098q-0.446-1.714-1.018-5.214l0.107-0.286 0.321-0.161q3.982 2.643 9.045 2.643t9.063-2.643q0.375 0.107 0.429 0.411t-0.089 0.804-0.143 0.661zM25.054 6.607q-0.464 2.982-1.982 11.696-0.089 0.536-0.482 1t-0.777 0.714-0.973 0.554q-4.5 2.25-10.893 1.571-4.429-0.482-7.036-2.482-0.268-0.214-0.455-0.473t-0.304-0.625-0.161-0.607-0.107-0.705-0.098-0.625q-0.161-0.893-0.473-2.679t-0.5-2.884-0.42-2.634-0.393-2.821q0.054-0.464 0.313-0.866t0.563-0.67 0.804-0.536 0.821-0.402 0.857-0.33q2.232-0.821 5.589-1.143 6.768-0.661 12.071 0.893 2.768 0.821 3.839 2.179 0.286 0.357 0.295 0.911t-0.098 0.964z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bitbucket-square\" viewBox=\"0 0 32 32\">\r\n            <title>bitbucket-square</title>\r\n            <path d=\"M15.143 15.536q0-0.768-0.732-1.179t-1.375-0.018q-0.768 0.357-0.759 1.295t0.777 1.259q0.696 0.411 1.446-0.071t0.643-1.286zM16.571 15.25q0.143 1.179-0.643 2.161t-1.964 1.089-2.125-0.714-1-2.018q-0.036-0.875 0.455-1.661t1.295-1.143q1.25-0.554 2.527 0.179t1.455 2.107zM19.643 8.268q-0.357 0.375-0.955 0.607t-0.946 0.286-1.134 0.143q-2.768 0.357-5.786 0-0.786-0.107-1.125-0.17t-0.938-0.286-0.973-0.58q0.232-0.339 0.643-0.554t0.714-0.277 0.839-0.152q3.536-0.625 7.286-0.018 0.589 0.089 0.911 0.152t0.768 0.286 0.696 0.562zM20.393 21.589q0-0.125 0.098-0.473t0.054-0.571-0.313-0.295q-2.875 1.893-6.518 1.893t-6.536-1.893l-0.214 0.107-0.089 0.214q0.464 2.75 0.732 3.75 0.839 1.446 3.643 1.929 4.446 0.821 7.643-0.946 0.607-0.339 0.875-0.92t0.402-1.527 0.223-1.268zM22.714 9.214q0.161-0.946-0.143-1.339-0.768-0.982-2.768-1.571-3.857-1.125-8.696-0.643-2.357 0.214-4.036 0.821-0.679 0.268-1.063 0.446t-0.839 0.607-0.527 0.964q0.143 1.214 0.339 2.464t0.518 3.054 0.429 2.446q0.018 0.089 0.089 0.554t0.125 0.643 0.214 0.482 0.393 0.5q1.875 1.429 5.071 1.786 4.625 0.5 7.857-1.125 0.429-0.232 0.705-0.411t0.554-0.518 0.348-0.714q0.857-4.768 1.429-8.446zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tumblr\" viewBox=\"0 0 18 32\">\r\n            <title>tumblr</title>\r\n            <path d=\"M16.857 23.732l1.429 4.232q-0.411 0.625-1.982 1.179t-3.161 0.571q-1.857 0.036-3.402-0.464t-2.545-1.321-1.696-1.893-0.991-2.143-0.295-2.107v-9.714h-3v-3.839q1.286-0.464 2.304-1.241t1.625-1.607 1.036-1.821 0.607-1.768 0.268-1.58q0.018-0.089 0.080-0.152t0.134-0.063h4.357v7.571h5.946v4.5h-5.964v9.25q0 0.536 0.116 1t0.402 0.938 0.884 0.741 1.455 0.25q1.393-0.036 2.393-0.518z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tumblr-square\" viewBox=\"0 0 32 32\">\r\n            <title>tumblr-square</title>\r\n            <path d=\"M20.286 26.089l-1.107-3.268q-0.786 0.393-1.839 0.393-0.643 0.018-1.107-0.188t-0.688-0.563-0.313-0.723-0.089-0.777v-7.107h4.589v-3.464h-4.571v-5.821h-3.357q-0.143 0-0.161 0.179-0.089 0.786-0.313 1.554t-0.696 1.696-1.375 1.696-2.116 1.214v2.946h2.321v7.464q0 1.018 0.384 2.054t1.161 1.982 2.161 1.527 3.152 0.545q1.232-0.018 2.438-0.446t1.527-0.893zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-long-arrow-down\" viewBox=\"0 0 14 32\">\r\n            <title>long-arrow-down</title>\r\n            <path d=\"M13.661 23.196q0.143 0.339-0.089 0.625l-6.25 6.857q-0.179 0.179-0.411 0.179-0.25 0-0.429-0.179l-6.339-6.857q-0.232-0.286-0.089-0.625 0.161-0.339 0.518-0.339h4v-22.286q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411v22.286h4q0.375 0 0.518 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-long-arrow-up\" viewBox=\"0 0 14 32\">\r\n            <title>long-arrow-up</title>\r\n            <path d=\"M13.661 8.804q-0.161 0.339-0.518 0.339h-4v22.286q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-22.286h-4q-0.375 0-0.518-0.339t0.089-0.625l6.25-6.857q0.179-0.179 0.411-0.179 0.25 0 0.429 0.179l6.339 6.857q0.232 0.286 0.089 0.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-long-arrow-left\" viewBox=\"0 0 32 32\">\r\n            <title>long-arrow-left</title>\r\n            <path d=\"M32 14.286v3.429q0 0.25-0.161 0.411t-0.411 0.161h-22.286v4q0 0.375-0.339 0.518t-0.625-0.089l-6.857-6.25q-0.179-0.179-0.179-0.411 0-0.25 0.179-0.429l6.857-6.321q0.286-0.25 0.625-0.107 0.339 0.161 0.339 0.518v4h22.286q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-long-arrow-right\" viewBox=\"0 0 32 32\">\r\n            <title>long-arrow-right</title>\r\n            <path d=\"M30.857 15.946q0 0.25-0.179 0.429l-6.857 6.321q-0.286 0.25-0.625 0.107-0.339-0.161-0.339-0.518v-4h-22.286q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h22.286v-4q0-0.375 0.339-0.518t0.625 0.089l6.857 6.25q0.179 0.179 0.179 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-apple\" viewBox=\"0 0 25 32\">\r\n            <title>apple</title>\r\n            <path d=\"M24.875 21.696q-0.696 2.232-2.196 4.464-2.304 3.5-4.589 3.5-0.875 0-2.5-0.571-1.536-0.571-2.696-0.571-1.089 0-2.536 0.589-1.446 0.607-2.357 0.607-2.714 0-5.375-4.625-2.625-4.661-2.625-8.982 0-4.071 2.018-6.679 2-2.571 5.071-2.571 1.286 0 3.161 0.536 1.857 0.536 2.464 0.536 0.804 0 2.554-0.607 1.821-0.607 3.089-0.607 2.125 0 3.804 1.161 0.929 0.643 1.857 1.786-1.411 1.196-2.036 2.107-1.161 1.679-1.161 3.696 0 2.214 1.232 3.982t2.821 2.25zM18.161 0.75q0 1.089-0.518 2.429-0.536 1.339-1.661 2.464-0.964 0.964-1.929 1.286-0.661 0.196-1.857 0.304 0.054-2.661 1.393-4.589 1.321-1.911 4.464-2.643 0.018 0.054 0.045 0.196t0.045 0.196q0 0.071 0.009 0.179t0.009 0.179z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-windows\" viewBox=\"0 0 30 32\">\r\n            <title>windows</title>\r\n            <path d=\"M12.179 17.964v11.625l-12.179-1.679v-9.946h12.179zM12.179 4.696v11.768h-12.179v-10.089zM29.714 17.964v14.036l-16.196-2.232v-11.804h16.196zM29.714 2.286v14.179h-16.196v-11.946z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-android\" viewBox=\"0 0 25 32\">\r\n            <title>android</title>\r\n            <path d=\"M8.804 8.625q0.286 0 0.491-0.205t0.205-0.491-0.205-0.491-0.491-0.205-0.482 0.205-0.196 0.491 0.196 0.491 0.482 0.205zM16.339 8.625q0.286 0 0.482-0.205t0.196-0.491-0.196-0.491-0.482-0.205-0.491 0.205-0.205 0.491 0.205 0.491 0.491 0.205zM1.839 11.911q0.75 0 1.286 0.536t0.536 1.286v7.679q0 0.768-0.527 1.304t-1.295 0.536-1.304-0.536-0.536-1.304v-7.679q0-0.75 0.536-1.286t1.304-0.536zM20.768 12.25v11.893q0 0.821-0.571 1.393t-1.375 0.571h-1.339v4.054q0 0.768-0.536 1.304t-1.304 0.536-1.304-0.536-0.536-1.304v-4.054h-2.464v4.054q0 0.768-0.536 1.304t-1.304 0.536q-0.75 0-1.286-0.536t-0.536-1.304l-0.018-4.054h-1.321q-0.821 0-1.393-0.571t-0.571-1.393v-11.893h16.393zM16.625 5.018q1.911 0.982 3.054 2.741t1.143 3.848h-16.518q0-2.089 1.143-3.848t3.071-2.741l-1.268-2.339q-0.125-0.232 0.089-0.357 0.232-0.107 0.357 0.107l1.286 2.357q1.696-0.75 3.589-0.75t3.589 0.75l1.286-2.357q0.125-0.214 0.357-0.107 0.214 0.125 0.089 0.357zM25.143 13.732v7.679q0 0.768-0.536 1.304t-1.304 0.536q-0.75 0-1.286-0.536t-0.536-1.304v-7.679q0-0.768 0.536-1.295t1.286-0.527q0.768 0 1.304 0.527t0.536 1.295z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-linux\" viewBox=\"0 0 32 32\">\r\n            <title>linux</title>\r\n            <path d=\"M11.839 7.339q-0.196 0.018-0.277 0.188t-0.152 0.17q-0.089 0.018-0.089-0.089 0-0.214 0.339-0.268h0.179zM13.393 7.589q-0.071 0.018-0.205-0.116t-0.313-0.080q0.429-0.196 0.571 0.036 0.054 0.107-0.054 0.161zM7.125 15.214q-0.071-0.018-0.107 0.054t-0.080 0.223-0.098 0.241-0.179 0.232q-0.125 0.179-0.018 0.214 0.071 0.018 0.223-0.125t0.223-0.321q0.018-0.054 0.036-0.125t0.036-0.107 0.027-0.080 0.009-0.071v-0.054t-0.018-0.045-0.054-0.036zM22.393 21.625q0-0.321-0.982-0.75 0.071-0.268 0.134-0.491t0.089-0.464 0.054-0.384 0.009-0.402-0.018-0.348-0.063-0.393-0.071-0.366-0.089-0.446-0.098-0.473q-0.179-0.857-0.839-1.839t-1.286-1.339q0.429 0.357 1.018 1.482 1.554 2.893 0.964 4.964-0.196 0.714-0.893 0.75-0.554 0.071-0.688-0.33t-0.143-1.491-0.205-1.911q-0.161-0.696-0.348-1.232t-0.348-0.813-0.277-0.438-0.232-0.268-0.134-0.125q-0.25-1.107-0.554-1.839t-0.527-1-0.42-0.589-0.268-0.714q-0.071-0.375 0.107-0.955t0.080-0.884-0.795-0.446q-0.268-0.054-0.795-0.321t-0.634-0.286q-0.143-0.018-0.196-0.464t0.143-0.911 0.643-0.482q0.661-0.054 0.911 0.536t0.071 1.036q-0.196 0.339-0.036 0.473t0.536 0.009q0.232-0.071 0.232-0.643v-0.661q-0.089-0.536-0.241-0.893t-0.375-0.545-0.42-0.268-0.482-0.134q-1.911 0.143-1.589 2.393 0 0.268-0.018 0.268-0.161-0.161-0.527-0.188t-0.589 0.009-0.277-0.089q0.018-1.018-0.286-1.607t-0.804-0.607q-0.482-0.018-0.741 0.491t-0.295 1.063q-0.018 0.268 0.063 0.661t0.232 0.67 0.277 0.241q0.179-0.054 0.286-0.25 0.071-0.161-0.125-0.143-0.125 0-0.277-0.259t-0.17-0.598q-0.018-0.393 0.161-0.661t0.607-0.25q0.304 0 0.482 0.375t0.17 0.696-0.027 0.393q-0.393 0.268-0.554 0.518-0.143 0.214-0.491 0.42t-0.366 0.223q-0.232 0.25-0.277 0.482t0.134 0.321q0.25 0.143 0.446 0.348t0.286 0.339 0.33 0.232 0.634 0.116q0.839 0.036 1.821-0.268 0.036-0.018 0.411-0.125t0.616-0.188 0.527-0.232 0.375-0.313q0.161-0.25 0.357-0.143 0.089 0.054 0.116 0.152t-0.054 0.214-0.295 0.17q-0.357 0.107-1.009 0.384t-0.813 0.348q-0.786 0.339-1.25 0.411-0.446 0.089-1.411-0.036-0.179-0.036-0.161 0.036t0.304 0.339q0.446 0.411 1.196 0.393 0.304-0.018 0.643-0.125t0.643-0.25 0.598-0.313 0.536-0.304 0.438-0.214 0.313-0.045 0.152 0.196q0 0.036-0.018 0.080t-0.071 0.089-0.107 0.080-0.152 0.089-0.161 0.080-0.179 0.089-0.17 0.080q-0.5 0.25-1.205 0.786t-1.188 0.768-0.875 0.018q-0.375-0.196-1.125-1.304-0.393-0.554-0.446-0.393-0.018 0.054-0.018 0.179 0 0.446-0.268 1.009t-0.527 0.991-0.375 1.036 0.205 1.125q-0.411 0.107-1.116 1.607t-0.848 2.518q-0.036 0.321-0.027 1.232t-0.098 1.054q-0.143 0.429-0.518 0.054-0.571-0.554-0.643-1.679-0.036-0.5 0.071-1 0.071-0.339-0.018-0.321l-0.071 0.089q-0.643 1.161 0.179 2.964 0.089 0.214 0.446 0.5t0.429 0.357q0.357 0.411 1.857 1.616t1.661 1.366q0.286 0.268 0.313 0.679t-0.25 0.768-0.813 0.411q0.143 0.268 0.518 0.795t0.5 0.964 0.125 1.259q0.821-0.429 0.125-1.643-0.071-0.143-0.188-0.286t-0.17-0.214-0.036-0.107q0.054-0.089 0.232-0.17t0.357 0.045q0.821 0.929 2.964 0.643 2.375-0.268 3.161-1.554 0.411-0.679 0.607-0.536 0.214 0.107 0.179 0.929-0.018 0.446-0.411 1.643-0.161 0.411-0.107 0.67t0.429 0.277q0.054-0.339 0.259-1.375t0.241-1.607q0.036-0.375-0.116-1.313t-0.134-1.732 0.411-1.259q0.268-0.321 0.911-0.321 0.018-0.661 0.616-0.946t1.295-0.188 1.071 0.402zM11.179 6.857q0.054-0.304-0.045-0.536t-0.205-0.268q-0.161-0.036-0.161 0.125 0.036 0.089 0.089 0.107 0.179 0 0.125 0.268-0.054 0.357 0.143 0.357 0.054 0 0.054-0.054zM18.661 10.375q-0.036-0.143-0.116-0.205t-0.232-0.089-0.259-0.098q-0.089-0.054-0.17-0.143t-0.125-0.143-0.098-0.116-0.071-0.071-0.071 0.027q-0.25 0.286 0.125 0.777t0.696 0.563q0.161 0.018 0.259-0.143t0.063-0.357zM15.482 6.571q0-0.196-0.089-0.348t-0.196-0.223-0.161-0.054q-0.25 0.018-0.125 0.125l0.071 0.036q0.25 0.071 0.321 0.554 0 0.054 0.143-0.036zM16.446 2.411q0-0.036-0.045-0.089t-0.161-0.125-0.17-0.107q-0.268-0.268-0.429-0.268-0.161 0.018-0.205 0.134t-0.018 0.232-0.009 0.223q-0.018 0.071-0.107 0.188t-0.107 0.161 0.054 0.152q0.071 0.054 0.143 0t0.196-0.161 0.268-0.161q0.018-0.018 0.161-0.018t0.268-0.036 0.161-0.125zM26.536 26.357q0.357 0.214 0.554 0.438t0.214 0.429-0.045 0.402-0.277 0.393-0.42 0.348-0.536 0.33-0.563 0.295-0.571 0.277-0.482 0.232q-0.679 0.339-1.527 1t-1.348 1.143q-0.304 0.286-1.214 0.348t-1.589-0.259q-0.321-0.161-0.527-0.42t-0.295-0.455-0.393-0.348-0.839-0.17q-0.786-0.018-2.321-0.018-0.339 0-1.018 0.027t-1.036 0.045q-0.786 0.018-1.42 0.268t-0.955 0.536-0.777 0.509-0.955 0.205q-0.518-0.018-1.982-0.554t-2.607-0.768q-0.339-0.071-0.911-0.17t-0.893-0.161-0.705-0.17-0.598-0.259-0.304-0.348q-0.179-0.411 0.125-1.188t0.321-0.973q0.018-0.286-0.071-0.714t-0.179-0.759-0.080-0.652 0.188-0.482q0.25-0.214 1.018-0.25t1.071-0.214q0.536-0.321 0.75-0.625t0.214-0.911q0.375 1.304-0.571 1.893-0.571 0.357-1.482 0.268-0.607-0.054-0.768 0.179-0.232 0.268 0.089 1.018 0.036 0.107 0.143 0.321t0.152 0.321 0.080 0.304 0.018 0.393q0 0.268-0.304 0.875t-0.25 0.857q0.054 0.304 0.661 0.464 0.357 0.107 1.509 0.33t1.777 0.366q0.429 0.107 1.321 0.393t1.473 0.411 0.991 0.071q0.768-0.107 1.152-0.5t0.411-0.857-0.134-1.045-0.339-0.929-0.357-0.652q-2.161-3.393-3.018-4.321-1.214-1.321-2.018-0.714-0.196 0.161-0.268-0.268-0.054-0.286-0.036-0.679 0.018-0.518 0.179-0.929t0.429-0.839 0.393-0.75q0.143-0.375 0.473-1.286t0.527-1.393 0.536-1.089 0.696-0.964q1.964-2.554 2.214-3.482-0.214-2-0.286-5.536-0.036-1.607 0.429-2.705t1.893-1.866q0.696-0.375 1.857-0.375 0.946-0.018 1.893 0.241t1.589 0.741q1.018 0.75 1.634 2.17t0.527 2.634q-0.089 1.696 0.536 3.821 0.607 2.018 2.375 3.893 0.982 1.054 1.777 2.911t1.063 3.411q0.143 0.875 0.089 1.509t-0.214 0.991-0.357 0.393q-0.179 0.036-0.42 0.339t-0.482 0.634-0.723 0.598-1.089 0.25q-0.321-0.018-0.563-0.089t-0.402-0.241-0.241-0.277-0.205-0.366-0.161-0.348q-0.393-0.661-0.732-0.536t-0.5 0.875 0.125 1.732q0.357 1.25 0.018 3.482-0.179 1.161 0.321 1.795t1.304 0.589 1.518-0.634q1.054-0.875 1.598-1.188t1.848-0.759q0.946-0.321 1.375-0.652t0.33-0.616-0.446-0.509-0.92-0.42q-0.589-0.196-0.884-0.857t-0.268-1.295 0.277-0.848q0.018 0.554 0.143 1.009t0.259 0.723 0.366 0.509 0.375 0.339 0.384 0.232 0.295 0.17z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-dribbble\" viewBox=\"0 0 32 32\">\r\n            <title>dribbble</title>\r\n            <path d=\"M18.286 26.786q-0.75-4.304-2.5-8.893h-0.036l-0.036 0.018q-0.286 0.107-0.768 0.295t-1.804 0.875-2.446 1.464-2.339 2.045-1.839 2.643l-0.268-0.196q3.286 2.679 7.464 2.679 2.357 0 4.571-0.929zM14.982 15.946q-0.375-0.875-0.946-1.982-5.554 1.661-12.018 1.661-0.018 0.125-0.018 0.375 0 2.214 0.786 4.223t2.214 3.598q0.893-1.589 2.205-2.973t2.545-2.223 2.33-1.446 1.777-0.857l0.661-0.232q0.071-0.018 0.232-0.063t0.232-0.080zM13.071 12.161q-2.143-3.804-4.357-6.75-2.464 1.161-4.179 3.321t-2.286 4.857q5.393 0 10.821-1.429zM25.286 17.857q-3.75-1.071-7.304-0.518 1.554 4.268 2.286 8.375 1.982-1.339 3.304-3.384t1.714-4.473zM10.911 4.625q-0.018 0-0.036 0.018 0.018-0.018 0.036-0.018zM21.446 7.214q-3.304-2.929-7.732-2.929-1.357 0-2.768 0.339 2.339 3.036 4.393 6.821 1.232-0.464 2.321-1.080t1.723-1.098 1.17-1.018 0.67-0.723zM25.429 15.875q-0.054-4.143-2.661-7.321l-0.018 0.018q-0.161 0.214-0.339 0.438t-0.777 0.795-1.268 1.080-1.786 1.161-2.348 1.152q0.446 0.946 0.786 1.696 0.036 0.107 0.116 0.313t0.134 0.295q0.643-0.089 1.33-0.125t1.313-0.036 1.232 0.027 1.143 0.071 1.009 0.098 0.857 0.116 0.652 0.107 0.446 0.080zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-skype\" viewBox=\"0 0 32 32\">\r\n            <title>skype</title>\r\n            <path d=\"M20.946 18.982q0-0.893-0.348-1.634t-0.866-1.223-1.304-0.875-1.473-0.607-1.563-0.411l-1.857-0.429q-0.536-0.125-0.786-0.188t-0.625-0.205-0.536-0.286-0.295-0.375-0.134-0.536q0-1.375 2.571-1.375 0.768 0 1.375 0.214t0.964 0.509 0.679 0.598 0.714 0.518 0.857 0.214q0.839 0 1.348-0.571t0.509-1.375q0-0.982-1-1.777t-2.536-1.205-3.25-0.411q-1.214 0-2.357 0.277t-2.134 0.839-1.589 1.554-0.598 2.295q0 1.089 0.339 1.902t1 1.348 1.429 0.866 1.839 0.58l2.607 0.643q1.607 0.393 2 0.643 0.571 0.357 0.571 1.071 0 0.696-0.714 1.152t-1.875 0.455q-0.911 0-1.634-0.286t-1.161-0.688-0.813-0.804-0.821-0.688-0.964-0.286q-0.893 0-1.348 0.536t-0.455 1.339q0 1.643 2.179 2.813t5.196 1.17q1.304 0 2.5-0.33t2.188-0.955 1.58-1.67 0.589-2.348zM27.429 22.857q0 2.839-2.009 4.848t-4.848 2.009q-2.321 0-4.179-1.429-1.375 0.286-2.679 0.286-2.554 0-4.884-0.991t-4.018-2.679-2.679-4.018-0.991-4.884q0-1.304 0.286-2.679-1.429-1.857-1.429-4.179 0-2.839 2.009-4.848t4.848-2.009q2.321 0 4.179 1.429 1.375-0.286 2.679-0.286 2.554 0 4.884 0.991t4.018 2.679 2.679 4.018 0.991 4.884q0 1.304-0.286 2.679 1.429 1.857 1.429 4.179z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-foursquare\" viewBox=\"0 0 23 32\">\r\n            <title>foursquare</title>\r\n            <path d=\"M17.857 7.75l0.661-3.464q0.089-0.411-0.161-0.714t-0.625-0.304h-12.714q-0.411 0-0.688 0.304t-0.277 0.661v19.661q0 0.125 0.107 0.018l5.196-6.286q0.411-0.464 0.679-0.598t0.857-0.134h4.268q0.393 0 0.661-0.259t0.321-0.527q0.429-2.321 0.661-3.411 0.071-0.375-0.205-0.714t-0.652-0.339h-5.25q-0.518 0-0.857-0.339t-0.339-0.857v-0.75q0-0.518 0.339-0.848t0.857-0.33h6.179q0.321 0 0.625-0.241t0.357-0.527zM21.911 3.786q-0.268 1.304-0.955 4.759t-1.241 6.25-0.625 3.098q-0.107 0.393-0.161 0.58t-0.25 0.58-0.438 0.589-0.688 0.375-1.036 0.179h-4.839q-0.232 0-0.393 0.179-0.143 0.161-7.607 8.821-0.393 0.446-1.045 0.509t-0.866-0.098q-0.982-0.393-0.982-1.75v-25.179q0-0.982 0.679-1.83t2.143-0.848h15.857q1.696 0 2.268 0.946t0.179 2.839zM21.911 3.786l-2.821 14.107q0.071-0.304 0.625-3.098t1.241-6.25 0.955-4.759z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-trello\" viewBox=\"0 0 32 32\">\r\n            <title>trello</title>\r\n            <path d=\"M12.571 24v-18.286q0-0.25-0.161-0.411t-0.411-0.161h-8.571q-0.25 0-0.411 0.161t-0.161 0.411v18.286q0 0.25 0.161 0.411t0.411 0.161h8.571q0.25 0 0.411-0.161t0.161-0.411zM24.571 17.143v-11.429q0-0.25-0.161-0.411t-0.411-0.161h-8.571q-0.25 0-0.411 0.161t-0.161 0.411v11.429q0 0.25 0.161 0.411t0.411 0.161h8.571q0.25 0 0.411-0.161t0.161-0.411zM27.429 3.429v25.143q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-25.143q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-female\" viewBox=\"0 0 23 32\">\r\n            <title>female</title>\r\n            <path d=\"M22.857 18.857q0 0.714-0.5 1.214t-1.214 0.5q-0.911 0-1.429-0.768l-4.054-6.089h-0.804v2.357l4.411 7.339q0.161 0.268 0.161 0.589 0 0.464-0.339 0.804t-0.804 0.339h-3.429v4.857q0 0.821-0.589 1.411t-1.411 0.589h-2.857q-0.821 0-1.411-0.589t-0.589-1.411v-4.857h-3.429q-0.464 0-0.804-0.339t-0.339-0.804q0-0.321 0.161-0.589l4.411-7.339v-2.357h-0.804l-4.054 6.089q-0.518 0.768-1.429 0.768-0.714 0-1.214-0.5t-0.5-1.214q0-0.518 0.286-0.946l4.571-6.857q1.304-1.911 3.143-1.911h6.857q1.839 0 3.143 1.911l4.571 6.857q0.286 0.429 0.286 0.946zM15.429 4.571q0 1.661-1.17 2.83t-2.83 1.17-2.83-1.17-1.17-2.83 1.17-2.83 2.83-1.17 2.83 1.17 1.17 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-male\" viewBox=\"0 0 18 32\">\r\n            <title>male</title>\r\n            <path d=\"M18.286 12.571v7.429q0 0.714-0.5 1.214t-1.214 0.5-1.214-0.5-0.5-1.214v-6.286h-1.143v16.286q0 0.821-0.589 1.411t-1.411 0.589-1.411-0.589-0.589-1.411v-8.286h-1.143v8.286q0 0.821-0.589 1.411t-1.411 0.589-1.411-0.589-0.589-1.411v-16.286h-1.143v6.286q0 0.714-0.5 1.214t-1.214 0.5-1.214-0.5-0.5-1.214v-7.429q0-1.429 1-2.429t2.429-1h11.429q1.429 0 2.429 1t1 2.429zM13.143 4.571q0 1.661-1.17 2.83t-2.83 1.17-2.83-1.17-1.17-2.83 1.17-2.83 2.83-1.17 2.83 1.17 1.17 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-gratipay\" viewBox=\"0 0 32 32\">\r\n            <title>gratipay</title>\r\n            <path d=\"M13.804 23.25l6.25-8.446q0.286-0.393 0.438-1.054t-0.107-1.518-1.098-1.411q-0.714-0.464-1.482-0.455t-1.313 0.313-0.973 0.804q-0.643 0.714-1.714 0.714-1.054 0-1.696-0.714-0.429-0.5-0.973-0.804t-1.313-0.313-1.5 0.455q-0.821 0.554-1.080 1.411t-0.107 1.518 0.438 1.054zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sun-o\" viewBox=\"0 0 32 32\">\r\n            <title>sun-o</title>\r\n            <path d=\"M26.286 16q0-2.089-0.813-3.991t-2.196-3.286-3.286-2.196-3.991-0.813-3.991 0.813-3.286 2.196-2.196 3.286-0.813 3.991 0.813 3.991 2.196 3.286 3.286 2.196 3.991 0.813 3.991-0.813 3.286-2.196 2.196-3.286 0.813-3.991zM31.214 20.946q-0.071 0.268-0.357 0.357l-5.214 1.714v5.464q0 0.286-0.232 0.464-0.268 0.179-0.518 0.071l-5.214-1.679-3.214 4.429q-0.179 0.232-0.464 0.232t-0.464-0.232l-3.214-4.429-5.214 1.679q-0.25 0.107-0.518-0.071-0.232-0.179-0.232-0.464v-5.464l-5.214-1.714q-0.286-0.089-0.357-0.357-0.089-0.304 0.071-0.518l3.214-4.429-3.214-4.429q-0.161-0.232-0.071-0.518 0.071-0.268 0.357-0.357l5.214-1.714v-5.464q0-0.286 0.232-0.464 0.268-0.179 0.518-0.071l5.214 1.679 3.214-4.429q0.161-0.214 0.464-0.214t0.464 0.214l3.214 4.429 5.214-1.679q0.25-0.107 0.518 0.071 0.232 0.179 0.232 0.464v5.464l5.214 1.714q0.286 0.089 0.357 0.357 0.089 0.286-0.071 0.518l-3.214 4.429 3.214 4.429q0.161 0.214 0.071 0.518z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-moon-o\" viewBox=\"0 0 32 32\">\r\n            <title>moon-o</title>\r\n            <path d=\"M22.536 23.268q-0.964 0.161-1.964 0.161-3.25 0-6.018-1.607t-4.375-4.375-1.607-6.018q0-3.429 1.857-6.375-3.589 1.071-5.866 4.089t-2.277 6.857q0 2.321 0.911 4.438t2.438 3.643 3.643 2.438 4.438 0.911q2.571 0 4.884-1.098t3.938-3.063zM26.161 21.75q-1.679 3.625-5.063 5.795t-7.384 2.17q-2.786 0-5.321-1.089t-4.375-2.929-2.929-4.375-1.089-5.321q0-2.732 1.027-5.223t2.786-4.313 4.205-2.938 5.179-1.223q0.786-0.036 1.089 0.696 0.321 0.732-0.268 1.286-1.536 1.393-2.348 3.241t-0.813 3.902q0 2.643 1.304 4.875t3.536 3.536 4.875 1.304q2.107 0 4.071-0.911 0.732-0.321 1.286 0.232 0.25 0.25 0.313 0.607t-0.080 0.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-archive\" viewBox=\"0 0 32 32\">\r\n            <title>archive</title>\r\n            <path d=\"M19.429 14.857q0-0.464-0.339-0.804t-0.804-0.339h-4.571q-0.464 0-0.804 0.339t-0.339 0.804 0.339 0.804 0.804 0.339h4.571q0.464 0 0.804-0.339t0.339-0.804zM29.714 11.429v17.143q0 0.464-0.339 0.804t-0.804 0.339h-25.143q-0.464 0-0.804-0.339t-0.339-0.804v-17.143q0-0.464 0.339-0.804t0.804-0.339h25.143q0.464 0 0.804 0.339t0.339 0.804zM30.857 3.429v4.571q0 0.464-0.339 0.804t-0.804 0.339h-27.429q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h27.429q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bug\" viewBox=\"0 0 30 32\">\r\n            <title>bug</title>\r\n            <path d=\"M29.143 17.143q0 0.464-0.339 0.804t-0.804 0.339h-4q0 3.054-1.196 5.179l3.714 3.732q0.339 0.339 0.339 0.804t-0.339 0.804q-0.321 0.339-0.804 0.339t-0.804-0.339l-3.536-3.518q-0.089 0.089-0.268 0.232t-0.75 0.509-1.161 0.652-1.464 0.518-1.732 0.232v-16h-2.286v16q-0.911 0-1.813-0.241t-1.554-0.589-1.179-0.696-0.777-0.58l-0.268-0.25-3.268 3.696q-0.357 0.375-0.857 0.375-0.429 0-0.768-0.286-0.339-0.321-0.366-0.795t0.277-0.83l3.607-4.054q-1.036-2.036-1.036-4.893h-4q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4v-5.25l-3.089-3.089q-0.339-0.339-0.339-0.804t0.339-0.804 0.804-0.339 0.804 0.339l3.089 3.089h15.071l3.089-3.089q0.339-0.339 0.804-0.339t0.804 0.339 0.339 0.804-0.339 0.804l-3.089 3.089v5.25h4q0.464 0 0.804 0.339t0.339 0.804zM20.571 6.857h-11.429q0-2.375 1.67-4.045t4.045-1.67 4.045 1.67 1.67 4.045z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-vk\" viewBox=\"0 0 34 32\">\r\n            <title>vk</title>\r\n            <path d=\"M34.232 9.286q0.411 1.143-2.679 5.25-0.429 0.571-1.161 1.518-1.393 1.786-1.607 2.339-0.304 0.732 0.25 1.446 0.304 0.375 1.446 1.464h0.018l0.071 0.071q2.518 2.339 3.411 3.946 0.054 0.089 0.116 0.223t0.125 0.473-0.009 0.607-0.446 0.491-1.054 0.223l-4.571 0.071q-0.429 0.089-1-0.089t-0.929-0.393l-0.357-0.214q-0.536-0.375-1.25-1.143t-1.223-1.384-1.089-1.036-1.009-0.277q-0.054 0.018-0.143 0.063t-0.304 0.259-0.384 0.527-0.304 0.929-0.116 1.384q0 0.268-0.063 0.491t-0.134 0.33l-0.071 0.089q-0.321 0.339-0.946 0.393h-2.054q-1.268 0.071-2.607-0.295t-2.348-0.946-1.839-1.179-1.259-1.027l-0.446-0.429q-0.179-0.179-0.491-0.536t-1.277-1.625-1.893-2.696-2.188-3.768-2.33-4.857q-0.107-0.286-0.107-0.482t0.054-0.286l0.071-0.107q0.268-0.339 1.018-0.339l4.893-0.036q0.214 0.036 0.411 0.116t0.286 0.152l0.089 0.054q0.286 0.196 0.429 0.571 0.357 0.893 0.821 1.848t0.732 1.455l0.286 0.518q0.518 1.071 1 1.857t0.866 1.223 0.741 0.688 0.607 0.25 0.482-0.089q0.036-0.018 0.089-0.089t0.214-0.393 0.241-0.839 0.17-1.446 0-2.232q-0.036-0.714-0.161-1.304t-0.25-0.821l-0.107-0.214q-0.446-0.607-1.518-0.768-0.232-0.036 0.089-0.429 0.304-0.339 0.679-0.536 0.946-0.464 4.268-0.429 1.464 0.018 2.411 0.232 0.357 0.089 0.598 0.241t0.366 0.429 0.188 0.571 0.063 0.813-0.018 0.982-0.045 1.259-0.027 1.473q0 0.196-0.018 0.75t-0.009 0.857 0.063 0.723 0.205 0.696 0.402 0.438q0.143 0.036 0.304 0.071t0.464-0.196 0.679-0.616 0.929-1.196 1.214-1.92q1.071-1.857 1.911-4.018 0.071-0.179 0.179-0.313t0.196-0.188l0.071-0.054 0.089-0.045t0.232-0.054 0.357-0.009l5.143-0.036q0.696-0.089 1.143 0.045t0.554 0.295z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-weibo\" viewBox=\"0 0 32 32\">\r\n            <title>weibo</title>\r\n            <path d=\"M12.054 22.929q0.375-0.607 0.196-1.232t-0.804-0.893q-0.607-0.25-1.304-0.018t-1.071 0.821q-0.393 0.607-0.232 1.223t0.768 0.902 1.33 0.045 1.116-0.848zM13.732 20.768q0.143-0.232 0.063-0.473t-0.313-0.33q-0.25-0.089-0.509 0.009t-0.384 0.33q-0.304 0.554 0.232 0.804 0.25 0.089 0.518-0.009t0.393-0.33zM16.839 22.679q-0.804 1.821-2.821 2.679t-4 0.214q-1.911-0.607-2.634-2.259t0.116-3.348q0.839-1.661 2.705-2.482t3.759-0.339q1.982 0.518 2.83 2.134t0.045 3.402zM22.411 19.821q-0.161-1.714-1.589-3.036t-3.723-1.946-4.902-0.375q-3.982 0.411-6.598 2.527t-2.366 4.723q0.161 1.714 1.589 3.036t3.723 1.946 4.902 0.375q3.982-0.411 6.598-2.527t2.366-4.723zM27.911 19.893q0 1.214-0.661 2.491t-1.946 2.446-3.009 2.098-4.036 1.482-4.83 0.554-4.911-0.598-4.295-1.661-3.063-2.696-1.161-3.563q0-2.054 1.241-4.375t3.527-4.607q3.018-3.018 6.098-4.214t4.402 0.125q1.161 1.143 0.357 3.732-0.071 0.25-0.018 0.357t0.179 0.125 0.259-0.009 0.241-0.063l0.107-0.036q2.482-1.054 4.393-1.054t2.732 1.089q0.804 1.125 0 3.179-0.036 0.232-0.080 0.357t0.080 0.223 0.214 0.134 0.304 0.107q1.018 0.321 1.839 0.839t1.429 1.455 0.607 2.080zM26.589 8.75q0.75 0.839 0.973 1.938t-0.116 2.098q-0.143 0.411-0.527 0.607t-0.795 0.071q-0.411-0.143-0.607-0.527t-0.071-0.795q0.357-1.125-0.429-1.982t-1.911-0.625q-0.429 0.089-0.804-0.143t-0.446-0.661q-0.089-0.429 0.143-0.795t0.661-0.455q1.071-0.232 2.125 0.098t1.804 1.17zM29.821 5.839q1.554 1.714 2.009 3.973t-0.241 4.313q-0.161 0.482-0.607 0.714t-0.929 0.071-0.714-0.607-0.089-0.929q0.5-1.464 0.179-3.071t-1.429-2.821q-1.107-1.232-2.643-1.705t-3.089-0.152q-0.5 0.107-0.929-0.17t-0.536-0.777 0.17-0.92 0.777-0.527q2.196-0.464 4.357 0.205t3.714 2.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-renren\" viewBox=\"0 0 32 32\">\r\n            <title>renren</title>\r\n            <path d=\"M20.232 28.036q-3.054 1.679-6.571 1.679-3.5 0-6.554-1.679 2.464-1.554 4.205-3.768t2.348-4.786q0.625 2.571 2.366 4.786t4.205 3.768zM11.393 2.536v8.661q0 4.5-2.259 8.205t-5.902 5.473q-3.232-3.839-3.232-8.839 0-3.339 1.491-6.241t4.098-4.813 5.804-2.446zM27.429 16.036q0 5-3.232 8.839-3.643-1.768-5.902-5.473t-2.259-8.205v-8.661q3.196 0.536 5.804 2.446t4.098 4.813 1.491 6.241z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pagelines\" viewBox=\"0 0 25 32\">\r\n            <title>pagelines</title>\r\n            <path d=\"M25.036 19.696q-0.571 1.429-1.357 2.464t-1.625 1.58-1.768 0.83-1.813 0.259-1.723-0.152-1.545-0.393-1.241-0.491-0.821-0.402l-0.304-0.179q-2.018 4.071-5.17 6.42t-6.866 2.366q-0.339 0-0.571-0.232t-0.232-0.571 0.232-0.563 0.571-0.223q3.089-0.018 5.759-1.92t4.491-5.259q-0.643 0.25-1.286 0.411t-1.482 0.232-1.625-0.045-1.661-0.509-1.643-1.054-1.509-1.786-1.33-2.607q2.036-0.839 3.821-1.018t2.991 0.134 2.223 1.009 1.58 1.375 1.009 1.464q0.946-2.339 1.411-5.196-0.125 0.018-0.321 0.045t-0.83 0.045-1.241-0.009-1.455-0.179-1.58-0.411-1.5-0.759-1.339-1.161-0.973-1.688-0.509-2.277q1.25-0.5 2.384-0.652t2.009 0.018 1.643 0.536 1.313 0.893 1 1.089 0.75 1.125 0.491 1 0.286 0.705l0.071 0.286q0.214-2.179 0.214-3.482-0.143-0.107-0.384-0.286t-0.875-0.795-1.134-1.277-0.964-1.661-0.589-2.009 0.214-2.268 1.25-2.473q1.304 0.446 2.277 1.098t1.509 1.366 0.857 1.518 0.366 1.589-0.009 1.527-0.232 1.366-0.339 1.107-0.304 0.75l-0.125 0.268q0.018 0.089 0.018 0.902t-0.018 1.277q0.054-0.125 0.179-0.33t0.545-0.768 0.902-1.036 1.268-0.991 1.634-0.795 2-0.259 2.366 0.429q-0.036 1.393-0.384 2.527t-0.893 1.866-1.241 1.277-1.455 0.813-1.509 0.429-1.429 0.17-1.205-0.018-0.83-0.080l-0.304-0.054q-0.411 2.625-1.304 5.054 0.107-0.125 0.321-0.33t0.884-0.732 1.384-0.938 1.777-0.75 2.098-0.357 2.304 0.42 2.446 1.384z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stack-exchange\" viewBox=\"0 0 23 32\">\r\n            <title>stack-exchange</title>\r\n            <path d=\"M22.482 22.375v1.179q0 1.518-1.027 2.58t-2.473 1.063h-1.018l-4.643 4.804v-4.804h-9.446q-1.446 0-2.473-1.063t-1.027-2.58v-1.179h22.107zM22.482 16.554v4.554h-22.107v-4.554h22.107zM22.482 10.696v4.554h-22.107v-4.554h22.107zM22.482 8.196v1.196h-22.107v-1.196q0-1.5 1.027-2.563t2.473-1.063h15.107q1.446 0 2.473 1.063t1.027 2.563z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-o-right\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-o-right</title>\r\n            <path d=\"M20.571 16q0 0.25-0.161 0.411l-5.714 5.714q-0.161 0.161-0.411 0.161-0.232 0-0.402-0.17t-0.17-0.402v-3.429h-6.286q-0.232 0-0.402-0.17t-0.17-0.402v-3.429q0-0.232 0.17-0.402t0.402-0.17h6.286v-3.429q0-0.25 0.161-0.411t0.411-0.161q0.214 0 0.429 0.179l5.696 5.696q0.161 0.161 0.161 0.411zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-arrow-circle-o-left\" viewBox=\"0 0 32 32\">\r\n            <title>arrow-circle-o-left</title>\r\n            <path d=\"M20.571 14.286v3.429q0 0.232-0.17 0.402t-0.402 0.17h-6.286v3.429q0 0.25-0.161 0.411t-0.411 0.161q-0.214 0-0.429-0.179l-5.696-5.696q-0.161-0.161-0.161-0.411t0.161-0.411l5.714-5.714q0.161-0.161 0.411-0.161 0.232 0 0.402 0.17t0.17 0.402v3.429h6.286q0.232 0 0.402 0.17t0.17 0.402zM23.429 16q0-2.643-1.304-4.875t-3.536-3.536-4.875-1.304-4.875 1.304-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-caret-square-o-left\" viewBox=\"0 0 32 32\">\r\n            <title>caret-square-o-left</title>\r\n            <path d=\"M18.286 10.286v11.429q0 0.464-0.339 0.804t-0.804 0.339q-0.357 0-0.661-0.214l-8-5.714q-0.482-0.339-0.482-0.929t0.482-0.929l8-5.714q0.304-0.214 0.661-0.214 0.464 0 0.804 0.339t0.339 0.804zM22.857 24.571v-17.143q0-0.232-0.17-0.402t-0.402-0.17h-17.143q-0.232 0-0.402 0.17t-0.17 0.402v17.143q0 0.232 0.17 0.402t0.402 0.17h17.143q0.232 0 0.402-0.17t0.17-0.402zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-dot-circle-o\" viewBox=\"0 0 32 32\">\r\n            <title>dot-circle-o</title>\r\n            <path d=\"M18.286 16q0 1.893-1.339 3.232t-3.232 1.339-3.232-1.339-1.339-3.232 1.339-3.232 3.232-1.339 3.232 1.339 1.339 3.232zM13.714 6.286q-2.643 0-4.875 1.304t-3.536 3.536-1.304 4.875 1.304 4.875 3.536 3.536 4.875 1.304 4.875-1.304 3.536-3.536 1.304-4.875-1.304-4.875-3.536-3.536-4.875-1.304zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-wheelchair\" viewBox=\"0 0 30 32\">\r\n            <title>wheelchair</title>\r\n            <path d=\"M18.268 21.196l1.821 3.643q-1.036 3.196-3.75 5.179t-6.054 1.982q-2.786 0-5.152-1.384t-3.75-3.75-1.384-5.152q0-3.232 1.866-5.893t4.902-3.768l0.304 2.339q-2.179 0.964-3.482 2.955t-1.304 4.366q0 3.304 2.348 5.652t5.652 2.348q2.25 0 4.152-1.161t2.946-3.134 0.884-4.223zM28.054 22.982l1.036 2.036-4.571 2.286q-0.232 0.125-0.518 0.125-0.714 0-1.018-0.625l-4.268-8.518h-8.429q-0.429 0-0.759-0.295t-0.384-0.723l-1.714-13.911q-0.036-0.286 0.107-0.75 0.25-0.911 1.018-1.473t1.732-0.563q1.179 0 2.018 0.839t0.839 2.018q0 1.232-0.929 2.098t-2.143 0.741l0.661 5.161h7.554v2.286h-7.268l0.286 2.286h8.125q0.714 0 1.018 0.625l4.071 8.125z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-vimeo-square\" viewBox=\"0 0 32 32\">\r\n            <title>vimeo-square</title>\r\n            <path d=\"M22.393 11.375q0.286-1.518-0.375-2.357-0.929-1.161-3.339-0.804-0.304 0.054-0.732 0.223t-1.027 0.545-1.152 0.866-1.063 1.25-0.795 1.634q1.429-0.125 2.027 0.286t0.473 1.768q-0.089 0.929-0.929 2.554-0.768 1.393-1.268 1.768-0.786 0.571-1.554-0.25-0.411-0.429-0.67-1.152t-0.339-1.304-0.179-1.5-0.152-1.277q-0.411-2.304-0.607-2.929-0.214-0.661-0.634-1.232t-0.902-0.714q-1.018-0.286-2.268 0.446-0.964 0.571-2.438 1.893t-2.188 1.821v0.125q0.286 0.143 0.455 0.464t0.384 0.357q0.375 0.054 0.973-0.152t1.036-0.188 0.741 0.536q0.196 0.321 0.33 0.688t0.268 0.857 0.223 0.723q0.304 0.821 0.946 3.339 0.643 2.607 1.018 3.518 0.75 1.768 1.839 2.232 0.768 0.214 1.518 0.027t1.357-0.563q2.339-1.375 4.464-4.232 1.857-2.482 3.080-5.223t1.473-4.045zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-try\" viewBox=\"0 0 21 32\">\r\n            <title>try</title>\r\n            <path d=\"M20.571 14.857q0 3.411-1.688 6.304t-4.58 4.58-6.304 1.688h-2.857q-0.25 0-0.411-0.161t-0.161-0.411v-10.911l-3.839 1.179q-0.054 0.018-0.161 0.018-0.179 0-0.339-0.107-0.232-0.179-0.232-0.464v-2.286q0-0.411 0.411-0.554l4.161-1.268v-1.661l-3.839 1.179q-0.054 0.018-0.161 0.018-0.179 0-0.339-0.107-0.232-0.179-0.232-0.464v-2.286q0-0.411 0.411-0.554l4.161-1.268v-4.464q0-0.25 0.161-0.411t0.411-0.161h2.857q0.25 0 0.411 0.161t0.161 0.411v3.232l6.696-2.071q0.268-0.089 0.5 0.089t0.232 0.464v2.286q0 0.411-0.411 0.554l-7.018 2.161v1.661l6.696-2.071q0.268-0.089 0.5 0.089t0.232 0.464v2.286q0 0.411-0.411 0.554l-7.018 2.161v8.696q3.357-0.232 5.679-2.696t2.321-5.857q0-0.25 0.161-0.411t0.411-0.161h2.857q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plus-square-o\" viewBox=\"0 0 25 32\">\r\n            <title>plus-square-o</title>\r\n            <path d=\"M20.571 14.286v1.143q0 0.25-0.161 0.411t-0.411 0.161h-6.286v6.286q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-6.286h-6.286q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h6.286v-6.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411v6.286h6.286q0.25 0 0.411 0.161t0.161 0.411zM22.857 22.286v-14.857q0-1.179-0.839-2.018t-2.018-0.839h-14.857q-1.179 0-2.018 0.839t-0.839 2.018v14.857q0 1.179 0.839 2.018t2.018 0.839h14.857q1.179 0 2.018-0.839t0.839-2.018zM25.143 7.429v14.857q0 2.125-1.509 3.634t-3.634 1.509h-14.857q-2.125 0-3.634-1.509t-1.509-3.634v-14.857q0-2.125 1.509-3.634t3.634-1.509h14.857q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-space-shuttle\" viewBox=\"0 0 39 32\">\r\n            <title>space-shuttle</title>\r\n            <path d=\"M11.071 20q-1.964 1.143-4.786 1.143h-2.286v-1.143h-1.143q-0.232 0-0.402-0.42t-0.17-1.009q0-0.429 0.125-0.875-1.036-0.036-1.723-0.188t-0.688-0.366 0.688-0.366 1.723-0.188q-0.125-0.446-0.125-0.875 0-0.589 0.17-1.009t0.402-0.42h1.143v-1.143h2.286q2.821 0 4.786 1.143h19.875q0.75 0.125 1.902 0.321t1.438 0.25q1.589 0.268 2.679 0.723t1.491 0.848 0.402 0.714-0.402 0.714-1.491 0.848-2.679 0.723q-0.286 0.054-1.438 0.25t-1.902 0.321h-19.875zM31.054 15.5q0.946 0.643 0.946 1.643t-0.946 1.643l1.446 0.536q1.214-0.857 1.214-2.179t-1.214-2.179zM11.161 20.286h18.125q-3.875 0.679-8.143 1.429-1.018 0-2.018 0.429t-1.482 0.857l-0.5 0.429-5.143 5.143q-0.464 0.464-1.259 0.804t-1.598 0.339h-1.714l-1.661-8.286h0.518q2.804 0 4.875-1.143zM6.286 12.857h-0.518l1.661-8.286h1.714q0.821 0 1.607 0.339t1.25 0.804l5.143 5.143q0.071 0.071 0.196 0.188t0.545 0.411 0.866 0.518 1.098 0.411 1.295 0.188l8.143 1.429h-18.125q-2.071-1.143-4.875-1.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-slack\" viewBox=\"0 0 30 32\">\r\n            <title>slack</title>\r\n            <path d=\"M27.125 13.857q1.107 0 1.848 0.723t0.741 1.813q0 1.732-1.661 2.321l-3.071 1.054 1 2.982q0.125 0.375 0.125 0.839 0 1.054-0.75 1.821t-1.804 0.768q-0.839 0-1.527-0.482t-0.955-1.286l-0.982-2.946-5.536 1.893 0.982 2.929q0.143 0.429 0.143 0.839 0 1.054-0.75 1.821t-1.821 0.768q-0.839 0-1.518-0.482t-0.946-1.286l-0.982-2.911-2.732 0.946q-0.518 0.161-0.893 0.161-1.089 0-1.813-0.714t-0.723-1.804q0-0.839 0.491-1.518t1.277-0.946l2.786-0.946-1.875-5.589-2.786 0.964q-0.464 0.143-0.857 0.143-1.071 0-1.804-0.723t-0.732-1.795q0-0.839 0.491-1.518t1.277-0.946l2.804-0.946-0.946-2.839q-0.143-0.429-0.143-0.839 0-1.071 0.75-1.83t1.821-0.759q0.839 0 1.518 0.482t0.946 1.286l0.964 2.857 5.536-1.875-0.964-2.857q-0.143-0.429-0.143-0.839 0-1.054 0.759-1.821t1.812-0.768q0.839 0 1.527 0.491t0.955 1.277l0.946 2.875 2.893-0.982q0.375-0.107 0.768-0.107 1.071 0 1.83 0.705t0.759 1.759q0 0.804-0.536 1.455t-1.321 0.92l-2.804 0.964 1.875 5.643 2.929-1q0.429-0.143 0.821-0.143zM12.946 18.536l5.536-1.875-1.875-5.625-5.536 1.911z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-envelope-square\" viewBox=\"0 0 32 32\">\r\n            <title>envelope-square</title>\r\n            <path d=\"M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143zM22.857 21.143v-7.786q-0.554 0.625-1.143 0.982-0.607 0.393-2.366 1.518t-2.705 1.768q-1.75 1.232-2.929 1.232v0 0q-1.179 0-2.929-1.232-0.821-0.571-2.527-1.652t-2.545-1.652q-0.214-0.143-0.589-0.482t-0.554-0.482v7.786q0 0.714 0.5 1.214t1.214 0.5h14.857q0.714 0 1.214-0.5t0.5-1.214zM22.857 10.911q0-0.732-0.491-1.25t-1.223-0.518h-14.857q-0.714 0-1.214 0.5t-0.5 1.214q0 0.661 0.545 1.366t1.205 1.152q0.839 0.571 2.455 1.589t2.313 1.482q0.054 0.036 0.304 0.205t0.375 0.25 0.375 0.232 0.42 0.232 0.384 0.17 0.402 0.134 0.366 0.045 0.366-0.045 0.402-0.134 0.384-0.17 0.42-0.232 0.375-0.232 0.375-0.25 0.304-0.205l4.768-3.107q0.625-0.411 1.188-1.116t0.563-1.313z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-wordpress\" viewBox=\"0 0 32 32\">\r\n            <title>wordpress</title>\r\n            <path d=\"M2.268 16q0-2.911 1.196-5.589l6.554 17.946q-3.5-1.696-5.625-5.018t-2.125-7.339zM25.268 15.304q0 0.339-0.045 0.688t-0.179 0.884-0.205 0.786-0.313 1.054-0.313 1.036l-1.357 4.571-4.964-14.75q0.821-0.054 1.571-0.143 0.339-0.036 0.464-0.33t-0.045-0.554-0.509-0.241l-3.661 0.179q-1.339-0.018-3.607-0.179-0.214-0.018-0.366 0.089t-0.205 0.268-0.027 0.33 0.161 0.295 0.348 0.143l1.429 0.143 2.143 5.857-3 9-5-14.857q0.821-0.054 1.571-0.143 0.339-0.036 0.464-0.33t-0.045-0.554-0.509-0.241l-3.661 0.179q-0.125 0-0.411-0.009t-0.464-0.009q1.875-2.857 4.902-4.527t6.563-1.67q2.625 0 5.009 0.946t4.259 2.661h-0.179q-0.982 0-1.643 0.723t-0.661 1.705q0 0.214 0.036 0.429t0.071 0.384 0.143 0.411 0.161 0.375 0.214 0.402 0.223 0.375 0.259 0.429 0.25 0.411q1.125 1.911 1.125 3.786zM16.232 17.196l4.232 11.554q0.018 0.107 0.089 0.196-2.25 0.786-4.554 0.786-2 0-3.875-0.571zM28.036 9.411q1.696 3.107 1.696 6.589 0 3.732-1.857 6.884t-4.982 4.973l4.196-12.107q1.054-3.018 1.054-4.929 0-0.75-0.107-1.411zM16 0q3.25 0 6.214 1.268t5.107 3.411 3.411 5.107 1.268 6.214-1.268 6.214-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214 1.268-6.214 3.411-5.107 5.107-3.411 6.214-1.268zM16 31.268q3.089 0 5.92-1.214t4.875-3.259 3.259-4.875 1.214-5.92-1.214-5.92-3.259-4.875-4.875-3.259-5.92-1.214-5.92 1.214-4.875 3.259-3.259 4.875-1.214 5.92 1.214 5.92 3.259 4.875 4.875 3.259 5.92 1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-openid\" viewBox=\"0 0 32 32\">\r\n            <title>openid</title>\r\n            <path d=\"M19.393 0v27.429l-4.857 2.286q-4.071-0.357-7.393-1.821t-5.232-3.723-1.911-4.866q0-2.5 1.795-4.705t4.911-3.67 6.991-1.929v3.071q-3.875 0.679-6.366 2.679t-2.491 4.554q0 2.714 2.759 4.768t6.938 2.589v-24.286zM31.339 10.393l0.661 6.964-9.375-2.036 2.625-1.482q-2.125-1.25-5-1.768v-3.071q4.946 0.589 8.589 2.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-university\" viewBox=\"0 0 37 32\">\r\n            <title>university</title>\r\n            <path d=\"M17.143 0l17.143 6.857v2.286h-2.286q0 0.464-0.366 0.804t-0.866 0.339h-27.25q-0.5 0-0.866-0.339t-0.366-0.804h-2.286v-2.286zM4.571 11.429h4.571v13.714h2.286v-13.714h4.571v13.714h2.286v-13.714h4.571v13.714h2.286v-13.714h4.571v13.714h1.054q0.5 0 0.866 0.339t0.366 0.804v1.143h-29.714v-1.143q0-0.464 0.366-0.804t0.866-0.339h1.054v-13.714zM33.054 28.571q0.5 0 0.866 0.339t0.366 0.804v2.286h-34.286v-2.286q0-0.464 0.366-0.804t0.866-0.339h31.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-graduation-cap\" viewBox=\"0 0 41 32\">\r\n            <title>graduation-cap</title>\r\n            <path d=\"M31.679 14.929l0.321 5.643q0.071 1.232-1.464 2.286t-4.196 1.67-5.768 0.616-5.768-0.616-4.196-1.67-1.464-2.286l0.321-5.643 10.25 3.232q0.393 0.125 0.857 0.125t0.857-0.125zM41.143 9.143q0 0.411-0.393 0.554l-20 6.286q-0.071 0.018-0.179 0.018t-0.179-0.018l-11.643-3.679q-0.768 0.607-1.268 1.991t-0.607 3.188q1.125 0.643 1.125 1.946 0 1.232-1.036 1.911l1.036 7.732q0.036 0.25-0.143 0.446-0.161 0.196-0.429 0.196h-3.429q-0.268 0-0.429-0.196-0.179-0.196-0.143-0.446l1.036-7.732q-1.036-0.679-1.036-1.911 0-1.304 1.161-1.982 0.196-3.696 1.75-5.893l-5.946-1.857q-0.393-0.143-0.393-0.554t0.393-0.554l20-6.286q0.071-0.018 0.179-0.018t0.179 0.018l20 6.286q0.393 0.143 0.393 0.554z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-yahoo\" viewBox=\"0 0 32 32\">\r\n            <title>yahoo</title>\r\n            <path d=\"M15.339 17.089l0.232 12.625q-1.107-0.196-1.875-0.196-0.732 0-1.875 0.196l0.232-12.625q-0.714-1.232-3.009-5.277t-3.866-6.688-3.232-5.125q1.036 0.268 1.929 0.268 0.768 0 1.982-0.268 1.125 1.982 2.384 4.098t2.982 4.938 2.473 4.054q0.661-1.089 1.955-3.17t2.098-3.393 1.875-3.143 1.911-3.384q0.964 0.25 1.911 0.25 1 0 2.036-0.25v0q-0.5 0.696-1.071 1.58t-0.884 1.402-1.009 1.714-0.875 1.5q-2.607 4.429-6.304 10.893z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-google\" viewBox=\"0 0 23 32\">\r\n            <title>google</title>\r\n            <path d=\"M17.518 23.911q0-0.446-0.125-0.875t-0.259-0.75-0.482-0.741-0.527-0.625-0.688-0.616-0.652-0.518-0.741-0.536-0.652-0.464q-0.286-0.036-0.875-0.036-0.946 0-1.866 0.125t-1.911 0.446-1.732 0.821-1.223 1.33-0.482 1.884q0 1 0.42 1.821t1.089 1.348 1.554 0.893 1.786 0.518 1.813 0.152q1.036 0 1.991-0.232t1.768-0.696 1.304-1.304 0.491-1.946zM15.429 8.589q0-1.054-0.304-2.241t-0.857-2.304-1.5-1.848-2.089-0.732q-0.75 0-1.473 0.348t-1.188 0.938q-0.821 1.054-0.821 2.857 0 0.821 0.179 1.741t0.563 1.839 0.929 1.652 1.339 1.196 1.723 0.464q0.661 0 1.384-0.295t1.17-0.777q0.946-1 0.946-2.839zM13.429 0h7.446l-2.446 1.571h-2.357q1.339 1.125 2.018 2.375t0.679 2.857q0 1.286-0.438 2.313t-1.063 1.661-1.241 1.161-1.054 1.098-0.438 1.179q0 0.643 0.571 1.259t1.375 1.214 1.616 1.313 1.384 1.857 0.571 2.536q0 1.625-0.875 3.089-1.268 2.179-3.741 3.205t-5.33 1.027q-2.357 0-4.402-0.741t-3.080-2.455q-0.643-1.054-0.643-2.339 0-1.446 0.795-2.679t2.116-2.054q2.339-1.464 7.214-1.786-0.571-0.732-0.848-1.313t-0.277-1.313q0-0.714 0.375-1.518-0.821 0.071-1.214 0.071-2.643 0-4.455-1.723t-1.813-4.366q0-1.464 0.643-2.839t1.768-2.339q1.357-1.179 3.25-1.75t3.893-0.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-reddit\" viewBox=\"0 0 41 32\">\r\n            <title>reddit</title>\r\n            <path d=\"M26.946 25.518q0 0.25-0.214 0.518-0.929 1.054-2.634 1.482t-3.509 0.429q-4.5 0-6.179-1.911-0.214-0.268-0.214-0.518 0-0.304 0.214-0.527t0.518-0.223q0.268 0 0.536 0.214 1.036 0.875 2.241 1.179t2.848 0.304 2.857-0.304 2.268-1.179q0.268-0.214 0.536-0.214 0.304 0 0.518 0.223t0.214 0.527zM17.464 18.536q0 1.089-0.768 1.857t-1.857 0.768q-1.071 0-1.866-0.777t-0.795-1.848q0-1.089 0.786-1.875t1.875-0.786 1.857 0.786 0.768 1.875zM28.964 18.536q0 1.089-0.768 1.857t-1.857 0.768q-1.071 0-1.866-0.777t-0.795-1.848q0-1.089 0.786-1.875t1.875-0.786 1.857 0.786 0.768 1.875zM7.411 13.268q-0.696-0.482-1.571-0.482-1.179 0-2.018 0.839t-0.839 2.018q0 1.286 0.964 2.161 0.946-2.518 3.464-4.536zM36.071 20.607q0-3.964-4.446-6.911-2.286-1.518-5.205-2.259t-5.92-0.741-5.92 0.741-5.223 2.259q-4.446 2.946-4.446 6.911t4.446 6.911q2.304 1.518 5.223 2.259t5.92 0.741 5.92-0.741 5.205-2.259q4.446-2.946 4.446-6.911zM38.161 15.643q0-1.179-0.839-2.018t-2.018-0.839q-0.893 0-1.661 0.536 2.5 2.036 3.429 4.571 1.089-0.857 1.089-2.25zM35.589 3.589q0-0.875-0.616-1.491t-1.473-0.616q-0.875 0-1.491 0.616t-0.616 1.491q0 0.857 0.616 1.473t1.491 0.616q0.857 0 1.473-0.616t0.616-1.473zM39.643 15.643q0 1.161-0.589 2.179t-1.589 1.607q0.089 0.625 0.089 1.179 0 2.482-1.411 4.563t-3.714 3.598q-2.5 1.643-5.598 2.438t-6.33 0.795-6.339-0.795-5.607-2.438q-2.304-1.518-3.714-3.598t-1.411-4.563q0-0.643 0.107-1.268-0.946-0.589-1.491-1.58t-0.545-2.116q0-1.786 1.268-3.063t3.071-1.277q1.625 0 2.839 1.071 4.732-3.036 11.393-3.161l2.571-8.143q0.179-0.518 0.714-0.518 0.429 0 6.857 1.607 0.429-0.982 1.321-1.571t1.964-0.589q1.464 0 2.518 1.054t1.054 2.536-1.054 2.527-2.518 1.045q-1.482 0-2.527-1.045t-1.063-2.509l-6.054-1.429-2.232 7.054q6.232 0.268 10.768 3.196 1.268-1.125 2.911-1.125 1.804 0 3.071 1.277t1.268 3.063z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-reddit-square\" viewBox=\"0 0 32 32\">\r\n            <title>reddit-square</title>\r\n            <path d=\"M16.964 20.411q0.125-0.125 0.313-0.125t0.313 0.125 0.125 0.321-0.125 0.321q-1.161 1.143-3.714 1.143h-0.036q-2.554 0-3.696-1.143-0.143-0.125-0.143-0.321t0.143-0.321q0.125-0.125 0.313-0.125t0.313 0.125q0.875 0.911 3.071 0.911h0.036q2.179 0 3.089-0.911zM11.982 16.482q0 0.661-0.464 1.143t-1.125 0.482-1.125-0.482-0.464-1.143 0.464-1.125 1.125-0.464 1.125 0.464 0.464 1.125zM21.679 8.696q-0.518 0-0.893-0.375t-0.375-0.893q0-0.536 0.375-0.911t0.893-0.375q0.536 0 0.911 0.375t0.375 0.911q0 0.518-0.375 0.893t-0.911 0.375zM21.714 2.286q2.357 0 4.036 1.679t1.679 4.054v15.964q0 2.375-1.679 4.054t-4.036 1.679h-16q-2.357 0-4.036-1.679t-1.679-4.054v-15.964q0-2.375 1.679-4.054t4.036-1.679h16zM23.589 16.786q0.625-0.25 1.018-0.813t0.393-1.259q0-0.911-0.643-1.563t-1.554-0.652q-1.071 0-1.75 0.857-2.696-1.911-6.696-2.054l1.482-4.732 3.679 0.875q0.018 0.893 0.652 1.518t1.509 0.625q0.893 0 1.536-0.634t0.643-1.527-0.643-1.536-1.536-0.643q-0.643 0-1.179 0.366t-0.804 0.955l-4.054-0.964q-0.161-0.036-0.313 0.045t-0.205 0.259l-1.696 5.393q-4 0.071-6.804 2.018-0.643-0.768-1.661-0.768-0.911 0-1.554 0.652t-0.643 1.563q0 0.661 0.348 1.205t0.938 0.813q-0.125 0.446-0.125 0.964 0 1.75 1.321 3.241t3.598 2.357 4.973 0.866q2.679 0 4.955-0.866t3.598-2.357 1.321-3.241q0-0.482-0.107-0.964zM17.339 14.893q0.661 0 1.125 0.464t0.464 1.125-0.464 1.143-1.125 0.482-1.125-0.482-0.464-1.143 0.464-1.125 1.125-0.464z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stumbleupon-circle\" viewBox=\"0 0 32 32\">\r\n            <title>stumbleupon-circle</title>\r\n            <path d=\"M15.464 14.982l1.607-0.482v-1.107q0-1.411-1.036-2.411t-2.464-1-2.464 0.991-1.036 2.402v5.054q0 0.357-0.25 0.598t-0.589 0.241-0.58-0.241-0.241-0.598v-2.143h-2.696v2.179q0 1.464 1.027 2.482t2.491 1.018q1.446 0 2.473-1.009t1.027-2.438v-5q0-0.339 0.241-0.589t0.598-0.25q0.339 0 0.58 0.25t0.241 0.589v0.964zM21.411 18.464v-2.179h-2.679v2.25q0 0.357-0.241 0.598t-0.598 0.241q-0.339 0-0.58-0.25t-0.241-0.589v-2.196l-1.607 0.464-1.071-0.5v2.196q0 1.429 1.036 2.446t2.482 1.018 2.473-1.018 1.027-2.482zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-stumbleupon\" viewBox=\"0 0 34 32\">\r\n            <title>stumbleupon</title>\r\n            <path d=\"M18.964 12.714v-2.107q0-0.75-0.536-1.286t-1.286-0.536-1.286 0.536-0.536 1.286v10.929q0 3.125-2.25 5.339t-5.411 2.214q-3.179 0-5.42-2.241t-2.241-5.42v-4.75h5.857v4.679q0 0.768 0.536 1.295t1.286 0.527 1.286-0.527 0.536-1.295v-11.071q0-3.054 2.259-5.214t5.384-2.161q3.143 0 5.393 2.179t2.25 5.25v2.429l-3.482 1.036zM28.429 16.679h5.857v4.75q0 3.179-2.241 5.42t-5.42 2.241q-3.161 0-5.411-2.223t-2.25-5.366v-4.786l2.339 1.089 3.482-1.036v4.821q0 0.75 0.536 1.277t1.286 0.527 1.286-0.527 0.536-1.277v-4.911z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-delicious\" viewBox=\"0 0 32 32\">\r\n            <title>delicious</title>\r\n            <path d=\"M26.286 24.571v-8.571h-12.571v-12.571h-8.571q-1.661 0-2.83 1.17t-1.17 2.83v8.571h12.571v12.571h8.571q1.661 0 2.83-1.17t1.17-2.83zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-digg\" viewBox=\"0 0 37 32\">\r\n            <title>digg</title>\r\n            <path d=\"M5.857 5.036h3.643v17.554h-9.5v-12.446h5.857v-5.107zM5.857 19.661v-6.589h-2.196v6.589h2.196zM10.964 10.143v12.446h3.661v-12.446h-3.661zM10.964 5.036v3.643h3.661v-3.643h-3.661zM16.089 10.143h9.518v16.821h-9.518v-2.911h5.857v-1.464h-5.857v-12.446zM21.946 19.661v-6.589h-2.196v6.589h2.196zM27.071 10.143h9.5v16.821h-9.5v-2.911h5.839v-1.464h-5.839v-12.446zM32.911 19.661v-6.589h-2.196v6.589h2.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pied-piper\" viewBox=\"0 0 32 32\">\r\n            <title>pied-piper</title>\r\n            <path d=\"M18.679 18.214q0 1.143-0.679 1.946t-1.625 0.804q-0.768 0-1.25-0.268v-4.946q0.5-0.304 1.25-0.304 0.946 0 1.625 0.813t0.679 1.955zM12.554 10.571q0 1.143-0.679 1.955t-1.625 0.813q-0.768 0-1.25-0.268v-4.946q0.5-0.304 1.25-0.304 0.946 0 1.625 0.804t0.679 1.946zM22.589 18.268q0-2.393-1.571-4.089t-3.804-1.696q-0.357 0-0.696 0.054-0.411 1.393-1.393 2.429-1.554 1.696-3.768 1.804v11.357l3.768-0.732v-3.679q0.911 0.339 2.089 0.339 2.232 0 3.804-1.696t1.571-4.089zM16.464 10.643q0-2.393-1.58-4.089t-3.813-1.696q-1.321 0-2.518 0.643h-3.321v15l3.768-0.732v-3.679q0.982 0.339 2.071 0.339 2.232 0 3.813-1.696t1.58-4.089zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pied-piper-alt\" viewBox=\"0 0 36 32\">\r\n            <title>pied-piper-alt</title>\r\n            <path d=\"M21.821 16.589q1.339-0.054 2.563 0.366t2.107 1.045 1.804 1.688 1.5 1.929 1.348 2.152q0.589 1 1.402 1.946t1.348 1.438 1.768 1.58q-0.857 0.536-1.938 1.027t-2.473 1.054-2.036 0.848q-0.786-0.661-1.321-2.054t-0.777-2.938-0.589-3.223-0.759-3.009-1.295-2.196-2.188-0.866l-0.179 0.036-0.107 0.071q0.071 0.089 0.232 0.25 0.107 0.089 0.5 0.42t0.455 0.393 0.339 0.321 0.321 0.366 0.205 0.375 0.188 0.491 0.080 0.554 0.071 0.723l0.018 0.589q0.018 0.464-0.045 1.027t-0.134 0.929-0.223 1.045-0.205 0.946q-0.625-0.018-1.804 0.17t-1.75 0.188q-0.696 0-1.286-0.179-0.036-0.286-0.036-0.839 0-1.321 0.054-1.714 0.036-0.232 0.563-0.741t1.018-1.054 0.473-0.92q-0.429-0.036-0.768 0.429-0.643 0.946-1.991 1.777t-2.438 0.83q-0.446 0-1.348-1.125t-1.902-2.491-1.5-1.723q-0.107-0.071-0.482-0.536-8.607 2-9.161 2-0.286 0-0.5-0.196t-0.214-0.482q0-0.268 0.152-0.473t0.402-0.259l8.679-1.893q-0.143-0.25-0.143-0.446t0.098-0.313 0.286-0.205 0.357-0.125 0.411-0.080 0.33-0.080q0.071-0.018 0.277-0.134t0.313-0.116q0.268 0 0.5 0.286t0.357 0.589q2.911-0.661 3.071-0.661 0.304 0 0.527 0.196t0.223 0.5q0 0.268-0.152 0.464t-0.42 0.25l-3.25 0.714-0.018 0.286q-0.018 0.464 1.455 2.098t1.866 1.634q0.839 0 2.125-1.429t1.286-2.304q0-0.643-0.42-0.946t-0.911-0.33-0.911-0.205-0.42-0.607q0-0.286 0.179-0.607l-1.214-0.339q0.768-0.786 0.768-2.089 0-0.464-0.089-1.036 1.464-0.286 2.571-0.286 0.786 0 1.277 0.027t0.866 0.152 0.554 0.241 0.366 0.438 0.277 0.598 0.304 0.848 0.429 1.071l0.893-0.446q-0.054 0.714-0.411 1.071t-0.759 0.375-0.714 0.116-0.295 0.366zM22.893 12.393q-0.089-0.089-0.241-0.277t-0.214-0.259-0.188-0.205-0.179-0.188l-0.143-0.143t-0.152-0.134-0.143-0.089-0.152-0.080q-0.125-0.054-0.259-0.089t-0.366-0.045-0.393-0.009h-1.25q-2.25 0-3.875 0.768 0.286-0.536 0.643-0.83t0.964-0.527 1.17-0.643 0.821-0.652 0.893-0.982 0.777-0.902q0.214 0.161 0.5 0.563t0.571 0.652 0.679 0.232l0.214-0.018v1.357l0.393 0.018q4.411-1.696 6.625-3.393 0.5-0.375 0.893-0.696t0.759-0.67 0.589-0.554 0.527-0.607 0.429-0.554 0.438-0.661 0.411-0.679 0.482-0.848 0.527-0.946l0.125-0.161q-0.036 0.946-0.768 2.482-1.411 2.946-3.661 4.714t-5.464 2.536q-0.25 0.054-0.75 0.134t-0.893 0.17-0.696 0.25q0.054 0.339 0.438 0.821t0.384 0.607q0 0.196-0.464 0.536zM18.946 28.839q0.696-0.464 2.348-0.848t2.616-0.384q0.161 0 0.402 0.277t0.5 0.759 0.464 0.893 0.429 0.911 0.259 0.589q-2.161 0.804-4.357 0.804-1.089 0-2.232-0.196zM14.679 17.286l0.857-0.214 1.946 3.161-1.304 0.857zM23.625 26.518q0.054 0.268 0.054 0.286 0 0.125-0.313 0.259t-0.821 0.232-0.964 0.17-0.955 0.134-0.571 0.080l-0.125-0.768q0.375-0.036 1.080-0.152t1.286-0.179 1.080-0.063h0.25zM15.464 15.304l-1.714 0.357-0.107-0.304q0.179-0.018 0.58-0.125t0.616-0.107q0.339 0 0.625 0.179zM18.946 26.625h0.554l0.179 1.482-0.732 0.214v-1.696zM34.821 0.018v0zM34.821 0.018l-0.018 0.089-0.036 0.036 0.018-0.054zM34.821 0.018l0.018-0.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-drupal\" viewBox=\"0 0 32 32\">\r\n            <title>drupal</title>\r\n            <path d=\"M20.839 28.321q-0.089-0.339-0.429-0.089-0.536 0.393-1.554 0.696t-2.339 0.304q-2.304 0-3.446-0.875-0.089-0.071-0.232-0.071-0.196 0-0.464 0.214-0.125 0.107-0.134 0.286t0.134 0.357q0.607 0.571 1.563 0.821t1.83 0.223 1.768-0.080q0.732-0.071 1.509-0.366t1.161-0.536 0.509-0.366q0.214-0.214 0.125-0.518zM20.143 26.268q-0.339-0.839-0.696-1.089-0.411-0.268-1.357-0.268-0.839 0-1.268 0.179-0.518 0.214-1.393 1-0.464 0.429-0.214 0.786 0.161 0.143 0.313 0.080t0.562-0.42q0.054-0.036 0.188-0.152t0.188-0.152 0.179-0.125 0.205-0.125 0.223-0.089 0.268-0.080 0.295-0.045 0.366-0.018q0.482 0 0.795 0.134t0.411 0.259 0.241 0.393q0.179 0.304 0.223 0.357t0.223-0.018q0.411-0.214 0.25-0.607zM26.482 21.25q0-0.393-0.089-0.795t-0.295-0.804-0.607-0.652-0.938-0.25q-0.589 0-1.732 0.741t-2.304 1.491-1.804 0.75q-0.482 0.018-1.134-0.339t-1.357-0.875-1.491-1.036-1.786-0.875-1.982-0.339q-2.054 0.018-3.518 1.402t-1.5 3.188q-0.036 2 1.321 2.929 0.518 0.357 1.116 0.509t1.848 0.152q1.018 0 2.357-0.58t2.393-1.268 2.143-1.259 1.661-0.554q0.464 0.018 1.161 0.563t1.277 1.196 1.214 1.205 0.991 0.571q0.625 0.054 1.045-0.25t0.991-1.125q0.5-0.732 0.759-1.804t0.259-1.893zM27.429 18.393q0 2.929-1.107 5.438t-2.964 4.214-4.33 2.67-5.188 0.964-5.232-1.027-4.42-2.804-3.045-4.313-1.143-5.393q0-1.589 0.348-3.080t0.875-2.598 1.259-2.116 1.402-1.679 1.402-1.241 1.152-0.83 0.759-0.438q0.25-0.143 0.911-0.473t0.973-0.509 0.857-0.536 1.080-0.786q0.643-0.5 1.036-1.295t0.536-2.241q2.304 2.768 3.321 3.446 0.786 0.518 2.321 1.214t2.304 1.179q0.375 0.232 0.696 0.446t1.080 0.83 1.357 1.259 1.339 1.696 1.232 2.179 0.839 2.652 0.348 3.17z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-joomla\" viewBox=\"0 0 32 32\">\r\n            <title>joomla</title>\r\n            <path d=\"M19.107 19.161l-2.857 2.857-2.696 2.714-0.536 0.536q-1.161 1.143-2.705 1.554t-3.063 0.036q-0.286 1.25-1.286 2.054t-2.304 0.804q-1.518 0-2.589-1.080t-1.071-2.598q0-1.286 0.795-2.286t2.027-1.286q-0.393-1.536 0.018-3.089t1.571-2.714l0.214-0.214 2.696 2.714-0.196 0.196q-0.661 0.661-0.661 1.589t0.661 1.607q0.661 0.661 1.589 0.661t1.589-0.661l0.536-0.536 2.696-2.714 2.875-2.857zM13.018 6.982l0.214 0.214-2.714 2.714-0.214-0.214q-0.661-0.661-1.589-0.661t-1.589 0.661-0.661 1.598 0.661 1.598l6.089 6.089-2.696 2.714-2.875-2.857-2.696-2.714-0.536-0.536q-1.214-1.196-1.607-2.848t0.089-3.205q-1.25-0.268-2.054-1.268t-0.804-2.304q0-1.518 1.071-2.598t2.589-1.080q1.357 0 2.384 0.875t1.241 2.196q1.5-0.357 3.027 0.063t2.67 1.563zM27.429 26.036q0 1.518-1.071 2.598t-2.589 1.080q-1.321 0-2.339-0.839t-1.268-2.107q-1.536 0.5-3.205 0.107t-2.884-1.607l-0.196-0.214 2.696-2.714 0.214 0.214q0.661 0.661 1.589 0.661t1.589-0.661 0.661-1.589-0.661-1.589l-6.107-6.107 2.714-2.714 5.571 5.571 0.518 0.536q1.143 1.143 1.563 2.688t0.045 3.063q1.357 0.196 2.259 1.223t0.902 2.402zM27.393 5.964q0 1.375-0.911 2.411t-2.268 1.232q0.464 1.518 0.054 3.152t-1.607 2.83l-0.214 0.214-2.696-2.714 0.214-0.214q0.661-0.661 0.661-1.589t-0.661-1.589-1.589-0.661-1.589 0.661l-6.107 6.107-2.714-2.714 2.875-2.857 2.714-2.714 0.518-0.536q1.196-1.196 2.839-1.598t3.179 0.063q0.196-1.339 1.223-2.25t2.42-0.911q1.518 0 2.589 1.080t1.071 2.598z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-language\" viewBox=\"0 0 32 32\">\r\n            <title>language</title>\r\n            <path d=\"M11.679 19.25q-0.018 0.054-0.223-0.009t-0.563-0.205l-0.357-0.161q-0.786-0.357-1.554-0.875-0.125-0.089-0.732-0.563t-0.679-0.509q-1.196 1.839-2.393 3.232-1.446 1.696-1.875 1.964-0.071 0.036-0.348 0.071t-0.33 0q0.107-0.071 1.464-1.643 0.375-0.429 1.527-2.054t1.402-2.107q0.304-0.536 0.911-1.759t0.643-1.384q-0.143-0.018-1.964 0.589-0.143 0.036-0.491 0.134t-0.616 0.17-0.304 0.089q-0.036 0.036-0.036 0.188t-0.018 0.17q-0.089 0.179-0.554 0.268-0.411 0.125-0.839 0-0.321-0.071-0.5-0.375-0.071-0.107-0.089-0.411 0.107-0.036 0.438-0.089t0.527-0.107q1.036-0.286 1.875-0.571 1.786-0.625 1.821-0.625 0.179-0.036 0.768-0.348t0.786-0.384q0.161-0.054 0.384-0.143t0.259-0.098 0.107 0.009q0.036 0.214-0.018 0.589 0 0.036-0.223 0.482t-0.473 0.955-0.304 0.598q-0.446 0.893-1.375 2.339l1.143 0.5q0.214 0.107 1.33 0.571t1.205 0.5q0.071 0.018 0.188 0.455t0.080 0.545zM8.018 10.571q0.054 0.268-0.071 0.5-0.214 0.411-0.893 0.679-0.536 0.214-1.071 0.214-0.464-0.054-0.875-0.464-0.25-0.268-0.321-0.732l0.018-0.054q0.054 0.054 0.348 0.089t0.473 0 1.036-0.286q0.643-0.214 0.982-0.25 0.304 0 0.375 0.304zM20.482 12.875l1.125 4.054-2.482-0.75zM0.696 27.161l12.393-4.143v-18.429l-12.393 4.161v18.411zM22.857 21.5l1.821 0.554-3.232-11.732-1.786-0.554-3.857 9.571 1.821 0.554 0.804-1.964 3.768 1.161zM13.875 4.321l10.232 3.286v-6.786zM19.429 27.946l2.821 0.232-0.964 2.857-0.714-1.179q-2.321 1.482-4.929 1.929-1.036 0.214-1.625 0.214h-1.5q-1.411 0-3.563-0.696t-3.277-1.518q-0.143-0.125-0.143-0.286 0-0.143 0.089-0.241t0.232-0.098q0.071 0 0.321 0.134t0.545 0.295 0.366 0.196q1.304 0.661 2.848 1.098t2.813 0.438q1.696 0 2.982-0.259t2.804-0.902q0.268-0.125 0.545-0.277t0.607-0.339 0.509-0.295zM27.429 8.679v19.268l-13.821-4.393q-0.25 0.107-6.696 2.277t-6.571 2.17q-0.232 0-0.321-0.232 0-0.018-0.018-0.054v-19.25q0.054-0.161 0.071-0.179 0.089-0.107 0.357-0.196 1.893-0.625 2.661-0.893v-6.857l9.964 3.536q0.036 0 2.866-0.982t5.643-1.938 2.884-0.955q0.357 0 0.357 0.375v7.464z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-fax\" viewBox=\"0 0 32 32\">\r\n            <title>fax</title>\r\n            <path d=\"M5.143 6.857q1.179 0 2.018 0.839t0.839 2.018v19.429q0 1.179-0.839 2.018t-2.018 0.839h-2.286q-1.179 0-2.018-0.839t-0.839-2.018v-19.429q0-1.179 0.839-2.018t2.018-0.839h2.286zM29.714 9.768q1.036 0.607 1.661 1.661t0.625 2.286v13.714q0 1.893-1.339 3.232t-3.232 1.339h-15.429q-1.179 0-2.018-0.839t-0.839-2.018v-27.429q0-0.714 0.5-1.214t1.214-0.5h12q0.714 0 1.571 0.357t1.357 0.857l2.714 2.714q0.5 0.5 0.857 1.357t0.357 1.571v2.911zM16.571 27.429v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM16.571 22.857v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM16.571 18.286v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM21.143 27.429v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM21.143 22.857v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM21.143 18.286v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM25.714 27.429v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM25.714 22.857v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM25.714 18.286v-2.286q0-0.25-0.161-0.411t-0.411-0.161h-2.286q-0.25 0-0.411 0.161t-0.161 0.411v2.286q0 0.25 0.161 0.411t0.411 0.161h2.286q0.25 0 0.411-0.161t0.161-0.411zM27.429 11.429v-4.571h-2.857q-0.714 0-1.214-0.5t-0.5-1.214v-2.857h-11.429v9.143h16z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-building\" viewBox=\"0 0 32 32\">\r\n            <title>building</title>\r\n            <path d=\"M24 0q0.464 0 0.804 0.339t0.339 0.804v29.714q0 0.464-0.339 0.804t-0.804 0.339h-22.857q-0.464 0-0.804-0.339t-0.339-0.804v-29.714q0-0.464 0.339-0.804t0.804-0.339h22.857zM9.143 5.143v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411zM9.143 9.714v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411zM9.143 14.286v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411zM9.143 18.857v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411zM6.857 24.571v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM6.857 20v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM6.857 15.429v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM6.857 10.857v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM6.857 6.286v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM16 29.143v-3.429q0-0.25-0.161-0.411t-0.411-0.161h-5.714q-0.25 0-0.411 0.161t-0.161 0.411v3.429q0 0.25 0.161 0.411t0.411 0.161h5.714q0.25 0 0.411-0.161t0.161-0.411zM16 20v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM16 15.429v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM16 10.857v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM16 6.286v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM20.571 24.571v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM20.571 20v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM20.571 15.429v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM20.571 10.857v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM20.571 6.286v-1.143q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v1.143q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-child\" viewBox=\"0 0 23 32\">\r\n            <title>child</title>\r\n            <path d=\"M21.214 9.786l-5.214 5.214v14.714q0 0.821-0.589 1.411t-1.411 0.589-1.411-0.589-0.589-1.411v-6.857h-1.143v6.857q0 0.821-0.589 1.411t-1.411 0.589-1.411-0.589-0.589-1.411v-14.714l-5.214-5.214q-0.5-0.5-0.5-1.214t0.5-1.214 1.214-0.5 1.214 0.5l4.071 4.071h6.571l4.071-4.071q0.5-0.5 1.214-0.5t1.214 0.5 0.5 1.214-0.5 1.214zM15.429 6.857q0 1.661-1.17 2.83t-2.83 1.17-2.83-1.17-1.17-2.83 1.17-2.83 2.83-1.17 2.83 1.17 1.17 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paw\" viewBox=\"0 0 30 32\">\r\n            <title>paw</title>\r\n            <path d=\"M13.929 8.429q0 1.071-0.339 2.027t-1.125 1.652-1.875 0.696q-1.357 0-2.464-1.027t-1.643-2.42-0.536-2.696q0-1.071 0.339-2.027t1.125-1.652 1.875-0.696q1.375 0 2.473 1.027t1.634 2.411 0.536 2.705zM7.821 17.054q0 1.429-0.75 2.482t-2.125 1.054q-1.357 0-2.527-0.991t-1.795-2.384-0.625-2.714q0-1.429 0.75-2.491t2.125-1.063q1.357 0 2.527 0.991t1.795 2.393 0.625 2.723zM14.857 16.571q2.107 0 4.554 1.741t4.089 4.232 1.643 4.545q0 0.821-0.304 1.366t-0.866 0.804-1.152 0.357-1.357 0.098q-1.214 0-3.348-0.804t-3.259-0.804q-1.179 0-3.438 0.795t-3.58 0.795q-3.268 0-3.268-2.607 0-1.536 1-3.42t2.491-3.438 3.348-2.607 3.446-1.054zM19.125 12.804q-1.089 0-1.875-0.696t-1.125-1.652-0.339-2.027q0-1.321 0.536-2.705t1.634-2.411 2.473-1.027q1.089 0 1.875 0.696t1.125 1.652 0.339 2.027q0 1.304-0.536 2.696t-1.643 2.42-2.464 1.027zM26.839 10.946q1.375 0 2.125 1.063t0.75 2.491q0 1.321-0.625 2.714t-1.795 2.384-2.527 0.991q-1.375 0-2.125-1.054t-0.75-2.482q0-1.321 0.625-2.723t1.795-2.393 2.527-0.991z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-spoon\" viewBox=\"0 0 14 32\">\r\n            <title>spoon</title>\r\n            <path d=\"M12.571 9.429q0 2.589-1.018 4.348t-2.714 2.42l0.804 14.661q0.036 0.464-0.286 0.804t-0.786 0.339h-3.429q-0.464 0-0.786-0.339t-0.286-0.804l0.804-14.661q-1.696-0.661-2.714-2.42t-1.018-4.348q0-2.286 0.759-4.455t2.098-3.571 2.857-1.402 2.857 1.402 2.098 3.571 0.759 4.455z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cube\" viewBox=\"0 0 32 32\">\r\n            <title>cube</title>\r\n            <path d=\"M16 29.089l11.429-6.232v-11.357l-11.429 4.161v13.429zM14.857 13.643l12.464-4.536-12.464-4.536-12.464 4.536zM29.714 9.143v13.714q0 0.625-0.321 1.161t-0.875 0.839l-12.571 6.857q-0.5 0.286-1.089 0.286t-1.089-0.286l-12.571-6.857q-0.554-0.304-0.875-0.839t-0.321-1.161v-13.714q0-0.714 0.411-1.304t1.089-0.839l12.571-4.571q0.393-0.143 0.786-0.143t0.786 0.143l12.571 4.571q0.679 0.25 1.089 0.839t0.411 1.304z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cubes\" viewBox=\"0 0 41 32\">\r\n            <title>cubes</title>\r\n            <path d=\"M11.429 29.143l6.857-3.429v-5.607l-6.857 2.929v6.107zM10.286 21.036l7.214-3.089-7.214-3.089-7.214 3.089zM29.714 29.143l6.857-3.429v-5.607l-6.857 2.929v6.107zM28.571 21.036l7.214-3.089-7.214-3.089-7.214 3.089zM20.571 15.804l6.857-2.946v-4.75l-6.857 2.929v4.768zM19.429 9.036l7.875-3.375-7.875-3.375-7.875 3.375zM38.857 18.286v7.429q0 0.643-0.339 1.196t-0.929 0.839l-8 4q-0.446 0.25-1.018 0.25t-1.018-0.25l-8-4q-0.089-0.036-0.125-0.071-0.036 0.036-0.125 0.071l-8 4q-0.446 0.25-1.018 0.25t-1.018-0.25l-8-4q-0.589-0.286-0.929-0.839t-0.339-1.196v-7.429q0-0.679 0.384-1.25t1.009-0.857l7.75-3.321v-7.143q0-0.679 0.384-1.25t1.009-0.857l8-3.429q0.411-0.179 0.893-0.179t0.893 0.179l8 3.429q0.625 0.286 1.009 0.857t0.384 1.25v7.143l7.75 3.321q0.643 0.286 1.018 0.857t0.375 1.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-behance\" viewBox=\"0 0 37 32\">\r\n            <title>behance</title>\r\n            <path d=\"M33 6.054h-9.125v2.214h9.125v-2.214zM28.5 13.661q-1.607 0-2.607 0.938t-1.107 2.545h7.286q-0.321-3.482-3.571-3.482zM28.786 24.107q1.125 0 2.179-0.571t1.357-1.554h3.946q-1.786 5.482-7.625 5.482-3.821 0-6.080-2.357t-2.259-6.196q0-3.714 2.33-6.17t6.009-2.455q2.464 0 4.295 1.214t2.732 3.196 0.902 4.429q0 0.304-0.036 0.839h-11.75q0 1.982 1.027 3.063t2.973 1.080zM4.946 23.214h5.286q3.661 0 3.661-2.982 0-3.214-3.554-3.214h-5.393v6.196zM4.946 13.625h5.018q1.393 0 2.205-0.652t0.813-2.027q0-2.571-3.393-2.571h-4.643v5.25zM0 4.536h10.607q1.554 0 2.768 0.25t2.259 0.848 1.607 1.723 0.563 2.75q0 3.232-3.071 4.696 2.036 0.571 3.071 2.054t1.036 3.643q0 1.339-0.438 2.438t-1.179 1.848-1.759 1.268-2.161 0.75-2.393 0.232h-10.911v-22.5z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-behance-square\" viewBox=\"0 0 32 32\">\r\n            <title>behance-square</title>\r\n            <path d=\"M22.286 2.286q2.125 0 3.634 1.509t1.509 3.634v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143zM8.911 8.839h-6.625v14.054h6.821q2.089 0 3.518-1.027t1.429-3.045q0-2.821-2.554-3.571 1.911-0.929 1.911-2.929 0-1.018-0.348-1.723t-1.009-1.080-1.411-0.527-1.732-0.152zM8.518 14.518h-3.143v-3.286h2.911q2.125 0 2.125 1.607 0 1.679-1.893 1.679zM8.679 20.5h-3.304v-3.875h3.375q2.214 0 2.214 2.018 0 1.857-2.286 1.857zM20.286 21.071q-1.214 0-1.857-0.679t-0.643-1.911h7.339q0.018-0.179 0.018-0.536 0-2.357-1.33-3.938t-3.634-1.58q-2.286 0-3.75 1.536t-1.464 3.857q0 2.411 1.411 3.875t3.804 1.464q3.661 0 4.768-3.411h-2.464q-0.196 0.607-0.848 0.964t-1.348 0.357zM20.107 14.536q2.018 0 2.214 2.179h-4.536q0.071-1 0.696-1.589t1.625-0.589zM17.214 9.786h5.696v1.375h-5.696v-1.375z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-steam\" viewBox=\"0 0 32 32\">\r\n            <title>steam</title>\r\n            <path d=\"M28.25 10.393q0 1.804-1.277 3.080t-3.080 1.277-3.080-1.277-1.277-3.080 1.277-3.080 3.080-1.277 3.080 1.277 1.277 3.080zM14.5 23.643q0-1.857-1.304-3.161t-3.161-1.304q-0.482 0-0.964 0.107l1.857 0.75q1.375 0.554 1.955 1.902t0.027 2.705q-0.554 1.375-1.911 1.946t-2.714 0.018q-0.375-0.143-1.107-0.438t-1.089-0.438q0.571 1.071 1.625 1.723t2.321 0.652q1.857 0 3.161-1.304t1.304-3.161zM29.321 10.411q0-2.25-1.598-3.848t-3.848-1.598q-2.268 0-3.866 1.598t-1.598 3.848q0 2.268 1.598 3.857t3.866 1.589q2.25 0 3.848-1.589t1.598-3.857zM32 10.411q0 3.375-2.384 5.75t-5.741 2.375l-7.804 5.696q-0.214 2.304-1.946 3.893t-4.089 1.589q-2.161 0-3.821-1.357t-2.107-3.429l-4.107-1.643v-7.661l6.946 2.804q1.411-0.857 3.089-0.857 0.232 0 0.625 0.036l5.071-7.268q0.036-3.339 2.42-5.696t5.723-2.357q3.357 0 5.741 2.384t2.384 5.741z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-steam-square\" viewBox=\"0 0 32 32\">\r\n            <title>steam-square</title>\r\n            <path d=\"M22.179 11.554q0-1.429-1.018-2.438t-2.446-1.009-2.438 1.018-1.009 2.429q0 1.429 1.009 2.438t2.438 1.009 2.446-1.009 1.018-2.438zM11.286 22.054q0 1.482-1.036 2.509t-2.5 1.027q-1 0-1.839-0.518t-1.286-1.375q0.929 0.357 1.75 0.714 1.071 0.429 2.143-0.027t1.518-1.545q0.429-1.071-0.027-2.143t-1.545-1.5l-1.464-0.589q0.393-0.089 0.75-0.089 1.464 0 2.5 1.027t1.036 2.509zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-2.732l3.071 1.232q0.357 1.643 1.67 2.714t3.009 1.071q1.857 0 3.232-1.25t1.554-3.089l6.161-4.5q2.679 0 4.563-1.884t1.884-4.545q0-2.679-1.884-4.563t-4.563-1.884q-2.643 0-4.518 1.866t-1.911 4.509l-4.018 5.75q-0.161-0.018-0.5-0.018-1.339 0-2.446 0.661l-5.304-2.125v-8.357q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634zM23.018 11.589q0 1.786-1.268 3.045t-3.054 1.259-3.045-1.259-1.259-3.045 1.259-3.054 3.045-1.268q1.804 0 3.063 1.259t1.259 3.063z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-recycle\" viewBox=\"0 0 32 32\">\r\n            <title>recycle</title>\r\n            <path d=\"M14.929 20.875l-0.268 6.571-0.036 0.393-7.5-0.518q-0.643-0.054-1.196-0.563t-0.839-1.17q-0.196-0.482-0.259-0.982t0.071-1.161 0.214-0.982 0.384-1.143 0.339-0.946q1.393 0.214 9.089 0.5zM8.018 10.411l3.214 6.768-2.625-1.643q-1.125 1.286-1.991 2.58t-1.295 2.232-0.705 1.688-0.33 1.125l-0.071 0.375-3.393-6.375q-0.304-0.464-0.321-1t0.107-0.839l0.143-0.321q0.625-1.125 2.036-3.357l-2.5-1.536zM30 19.643l-3.357 6.411q-0.214 0.518-0.652 0.83t-0.777 0.366l-0.321 0.071q-1.268 0.125-3.911 0.214l0.143 2.929-4.107-6.554 3.768-6.464 0.125 3.089q3.036 0.286 5.054 0.089t3.036-0.589zM15.982 3.143q-0.839 1.125-4.732 7.768l-5.661-3.339-0.339-0.214 4.018-6.357q0.357-0.554 1.071-0.804t1.429-0.179q0.429 0.036 0.866 0.214t0.75 0.375 0.741 0.589 0.643 0.616 0.643 0.705 0.571 0.625zM27.679 8.625l3.786 6.482q0.321 0.661 0.223 1.357t-0.491 1.321q-0.232 0.357-0.589 0.661t-0.679 0.5-0.866 0.393-0.839 0.286-0.92 0.25-0.821 0.214q-0.607-1.286-4.732-7.786l5.589-3.482zM25.125 4.589l2.536-1.482-3.929 6.661-7.482-0.357 2.696-1.536q-0.607-1.589-1.339-2.964t-1.348-2.205-1.152-1.429-0.839-0.83l-0.304-0.232 7.232 0.018q0.554-0.054 1.036 0.188t0.696 0.509l0.196 0.268q0.696 1.089 2 3.393z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-car\" viewBox=\"0 0 37 32\">\r\n            <title>car</title>\r\n            <path d=\"M8.571 19.429q0-1.179-0.839-2.018t-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839 2.018-0.839 0.839-2.018zM9.214 13.714h18.143l-1.589-6.375q-0.036-0.143-0.25-0.313t-0.375-0.17h-13.714q-0.161 0-0.375 0.17t-0.25 0.313zM33.714 19.429q0-1.179-0.839-2.018t-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839 2.018-0.839 0.839-2.018zM36.571 17.714v6.857q0 0.25-0.161 0.411t-0.411 0.161h-1.714v2.286q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-2.286h-18.286v2.286q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-2.286h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-6.857q0-1.661 1.17-2.83t2.83-1.17h0.5l1.875-7.482q0.411-1.679 1.857-2.813t3.196-1.134h13.714q1.75 0 3.196 1.134t1.857 2.813l1.875 7.482h0.5q1.661 0 2.83 1.17t1.17 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-untitled402\" viewBox=\"0 0 37 32\">\r\n            <title>untitled402</title>\r\n            <path d=\"M32.571 16q1.661 0 2.83 1.17t1.17 2.83v6.857q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.143q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-1.143h-18.286v1.143q0 1.429-1 2.429t-2.429 1-2.429-1-1-2.429v-1.143h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-6.857q0-1.661 1.17-2.83t2.83-1.17h0.5l1.875-7.482q0.411-1.679 1.857-2.813t3.196-1.134h2.286v-4q0-0.25 0.161-0.411t0.411-0.161h8q0.25 0 0.411 0.161t0.161 0.411v4h2.286q1.75 0 3.196 1.134t1.857 2.813l1.875 7.482h0.5zM5.714 24.571q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839zM9.214 16h18.143l-1.589-6.375q-0.036-0.143-0.25-0.313t-0.375-0.17h-13.714q-0.161 0-0.375 0.17t-0.25 0.313zM30.857 24.571q1.179 0 2.018-0.839t0.839-2.018-0.839-2.018-2.018-0.839-2.018 0.839-0.839 2.018 0.839 2.018 2.018 0.839z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tree\" viewBox=\"0 0 32 32\">\r\n            <title>tree</title>\r\n            <path d=\"M26.857 26.286q0 0.464-0.339 0.804t-0.804 0.339h-8.25q0.018 0.304 0.107 1.563t0.089 1.938q0 0.446-0.321 0.759t-0.768 0.313h-5.714q-0.446 0-0.768-0.313t-0.321-0.759q0-0.679 0.089-1.938t0.107-1.563h-8.25q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l7.179-7.196h-4.089q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l7.179-7.196h-3.518q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804l6.857-6.857q0.339-0.339 0.804-0.339t0.804 0.339l6.857 6.857q0.339 0.339 0.339 0.804t-0.339 0.804-0.804 0.339h-3.518l7.179 7.196q0.339 0.339 0.339 0.804t-0.339 0.804-0.804 0.339h-4.089l7.179 7.196q0.339 0.339 0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-spotify\" viewBox=\"0 0 32 32\">\r\n            <title>spotify</title>\r\n            <path d=\"M20.125 21.607q0-0.571-0.536-0.911-3.446-2.054-7.982-2.054-2.375 0-5.125 0.607-0.75 0.161-0.75 0.929 0 0.357 0.241 0.616t0.634 0.259q0.089 0 0.661-0.143 2.357-0.482 4.339-0.482 4.036 0 7.089 1.839 0.339 0.196 0.589 0.196 0.339 0 0.589-0.241t0.25-0.616zM21.839 17.768q0-0.714-0.625-1.089-4.232-2.518-9.786-2.518-2.732 0-5.411 0.75-0.857 0.232-0.857 1.143 0 0.446 0.313 0.759t0.759 0.313q0.125 0 0.661-0.143 2.179-0.589 4.482-0.589 4.982 0 8.714 2.214 0.429 0.232 0.679 0.232 0.446 0 0.759-0.313t0.313-0.759zM23.768 13.339q0-0.839-0.714-1.25-2.25-1.304-5.232-1.973t-6.125-0.67q-3.643 0-6.5 0.839-0.411 0.125-0.688 0.455t-0.277 0.866q0 0.554 0.366 0.929t0.92 0.375q0.196 0 0.714-0.143 2.375-0.661 5.482-0.661 2.839 0 5.527 0.607t4.527 1.696q0.375 0.214 0.714 0.214 0.518 0 0.902-0.366t0.384-0.92zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-deviantart\" viewBox=\"0 0 18 32\">\r\n            <title>deviantart</title>\r\n            <path d=\"M18.286 5.411l-5.411 10.393 0.429 0.554h4.982v7.411h-9.054l-0.786 0.536-2.536 4.875-0.536 0.536h-5.375v-5.411l5.411-10.411-0.429-0.536h-4.982v-7.411h9.054l0.786-0.536 2.536-4.875 0.536-0.536h5.375v5.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-soundcloud\" viewBox=\"0 0 41 32\">\r\n            <title>soundcloud</title>\r\n            <path d=\"M14 24.5l0.286-4.304-0.286-9.339q-0.018-0.179-0.134-0.304t-0.295-0.125q-0.161 0-0.286 0.125t-0.125 0.304l-0.25 9.339 0.25 4.304q0.018 0.179 0.134 0.295t0.277 0.116q0.393 0 0.429-0.411zM19.286 23.982l0.196-3.768-0.214-10.464q0-0.286-0.232-0.429-0.143-0.089-0.286-0.089t-0.286 0.089q-0.232 0.143-0.232 0.429l-0.018 0.107-0.179 10.339q0 0.018 0.196 4.214v0.018q0 0.179 0.107 0.304 0.161 0.196 0.411 0.196 0.196 0 0.357-0.161 0.161-0.125 0.161-0.357zM0.625 17.911l0.357 2.286-0.357 2.25q-0.036 0.161-0.161 0.161t-0.161-0.161l-0.304-2.25 0.304-2.286q0.036-0.161 0.161-0.161t0.161 0.161zM2.161 16.5l0.464 3.696-0.464 3.625q-0.036 0.161-0.179 0.161-0.161 0-0.161-0.179l-0.411-3.607 0.411-3.696q0-0.161 0.161-0.161 0.143 0 0.179 0.161zM3.804 15.821l0.446 4.375-0.446 4.232q0 0.196-0.196 0.196-0.179 0-0.214-0.196l-0.375-4.232 0.375-4.375q0.036-0.214 0.214-0.214 0.196 0 0.196 0.214zM5.482 15.696l0.411 4.5-0.411 4.357q-0.036 0.232-0.25 0.232-0.232 0-0.232-0.232l-0.375-4.357 0.375-4.5q0-0.232 0.232-0.232 0.214 0 0.25 0.232zM7.161 16.018l0.375 4.179-0.375 4.393q-0.036 0.286-0.286 0.286-0.107 0-0.188-0.080t-0.080-0.205l-0.357-4.393 0.357-4.179q0-0.107 0.080-0.188t0.188-0.080q0.25 0 0.286 0.268zM8.839 13.411l0.375 6.786-0.375 4.393q0 0.125-0.089 0.223t-0.214 0.098q-0.286 0-0.321-0.321l-0.321-4.393 0.321-6.786q0.036-0.321 0.321-0.321 0.125 0 0.214 0.098t0.089 0.223zM10.518 11.875l0.339 8.357-0.339 4.357q0 0.143-0.098 0.241t-0.241 0.098q-0.321 0-0.357-0.339l-0.286-4.357 0.286-8.357q0.036-0.339 0.357-0.339 0.143 0 0.241 0.098t0.098 0.241zM12.268 11.161l0.321 9.036-0.321 4.321q-0.036 0.375-0.393 0.375-0.339 0-0.375-0.375l-0.286-4.321 0.286-9.036q0-0.161 0.116-0.277t0.259-0.116q0.161 0 0.268 0.116t0.125 0.277zM19.268 24.411v0 0zM15.732 11.089l0.268 9.107-0.268 4.268q0 0.179-0.134 0.313t-0.313 0.134-0.304-0.125-0.143-0.321l-0.25-4.268 0.25-9.107q0-0.196 0.134-0.321t0.313-0.125 0.313 0.125 0.134 0.321zM17.5 11.429l0.25 8.786-0.25 4.214q0 0.196-0.143 0.339t-0.339 0.143-0.339-0.143-0.161-0.339l-0.214-4.214 0.214-8.786q0.018-0.214 0.161-0.357t0.339-0.143 0.33 0.143 0.152 0.357zM21.286 20.214l-0.25 4.125q0 0.232-0.161 0.393t-0.393 0.161-0.393-0.161-0.179-0.393l-0.107-2.036-0.107-2.089 0.214-11.357v-0.054q0.036-0.268 0.214-0.429 0.161-0.125 0.357-0.125 0.143 0 0.268 0.089 0.25 0.143 0.286 0.464zM41.143 19.875q0 2.089-1.482 3.563t-3.571 1.473h-14.036q-0.232-0.036-0.393-0.196t-0.161-0.393v-16.054q0-0.411 0.5-0.589 1.518-0.607 3.232-0.607 3.482 0 6.036 2.348t2.857 5.777q0.946-0.393 1.964-0.393 2.089 0 3.571 1.482t1.482 3.589z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-database\" viewBox=\"0 0 32 32\">\r\n            <title>database</title>\r\n            <path d=\"M13.714 13.714q4.232 0 7.911-0.768t5.804-2.268v3.036q0 1.232-1.839 2.286t-5 1.67-6.875 0.616-6.875-0.616-5-1.67-1.839-2.286v-3.036q2.125 1.5 5.804 2.268t7.911 0.768zM13.714 27.429q4.232 0 7.911-0.768t5.804-2.268v3.036q0 1.232-1.839 2.286t-5 1.67-6.875 0.616-6.875-0.616-5-1.67-1.839-2.286v-3.036q2.125 1.5 5.804 2.268t7.911 0.768zM13.714 20.571q4.232 0 7.911-0.768t5.804-2.268v3.036q0 1.232-1.839 2.286t-5 1.67-6.875 0.616-6.875-0.616-5-1.67-1.839-2.286v-3.036q2.125 1.5 5.804 2.268t7.911 0.768zM13.714 0q3.714 0 6.875 0.616t5 1.67 1.839 2.286v2.286q0 1.232-1.839 2.286t-5 1.67-6.875 0.616-6.875-0.616-5-1.67-1.839-2.286v-2.286q0-1.232 1.839-2.286t5-1.67 6.875-0.616z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-pdf-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-pdf-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM15.964 19.125q0.589 0.464 1.5 1 1.054-0.125 2.089-0.125 2.625 0 3.161 0.875 0.286 0.393 0.036 0.929 0 0.018-0.018 0.036l-0.036 0.036v0.018q-0.107 0.679-1.268 0.679-0.857 0-2.054-0.357t-2.321-0.946q-3.946 0.429-7 1.482-2.732 4.679-4.321 4.679-0.268 0-0.5-0.125l-0.429-0.214q-0.018-0.018-0.107-0.089-0.179-0.179-0.107-0.643 0.161-0.714 1-1.634t2.357-1.723q0.25-0.161 0.411 0.107 0.036 0.036 0.036 0.071 0.929-1.518 1.911-3.518 1.214-2.429 1.857-4.679-0.429-1.464-0.545-2.848t0.116-2.277q0.196-0.714 0.75-0.714h0.393q0.411 0 0.625 0.268 0.321 0.375 0.161 1.214-0.036 0.107-0.071 0.143 0.018 0.054 0.018 0.143v0.536q-0.036 2.196-0.25 3.429 0.982 2.929 2.607 4.25zM5.679 26.464q0.929-0.429 2.446-2.821-0.911 0.714-1.563 1.5t-0.884 1.321zM12.786 10.036q-0.268 0.75-0.036 2.357 0.018-0.125 0.125-0.786 0-0.054 0.125-0.768 0.018-0.071 0.071-0.143-0.018-0.018-0.018-0.036t-0.009-0.027-0.009-0.027q-0.018-0.393-0.232-0.643 0 0.018-0.018 0.036v0.036zM10.571 21.839q2.411-0.964 5.071-1.446-0.036-0.018-0.232-0.17t-0.286-0.241q-1.357-1.196-2.268-3.143-0.482 1.536-1.482 3.518-0.536 1-0.804 1.482zM22.107 21.554q-0.429-0.429-2.5-0.429 1.357 0.5 2.214 0.5 0.25 0 0.321-0.018 0-0.018-0.036-0.054z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-word-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-word-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM4.161 13.714v1.911h1.25l2.929 11.804h2.839l2.286-8.661q0.125-0.357 0.179-0.821 0.036-0.286 0.036-0.429h0.071l0.054 0.429q0.018 0.054 0.063 0.357t0.098 0.464l2.286 8.661h2.839l2.929-11.804h1.25v-1.911h-5.357v1.911h1.607l-1.768 7.821q-0.089 0.357-0.125 0.821l-0.036 0.375h-0.071l-0.054-0.375q-0.018-0.089-0.071-0.375t-0.089-0.446l-2.571-9.732h-2.036l-2.571 9.732q-0.036 0.161-0.080 0.438t-0.063 0.384l-0.071 0.375h-0.071l-0.036-0.375q-0.036-0.464-0.125-0.821l-1.768-7.821h1.607v-1.911h-5.357z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-excel-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-excel-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM7.661 25.536v1.893h5.018v-1.893h-1.339l1.839-2.875q0.089-0.125 0.179-0.295t0.134-0.241 0.063-0.071h0.036q0.018 0.071 0.089 0.179 0.036 0.071 0.080 0.134t0.107 0.143 0.116 0.152l1.911 2.875h-1.357v1.893h5.196v-1.893h-1.214l-3.429-4.875 3.482-5.036h1.196v-1.911h-4.982v1.911h1.321l-1.839 2.839q-0.071 0.125-0.179 0.295t-0.161 0.241l-0.036 0.054h-0.036q-0.018-0.071-0.089-0.179-0.107-0.196-0.304-0.411l-1.893-2.839h1.357v-1.911h-5.179v1.911h1.214l3.375 4.857-3.464 5.054h-1.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-powerpoint-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-powerpoint-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM7.429 25.536v1.893h5.839v-1.893h-1.661v-2.982h2.446q1.357 0 2.107-0.268 1.196-0.411 1.902-1.554t0.705-2.607q0-1.446-0.661-2.518t-1.786-1.554q-0.857-0.339-2.321-0.339h-6.571v1.911h1.643v9.911h-1.643zM13.732 20.536h-2.125v-4.786h2.143q0.929 0 1.482 0.321 1 0.589 1 2.054 0 1.589-1.107 2.143-0.554 0.268-1.393 0.268z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-image-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-image-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM22.857 21.714v5.714h-18.286v-3.429l3.429-3.429 2.286 2.286 6.857-6.857zM8 18.286q-1.429 0-2.429-1t-1-2.429 1-2.429 2.429-1 2.429 1 1 2.429-1 2.429-2.429 1z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-zip-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-zip-o</title>\r\n            <path d=\"M11.429 6.857v-2.286h-2.286v2.286h2.286zM13.714 9.143v-2.286h-2.286v2.286h2.286zM11.429 11.429v-2.286h-2.286v2.286h2.286zM13.714 13.714v-2.286h-2.286v2.286h2.286zM26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-2.286v2.286h-2.286v-2.286h-9.143v27.429h22.857zM13.946 16.839l1.911 6.232q0.143 0.482 0.143 0.929 0 1.482-1.295 2.455t-3.277 0.973-3.277-0.973-1.295-2.455q0-0.446 0.143-0.929 0.375-1.125 2.143-7.071v-2.286h2.286v2.286h1.411q0.393 0 0.696 0.232t0.411 0.607zM11.429 25.143q0.946 0 1.616-0.339t0.67-0.804-0.67-0.804-1.616-0.339-1.616 0.339-0.67 0.804 0.67 0.804 1.616 0.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-sound-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-sound-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM11.071 15.179q0.357 0.143 0.357 0.536v9.714q0 0.393-0.357 0.536-0.143 0.036-0.214 0.036-0.214 0-0.411-0.161l-2.964-2.982h-2.339q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h2.339l2.964-2.982q0.286-0.268 0.625-0.125zM18.518 27.482q0.554 0 0.893-0.429 2.304-2.839 2.304-6.482t-2.304-6.482q-0.286-0.375-0.768-0.429t-0.839 0.25q-0.375 0.304-0.42 0.777t0.259 0.848q1.786 2.196 1.786 5.036t-1.786 5.036q-0.304 0.375-0.259 0.848t0.42 0.759q0.321 0.268 0.714 0.268zM14.75 24.839q0.482 0 0.839-0.357 1.554-1.661 1.554-3.911t-1.554-3.911q-0.321-0.339-0.804-0.357t-0.821 0.304-0.357 0.795 0.321 0.83q0.929 1.018 0.929 2.339t-0.929 2.339q-0.339 0.357-0.321 0.83t0.357 0.795q0.357 0.304 0.786 0.304z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-video-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-video-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM13.714 13.714q0.929 0 1.607 0.679t0.679 1.607v6.857q0 0.929-0.679 1.607t-1.607 0.679h-6.857q-0.929 0-1.607-0.679t-0.679-1.607v-6.857q0-0.929 0.679-1.607t1.607-0.679h6.857zM22.5 13.75q0.357 0.143 0.357 0.536v10.286q0 0.393-0.357 0.536-0.143 0.036-0.214 0.036-0.25 0-0.411-0.161l-4.732-4.75v-1.607l4.732-4.75q0.161-0.161 0.411-0.161 0.071 0 0.214 0.036z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-file-code-o\" viewBox=\"0 0 32 32\">\r\n            <title>file-code-o</title>\r\n            <path d=\"M26.214 6.786q0.5 0.5 0.857 1.357t0.357 1.571v20.571q0 0.714-0.5 1.214t-1.214 0.5h-24q-0.714 0-1.214-0.5t-0.5-1.214v-28.571q0-0.714 0.5-1.214t1.214-0.5h16q0.714 0 1.571 0.357t1.357 0.857zM18.286 2.429v6.714h6.714q-0.179-0.518-0.393-0.732l-5.589-5.589q-0.214-0.214-0.732-0.393zM25.143 29.714v-18.286h-7.429q-0.714 0-1.214-0.5t-0.5-1.214v-7.429h-13.714v27.429h22.857zM8.571 13.714q0.143-0.196 0.375-0.223t0.429 0.116l0.911 0.679q0.196 0.143 0.223 0.375t-0.116 0.429l-3.25 4.339 3.25 4.339q0.143 0.196 0.116 0.429t-0.223 0.375l-0.911 0.679q-0.196 0.143-0.429 0.116t-0.375-0.223l-4.036-5.375q-0.25-0.339 0-0.679zM22.893 19.089q0.25 0.339 0 0.679l-4.036 5.375q-0.143 0.196-0.375 0.223t-0.429-0.116l-0.911-0.679q-0.196-0.143-0.223-0.375t0.116-0.429l3.25-4.339-3.25-4.339q-0.143-0.196-0.116-0.429t0.223-0.375l0.911-0.679q0.196-0.143 0.429-0.116t0.375 0.223zM11.821 27.321q-0.232-0.036-0.366-0.232t-0.098-0.429l2.464-14.839q0.036-0.232 0.232-0.366t0.429-0.098l1.125 0.179q0.232 0.036 0.366 0.232t0.098 0.429l-2.464 14.839q-0.036 0.232-0.232 0.366t-0.429 0.098z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-vine\" viewBox=\"0 0 32 32\">\r\n            <title>vine</title>\r\n            <path d=\"M26.732 14.768v3.536q-1.804 0.411-3.536 0.411-1.161 2.429-2.955 4.839t-3.241 3.848-2.286 1.902q-1.429 0.804-2.893-0.054-0.5-0.304-1.080-0.777t-1.518-1.491-1.83-2.295-1.92-3.286-1.884-4.357-1.634-5.616-1.259-6.964h5.054q0.464 3.893 1.25 7.116t1.866 5.661 2.17 4.205 2.5 3.482q3.018-3.018 5.125-7.25-2.536-1.286-3.982-3.929t-1.446-5.946q0-3.429 1.857-5.616t5.071-2.188q3.179 0 4.875 1.884t1.696 5.313q0 2.839-1.036 5.107-0.125 0.018-0.348 0.054t-0.821 0.036-1.125-0.107-1.107-0.455-0.902-0.92q0.554-1.839 0.554-3.286 0-1.554-0.518-2.357t-1.411-0.804q-0.946 0-1.518 0.884t-0.571 2.509q0 3.321 1.875 5.241t4.768 1.92q1.107 0 2.161-0.25z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-codepen\" viewBox=\"0 0 32 32\">\r\n            <title>codepen</title>\r\n            <path d=\"M3.857 20.875l10.768 7.179v-6.411l-5.964-3.982zM2.75 18.304l3.446-2.304-3.446-2.304v4.607zM17.375 28.054l10.768-7.179-4.804-3.214-5.964 3.982v6.411zM16 19.25l4.857-3.25-4.857-3.25-4.857 3.25zM8.661 14.339l5.964-3.982v-6.411l-10.768 7.179zM25.804 16l3.446 2.304v-4.607zM23.339 14.339l4.804-3.214-10.768-7.179v6.411zM32 11.125v9.75q0 0.732-0.607 1.143l-14.625 9.75q-0.375 0.232-0.768 0.232t-0.768-0.232l-14.625-9.75q-0.607-0.411-0.607-1.143v-9.75q0-0.732 0.607-1.143l14.625-9.75q0.375-0.232 0.768-0.232t0.768 0.232l14.625 9.75q0.607 0.411 0.607 1.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-jsfiddle\" viewBox=\"0 0 37 32\">\r\n            <title>jsfiddle</title>\r\n            <path d=\"M32.143 13.786q1.982 0.821 3.205 2.598t1.223 3.955q0 2.929-2.107 5.009t-5.089 2.080q-0.071 0-0.205-0.009t-0.188-0.009h-21.732q-3.036-0.179-5.143-2.241t-2.107-5.009q0-1.964 0.982-3.625t2.625-2.625q-0.214-0.696-0.214-1.464 0-2.054 1.464-3.5t3.554-1.446q1.696 0 3.071 1.036 1.339-2.75 3.973-4.429t5.83-1.679q2.964 0 5.464 1.438t3.955 3.902 1.455 5.375q0 0.107-0.009 0.321t-0.009 0.321zM8.357 18.536q0 2.179 1.5 3.446t3.714 1.268q2.446 0 4.286-1.768-0.286-0.357-0.848-1.009t-0.777-0.902q-1.196 1.161-2.571 1.161-0.982 0-1.67-0.598t-0.688-1.563q0-0.946 0.688-1.554t1.634-0.607q0.786 0 1.509 0.375t1.304 0.982 1.161 1.339 1.232 1.464 1.375 1.339 1.732 0.982 2.17 0.375q2.161 0 3.652-1.277t1.491-3.402q0-2.161-1.5-3.429t-3.696-1.268q-2.554 0-4.304 1.732 0.25 0.286 0.527 0.607t0.616 0.714 0.518 0.607q1.179-1.143 2.536-1.143 0.929 0 1.643 0.589t0.714 1.5q0 1.018-0.661 1.634t-1.679 0.616q-0.768 0-1.473-0.375t-1.286-0.982-1.17-1.339-1.241-1.464-1.384-1.339-1.723-0.982-2.116-0.375q-2.179 0-3.696 1.259t-1.518 3.384z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-life-ring\" viewBox=\"0 0 32 32\">\r\n            <title>life-ring</title>\r\n            <path d=\"M16 0q3.25 0 6.214 1.268t5.107 3.411 3.411 5.107 1.268 6.214-1.268 6.214-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214 1.268-6.214 3.411-5.107 5.107-3.411 6.214-1.268zM16 2.286q-3.393 0-6.446 1.607l3.464 3.464q1.464-0.5 2.982-0.5t2.982 0.5l3.464-3.464q-3.054-1.607-6.446-1.607zM3.893 22.446l3.464-3.464q-0.5-1.464-0.5-2.982t0.5-2.982l-3.464-3.464q-1.607 3.054-1.607 6.446t1.607 6.446zM16 29.714q3.393 0 6.446-1.607l-3.464-3.464q-1.464 0.5-2.982 0.5t-2.982-0.5l-3.464 3.464q3.054 1.607 6.446 1.607zM16 22.857q2.839 0 4.848-2.009t2.009-4.848-2.009-4.848-4.848-2.009-4.848 2.009-2.009 4.848 2.009 4.848 4.848 2.009zM24.643 18.982l3.464 3.464q1.607-3.054 1.607-6.446t-1.607-6.446l-3.464 3.464q0.5 1.464 0.5 2.982t-0.5 2.982z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-circle-o-notch\" viewBox=\"0 0 32 32\">\r\n            <title>circle-o-notch</title>\r\n            <path d=\"M32 16q0 3.25-1.268 6.214t-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214q0-3.964 1.804-7.402t4.938-5.661 6.973-2.777v4.643q-3.946 0.804-6.545 3.946t-2.598 7.25q0 2.321 0.911 4.438t2.438 3.643 3.643 2.438 4.438 0.911 4.438-0.911 3.643-2.438 2.438-3.643 0.911-4.438q0-4.107-2.598-7.25t-6.545-3.946v-4.643q3.839 0.554 6.973 2.777t4.938 5.661 1.804 7.402z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-rebel\" viewBox=\"0 0 32 32\">\r\n            <title>rebel</title>\r\n            <path d=\"M0.339 15.607q0.143-3.875 2.071-7.25t5.446-5.679h0.089q0 0.018-0.018 0.054-0.143 0.143-0.5 0.598t-0.929 1.366-1.071 1.973-0.795 2.42-0.25 2.688 0.696 2.813 1.938 2.75q0.893 0.893 1.821 1.241t1.616 0.205 1.241-0.42 0.839-0.58l0.286-0.286q0.696-0.911 0.946-2.080t0.116-2.188-0.375-1.911-0.473-1.429l-0.25-0.518q-0.179-0.446-0.545-0.884t-0.768-0.732-0.777-0.527-0.625-0.339l-0.232-0.107 1.857-2.054q0.696 0.304 1.393 0.929t1.054 1.089l0.339 0.482q0.018-0.857-0.33-1.848t-0.723-1.563l-0.357-0.554 2.875-3.268 2.857 3.232q-0.589 0.821-0.938 1.83t-0.402 1.616l-0.071 0.589q0.393-0.661 1.098-1.295t1.205-0.938l0.5-0.304 1.839 2.054q-0.786 0.25-1.518 0.893t-1.071 1.161l-0.339 0.518q-0.554 1-0.857 2.384t-0.125 3.036 1.018 2.795q0.589 0.804 1.384 1.080t1.518 0.098 1.357-0.473 1.027-0.598l0.375-0.286q1.071-0.946 1.723-2.054t0.866-2.17 0.179-2.17-0.321-2.107-0.661-1.92-0.813-1.661-0.804-1.286-0.616-0.848l-0.232-0.304q-0.25-0.232-0.125-0.232l0.179 0.054q0.714 0.518 1.116 0.821t1.107 0.893 1.143 1.036 1.045 1.161 0.991 1.375 0.813 1.571 0.679 1.839 0.42 2.089 0.188 2.429q0.054 4.625-1.929 8.304t-5.571 5.732-8.143 2.054q-3.304 0-6.268-1.321t-5.063-3.536-3.286-5.232-1.080-6.304z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-empire\" viewBox=\"0 0 32 32\">\r\n            <title>empire</title>\r\n            <path d=\"M15.607 29.25v1.179q-3.714-0.107-6.875-1.955t-5.054-4.92l1.036-0.607q0.518 0.875 1.304 1.768l1.161-1.018q2.643 3 6.571 3.786l-0.304 1.536q1.161 0.214 2.161 0.232zM4.929 19.786l-1.482 0.5q0.393 1.071 0.875 2l-1.018 0.589q-1.75-3.214-1.75-6.875t1.75-6.875l1.018 0.589q-0.536 1-0.875 2l1.464 0.5q-0.625 1.786-0.625 3.786 0 1.946 0.643 3.786zM27.286 22.946l1.036 0.607q-1.893 3.071-5.054 4.92t-6.875 1.955v-1.179q1-0.018 2.161-0.232l-0.304-1.536q3.929-0.786 6.571-3.786l1.161 1.018q0.786-0.893 1.304-1.768zM24.589 13.054l-4.161 1.429q0.25 0.75 0.25 1.518t-0.25 1.518l4.143 1.429q-0.554 1.643-1.75 3.018l-3.304-2.893q-1.018 1.196-2.625 1.518l0.857 4.304q-0.929 0.179-1.75 0.179t-1.75-0.179l0.857-4.304q-1.607-0.321-2.625-1.518l-3.304 2.893q-1.196-1.375-1.75-3.018l4.143-1.429q-0.25-0.75-0.25-1.518t0.25-1.518l-4.161-1.429q0.589-1.661 1.768-3.018l3.304 2.893q1.054-1.214 2.625-1.536l-0.857-4.286q0.786-0.179 1.75-0.179t1.75 0.179l-0.857 4.286q1.571 0.321 2.625 1.536l3.304-2.893q1.179 1.357 1.768 3.018zM15.607 1.571v1.179q-1.161 0.036-2.161 0.232l0.304 1.536q-3.929 0.75-6.571 3.768l-1.161-1q-0.679 0.75-1.304 1.75l-1.018-0.589q1.893-3.071 5.036-4.92t6.875-1.955zM30.446 16q0 3.661-1.75 6.875l-1.018-0.589q0.482-0.929 0.875-2l-1.482-0.5q0.643-1.839 0.643-3.786 0-2-0.625-3.786l1.464-0.5q-0.339-1-0.875-2l1.018-0.589q1.75 3.214 1.75 6.875zM28.304 8.446l-1.018 0.589q-0.625-1-1.304-1.75l-1.161 1q-2.643-3.018-6.571-3.768l0.304-1.536q-1-0.196-2.161-0.232v-1.179q3.732 0.107 6.875 1.955t5.036 4.92zM31.214 16q0-3.089-1.205-5.911t-3.241-4.857-4.857-3.241-5.911-1.205-5.911 1.205-4.857 3.241-3.241 4.857-1.205 5.911 1.205 5.911 3.241 4.857 4.857 3.241 5.911 1.205 5.911-1.205 4.857-3.241 3.241-4.857 1.205-5.911zM32 16q0 3.25-1.268 6.214t-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214 1.268-6.214 3.411-5.107 5.107-3.411 6.214-1.268 6.214 1.268 5.107 3.411 3.411 5.107 1.268 6.214z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-git-square\" viewBox=\"0 0 32 32\">\r\n            <title>git-square</title>\r\n            <path d=\"M10.393 23.357q0 1.179-1.661 1.179-1.911 0-1.911-1.125 0-1.143 1.75-1.143 1.821 0 1.821 1.089zM9.75 15.036q0 1.518-1.321 1.518-1.375 0-1.375-1.5 0-1.607 1.375-1.607 0.643 0 0.982 0.455t0.339 1.134zM12.714 13.696v-2.232q-1.393 0.518-2.411 0.518-0.893-0.518-1.964-0.518-1.536 0-2.589 1.018t-1.054 2.554q0 0.893 0.527 1.821t1.313 1.196v0.054q-0.679 0.304-0.679 1.518 0 0.946 0.732 1.375v0.054q-2.018 0.661-2.018 2.482 0 0.804 0.357 1.402t0.964 0.911 1.286 0.455 1.446 0.143q4 0 4-3.357 0-1.196-0.857-1.768t-2.25-0.821q-0.482-0.089-0.92-0.366t-0.438-0.705q0-0.786 0.875-0.929 1.375-0.268 2.179-1.25t0.804-2.393q0-0.429-0.179-0.929 0.661-0.161 0.875-0.232zM13.768 21.179h2.446q-0.036-0.482-0.036-1.464v-6.911q0-0.821 0.036-1.232h-2.446q0.054 0.411 0.054 1.268v7q0 0.893-0.054 1.339zM22.857 20.893v-2.161q-0.536 0.375-1.214 0.375-0.946 0-0.946-1.464v-4.018h0.929q0.161 0 0.473 0.018t0.473 0.018v-2.089h-1.875q0-1.464 0.054-1.821h-2.5q0.071 0.429 0.071 0.982v0.839h-1.071v2.089q0.643-0.054 0.661-0.054 0.054 0 0.196 0.009t0.214 0.009v0.036h-0.036v3.875q0 0.661 0.045 1.143t0.205 1.009 0.438 0.866 0.777 0.554 1.179 0.214q1.143 0 1.929-0.429zM16.5 8.286q0-0.643-0.429-1.134t-1.071-0.491-1.080 0.482-0.438 1.143q0 0.643 0.446 1.116t1.071 0.473 1.063-0.482 0.438-1.107zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-git\" viewBox=\"0 0 32 32\">\r\n            <title>git</title>\r\n            <path d=\"M10.625 27.036q0-1.786-2.946-1.786-2.821 0-2.821 1.857 0 1.804 3.071 1.804 2.696 0 2.696-1.875zM9.571 13.554q0-1.089-0.536-1.821t-1.589-0.732q-2.214 0-2.214 2.589 0 2.411 2.214 2.411 2.125 0 2.125-2.446zM14.375 7.768v3.607q-0.643 0.214-1.411 0.393 0.286 0.768 0.286 1.5 0 2.268-1.304 3.866t-3.518 2.009q-0.714 0.143-1.063 0.482t-0.348 1.036q0 0.554 0.402 0.92t1.036 0.571 1.402 0.393 1.536 0.455 1.402 0.67 1.036 1.143 0.402 1.759q0 5.429-6.482 5.429-1.232 0-2.321-0.223t-2.071-0.732-1.563-1.464-0.58-2.277q0-2.946 3.25-4.018v-0.071q-1.196-0.732-1.196-2.25 0-1.946 1.125-2.446v-0.071q-1.286-0.429-2.134-1.938t-0.848-2.955q0-2.482 1.696-4.134t4.196-1.652q1.714 0 3.179 0.839 1.75 0 3.893-0.839zM20.054 23.5h-3.964q0.071-0.804 0.071-2.393v-10.875q0-1.679-0.071-2.286h3.964q-0.071 0.589-0.071 2.214v10.946q0 1.589 0.071 2.393zM30.786 19.536v3.5q-1.268 0.696-3.107 0.696-1.107 0-1.911-0.357t-1.25-0.893-0.705-1.393-0.33-1.643-0.071-1.839v-6.268h0.036v-0.071q-0.125 0-0.339-0.018t-0.321-0.018q-0.375 0-1.054 0.107v-3.393h1.714v-1.357q0-0.964-0.107-1.589h4.054q-0.107 0.732-0.107 2.946h3.054v3.393q-0.268 0-0.777-0.036t-0.759-0.036h-1.518v6.518q0 2.339 1.554 2.339 1.089 0 1.946-0.589zM20.5 2.625q0 1.036-0.696 1.813t-1.714 0.777q-1.036 0-1.75-0.777t-0.714-1.813q0-1.054 0.705-1.839t1.759-0.786q1.036 0 1.723 0.795t0.688 1.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-hacker-news\" viewBox=\"0 0 32 32\">\r\n            <title>hacker-news</title>\r\n            <path d=\"M14.732 17.661l6.125-10.5h-2.679q-0.375 0.696-1.134 2.116t-1.214 2.295-1.063 2.116-1.071 2.295h-0.054q-0.375-0.857-0.795-1.732t-0.929-1.884-0.83-1.643-0.964-1.866-0.875-1.696h-2.679l5.768 10.518v7.768h2.393v-7.786zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tencent-weibo\" viewBox=\"0 0 23 32\">\r\n            <title>tencent-weibo</title>\r\n            <path d=\"M15.036 10.214q0 1.429-1.018 2.438t-2.429 1.009q-1.071 0-1.982-0.625-1.107 1.196-2.054 2.607-4.411 6.625-3.607 15.339 0.018 0.393-0.223 0.688t-0.616 0.33h-0.089q-0.357 0-0.625-0.241t-0.304-0.598q-0.25-2.25-0.063-4.42t0.527-3.875 0.964-3.321 1.232-2.777 1.321-2.232q1.089-1.607 2.357-2.946-0.286-0.625-0.286-1.375 0-1.429 1.009-2.438t2.438-1.009 2.438 1.009 1.009 2.438zM21.839 10.411q0 2.821-1.393 5.214t-3.795 3.786-5.223 1.393q-1.143 0-2.339-0.25-0.375-0.089-0.58-0.42t-0.116-0.705q0.089-0.357 0.411-0.563t0.696-0.134q0.911 0.232 1.929 0.232 1.732 0 3.321-0.679t2.732-1.821 1.821-2.732 0.679-3.321-0.679-3.321-1.821-2.732-2.732-1.821-3.321-0.679-3.321 0.679-2.732 1.821-1.821 2.732-0.679 3.321q0 2.036 0.929 3.893 0.179 0.357 0.063 0.714t-0.455 0.536-0.705 0.054-0.545-0.464q-1.143-2.196-1.143-4.732 0-2.125 0.83-4.054t2.223-3.321 3.321-2.214 4.036-0.821q2.821 0 5.223 1.393t3.795 3.795 1.393 5.223z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-qq\" viewBox=\"0 0 32 32\">\r\n            <title>qq</title>\r\n            <path d=\"M4.821 14.393q-0.143-0.339-0.143-0.929 0-0.357 0.196-0.875t0.429-0.804q-0.018-0.393 0.134-0.946t0.402-0.768q0-2.482 1.652-5.152t3.884-3.741q2.482-1.179 5.786-1.179 2.375 0 4.75 0.982 0.875 0.375 1.607 0.857t1.268 1 0.982 1.214 0.75 1.321 0.58 1.509 0.455 1.598 0.393 1.75l0.018 0.089q0.982 1.482 0.982 2.679 0 0.25-0.161 0.714t-0.161 0.679q0 0.018 0.027 0.063t0.063 0.089 0.036 0.063q1.375 2.036 2.152 3.83t0.777 3.723q0 0.768-0.348 1.786t-0.991 1.018q-0.161 0-0.348-0.134t-0.339-0.313-0.339-0.464-0.286-0.473-0.241-0.464-0.161-0.313q-0.018-0.018-0.054-0.018l-0.089 0.071q-1.054 2.75-2.357 3.982 0.357 0.357 1.098 0.688t1.232 0.741 0.634 1.161q-0.036 0.071-0.071 0.286t-0.125 0.321q-1.143 1.732-5.393 1.732-0.946 0-1.973-0.161t-1.75-0.357-1.866-0.536q-0.268-0.089-0.411-0.125-0.25-0.071-0.821-0.080t-0.714-0.027q-0.732 0.804-2.277 1.161t-3.009 0.357q-0.625 0-1.232-0.027t-1.661-0.161-1.804-0.366-1.33-0.714-0.58-1.143q0-0.714 0.179-1.063t0.732-0.866q0.196-0.036 0.723-0.232t0.884-0.214q0.071 0 0.25-0.036 0.036-0.036 0.036-0.071l-0.036-0.054q-0.857-0.196-1.929-1.884t-1.304-2.795l-0.089-0.054q-0.071 0-0.214 0.357-0.321 0.732-0.973 1.33t-1.384 0.67h-0.018q-0.071 0-0.107-0.080t-0.089-0.098q-0.411-0.964-0.411-1.786 0-4.911 4.5-8.321z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-wechat\" viewBox=\"0 0 37 32\">\r\n            <title>wechat</title>\r\n            <path d=\"M10.357 8.232q0-0.732-0.446-1.179t-1.179-0.446q-0.768 0-1.357 0.455t-0.589 1.17q0 0.696 0.589 1.152t1.357 0.455q0.732 0 1.179-0.438t0.446-1.17zM23.625 17.286q0-0.5-0.455-0.893t-1.17-0.393q-0.482 0-0.884 0.402t-0.402 0.884q0 0.5 0.402 0.902t0.884 0.402q0.714 0 1.17-0.393t0.455-0.911zM19.411 8.232q0-0.732-0.438-1.179t-1.17-0.446q-0.768 0-1.357 0.455t-0.589 1.17q0 0.696 0.589 1.152t1.357 0.455q0.732 0 1.17-0.438t0.438-1.17zM30.75 17.286q0-0.5-0.464-0.893t-1.161-0.393q-0.482 0-0.884 0.402t-0.402 0.884q0 0.5 0.402 0.902t0.884 0.402q0.696 0 1.161-0.393t0.464-0.911zM26 10.196q-0.554-0.071-1.25-0.071-3.018 0-5.554 1.375t-3.991 3.723-1.455 5.134q0 1.393 0.411 2.714-0.625 0.054-1.214 0.054-0.464 0-0.893-0.027t-0.982-0.116-0.795-0.125-0.973-0.188-0.893-0.188l-4.518 2.268 1.286-3.893q-5.179-3.625-5.179-8.75 0-3.018 1.741-5.554t4.714-3.991 6.491-1.455q3.143 0 5.938 1.179t4.679 3.259 2.438 4.652zM36.571 20.214q0 2.089-1.223 3.991t-3.313 3.455l0.982 3.232-3.554-1.946q-2.679 0.661-3.893 0.661-3.018 0-5.554-1.259t-3.991-3.42-1.455-4.714 1.455-4.714 3.991-3.42 5.554-1.259q2.875 0 5.411 1.259t4.063 3.429 1.527 4.705z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paper-plane\" viewBox=\"0 0 32 32\">\r\n            <title>paper-plane</title>\r\n            <path d=\"M31.5 0.196q0.589 0.429 0.482 1.143l-4.571 27.429q-0.089 0.518-0.571 0.804-0.25 0.143-0.554 0.143-0.196 0-0.429-0.089l-8.089-3.304-4.321 5.268q-0.321 0.411-0.875 0.411-0.232 0-0.393-0.071-0.339-0.125-0.545-0.42t-0.205-0.652v-6.232l15.429-18.911-19.089 16.518-7.054-2.893q-0.661-0.25-0.714-0.982-0.036-0.714 0.571-1.054l29.714-17.143q0.268-0.161 0.571-0.161 0.357 0 0.643 0.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paper-plane-o\" viewBox=\"0 0 32 32\">\r\n            <title>paper-plane-o</title>\r\n            <path d=\"M31.5 0.196q0.589 0.429 0.482 1.143l-4.571 27.429q-0.089 0.518-0.571 0.804-0.25 0.143-0.554 0.143-0.196 0-0.429-0.089l-9.411-3.839-5.321 5.839q-0.321 0.375-0.839 0.375-0.25 0-0.411-0.071-0.339-0.125-0.536-0.42t-0.196-0.652v-8.071l-8.429-3.446q-0.661-0.25-0.714-0.982-0.054-0.696 0.571-1.054l29.714-17.143q0.625-0.375 1.214 0.036zM25.393 26.964l3.946-23.625-25.607 14.768 6 2.446 15.411-11.411-8.536 14.232z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-history\" viewBox=\"0 0 32 32\">\r\n            <title>history</title>\r\n            <path d=\"M27.429 16q0 2.786-1.089 5.321t-2.929 4.375-4.375 2.929-5.321 1.089q-3.071 0-5.839-1.295t-4.714-3.652q-0.125-0.179-0.116-0.402t0.152-0.366l2.446-2.464q0.179-0.161 0.446-0.161 0.286 0.036 0.411 0.214 1.304 1.696 3.196 2.625t4.018 0.929q1.857 0 3.545-0.723t2.92-1.955 1.955-2.92 0.723-3.545-0.723-3.545-1.955-2.92-2.92-1.955-3.545-0.723q-1.75 0-3.357 0.634t-2.857 1.813l2.446 2.464q0.554 0.536 0.25 1.232-0.304 0.714-1.054 0.714h-8q-0.464 0-0.804-0.339t-0.339-0.804v-8q0-0.75 0.714-1.054 0.696-0.304 1.232 0.25l2.321 2.304q1.911-1.804 4.366-2.795t5.080-0.991q2.786 0 5.321 1.089t4.375 2.929 2.929 4.375 1.089 5.321zM16 10.857v8q0 0.25-0.161 0.411t-0.411 0.161h-5.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h4v-6.286q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-circle-thin\" viewBox=\"0 0 32 32\">\r\n            <title>circle-thin</title>\r\n            <path d=\"M13.714 4.571q-2.321 0-4.438 0.911t-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.437-0.911 3.643-2.438 2.438-3.643 0.911-4.438-0.911-4.438-2.438-3.643-3.643-2.438-4.438-0.911zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-header\" viewBox=\"0 0 32 32\">\r\n            <title>header</title>\r\n            <path d=\"M30.036 29.714q-0.786 0-2.366-0.063t-2.384-0.063q-0.786 0-2.357 0.063t-2.357 0.063q-0.429 0-0.661-0.366t-0.232-0.813q0-0.554 0.304-0.821t0.696-0.304 0.911-0.125 0.804-0.268q0.589-0.375 0.589-2.5l-0.018-6.982q0-0.375-0.018-0.554-0.232-0.071-0.893-0.071h-12.054q-0.679 0-0.911 0.071-0.018 0.179-0.018 0.554l-0.018 6.625q0 2.536 0.661 2.929 0.286 0.179 0.857 0.232t1.018 0.063 0.804 0.268 0.357 0.813q0 0.464-0.223 0.857t-0.652 0.393q-0.839 0-2.491-0.063t-2.473-0.063q-0.768 0-2.286 0.063t-2.268 0.063q-0.411 0-0.634-0.375t-0.223-0.804q0-0.536 0.277-0.804t0.643-0.313 0.848-0.134 0.75-0.268q0.589-0.411 0.589-2.554l-0.018-1.018v-14.518q0-0.054 0.009-0.464t0-0.652-0.027-0.688-0.063-0.75-0.116-0.652-0.196-0.563-0.286-0.321q-0.268-0.179-0.804-0.214t-0.946-0.036-0.732-0.25-0.321-0.804q0-0.464 0.214-0.857t0.643-0.393q0.821 0 2.473 0.063t2.473 0.063q0.75 0 2.259-0.063t2.259-0.063q0.446 0 0.67 0.393t0.223 0.857q0 0.536-0.304 0.777t-0.688 0.259-0.884 0.071-0.768 0.232q-0.625 0.375-0.625 2.857l0.018 5.714q0 0.375 0.018 0.571 0.232 0.054 0.696 0.054h12.482q0.446 0 0.679-0.054 0.018-0.196 0.018-0.571l0.018-5.714q0-2.482-0.625-2.857-0.321-0.196-1.045-0.223t-1.179-0.232-0.455-0.884q0-0.464 0.223-0.857t0.67-0.393q0.786 0 2.357 0.063t2.357 0.063q0.768 0 2.304-0.063t2.304-0.063q0.446 0 0.67 0.393t0.223 0.857q0 0.536-0.313 0.786t-0.714 0.259-0.92 0.054-0.786 0.223q-0.625 0.411-0.625 2.875l0.018 16.839q0 2.125 0.607 2.5 0.286 0.179 0.821 0.241t0.955 0.080 0.741 0.277 0.321 0.795q0 0.464-0.214 0.857t-0.643 0.393z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paragraph\" viewBox=\"0 0 23 32\">\r\n            <title>paragraph</title>\r\n            <path d=\"M22.821 3.375v1.304q0 0.518-0.33 1.089t-0.759 0.571q-0.893 0-0.964 0.018-0.464 0.107-0.571 0.554-0.054 0.196-0.054 1.143v20.571q0 0.446-0.321 0.768t-0.768 0.321h-1.929q-0.446 0-0.768-0.321t-0.321-0.768v-21.75h-2.554v21.75q0 0.446-0.313 0.768t-0.777 0.321h-1.929q-0.464 0-0.777-0.321t-0.313-0.768v-8.857q-2.625-0.214-4.375-1.054-2.25-1.036-3.429-3.196-1.143-2.089-1.143-4.625 0-2.964 1.571-5.107 1.571-2.107 3.732-2.839 1.982-0.661 7.446-0.661h8.554q0.446 0 0.768 0.321t0.321 0.768z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sliders\" viewBox=\"0 0 32 32\">\r\n            <title>sliders</title>\r\n            <path d=\"M6.286 25.143v2.286h-6.286v-2.286h6.286zM12.571 22.857q0.464 0 0.804 0.339t0.339 0.804v4.571q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h4.571zM15.429 16v2.286h-15.429v-2.286h15.429zM4 6.857v2.286h-4v-2.286h4zM27.429 25.143v2.286h-13.143v-2.286h13.143zM10.286 4.571q0.464 0 0.804 0.339t0.339 0.804v4.571q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h4.571zM21.714 13.714q0.464 0 0.804 0.339t0.339 0.804v4.571q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-4.571q0-0.464 0.339-0.804t0.804-0.339h4.571zM27.429 16v2.286h-4v-2.286h4zM27.429 6.857v2.286h-15.429v-2.286h15.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-share-alt\" viewBox=\"0 0 32 32\">\r\n            <title>share-alt</title>\r\n            <path d=\"M21.714 18.286q2.375 0 4.045 1.67t1.67 4.045-1.67 4.045-4.045 1.67-4.045-1.67-1.67-4.045q0-0.214 0.036-0.607l-6.429-3.214q-1.643 1.536-3.893 1.536-2.375 0-4.045-1.67t-1.67-4.045 1.67-4.045 4.045-1.67q2.25 0 3.893 1.536l6.429-3.214q-0.036-0.393-0.036-0.607 0-2.375 1.67-4.045t4.045-1.67 4.045 1.67 1.67 4.045-1.67 4.045-4.045 1.67q-2.25 0-3.893-1.536l-6.429 3.214q0.036 0.393 0.036 0.607t-0.036 0.607l6.429 3.214q1.643-1.536 3.893-1.536z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-share-alt-square\" viewBox=\"0 0 32 32\">\r\n            <title>share-alt-square</title>\r\n            <path d=\"M22.857 21.339q0-1.571-1.116-2.696t-2.688-1.125q-1.5 0-2.589 1.036l-4.304-2.143q0.036-0.286 0.036-0.411t-0.036-0.411l4.304-2.143q1.089 1.036 2.589 1.036 1.571 0 2.688-1.125t1.116-2.696-1.116-2.688-2.688-1.116-2.696 1.116-1.125 2.688q0 0.125 0.036 0.411l-4.304 2.143q-1.107-1.018-2.589-1.018-1.571 0-2.688 1.116t-1.116 2.688 1.116 2.687 2.688 1.116q1.482 0 2.589-1.018l4.304 2.143q-0.036 0.286-0.036 0.411 0 1.571 1.125 2.688t2.696 1.116 2.688-1.116 1.116-2.688zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bomb\" viewBox=\"0 0 32 32\">\r\n            <title>bomb</title>\r\n            <path d=\"M10.196 10.518q-0.179-0.446-0.607-0.625t-0.875 0q-1.929 0.786-3.411 2.268t-2.268 3.411q-0.179 0.446 0 0.875t0.625 0.607q0.232 0.089 0.429 0.089 0.75 0 1.071-0.714 0.607-1.5 1.759-2.652t2.652-1.759q0.446-0.196 0.625-0.625t0-0.875zM27.018 4.161l0.821 0.821-4.357 4.339 1.214 1.214q0.339 0.339 0.339 0.813t-0.339 0.813l-1.143 1.143q1.589 2.875 1.589 6.125 0 2.554-0.991 4.884t-2.679 4.018-4.018 2.679-4.884 0.991-4.884-0.991-4.018-2.679-2.679-4.018-0.991-4.884 0.991-4.884 2.679-4.018 4.018-2.679 4.884-0.991q3.25 0 6.125 1.589l1.143-1.143q0.339-0.339 0.813-0.339t0.813 0.339l1.214 1.214zM27.161 3.161q-0.179 0.179-0.393 0.179-0.232 0-0.411-0.179l-1.625-1.607q-0.161-0.179-0.161-0.411t0.161-0.411q0.179-0.161 0.411-0.161t0.411 0.161l1.607 1.625q0.179 0.161 0.179 0.402t-0.179 0.402zM31.268 7.268q-0.196 0.161-0.411 0.161t-0.411-0.161l-1.607-1.625q-0.179-0.161-0.179-0.402t0.179-0.402q0.161-0.179 0.402-0.179t0.402 0.179l1.625 1.607q0.161 0.179 0.161 0.411t-0.161 0.411zM32 4q0 0.25-0.161 0.411t-0.411 0.161h-1.714q-0.25 0-0.411-0.161t-0.161-0.411 0.161-0.411 0.411-0.161h1.714q0.25 0 0.411 0.161t0.161 0.411zM28.571 0.571v1.714q0 0.25-0.161 0.411t-0.411 0.161-0.411-0.161-0.161-0.411v-1.714q0-0.25 0.161-0.411t0.411-0.161 0.411 0.161 0.161 0.411zM31.268 1.554l-1.625 1.607q-0.179 0.179-0.393 0.179-0.232 0-0.411-0.179-0.179-0.161-0.179-0.402t0.179-0.402l1.607-1.625q0.179-0.161 0.411-0.161t0.411 0.161q0.161 0.179 0.161 0.411t-0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-soccer-ball-o\" viewBox=\"0 0 32 32\">\r\n            <title>soccer-ball-o</title>\r\n            <path d=\"M10.875 14.571l5.125-3.714 5.125 3.714-1.946 6h-6.339zM16 0q3.25 0 6.214 1.268t5.107 3.411 3.411 5.107 1.268 6.214-1.268 6.214-3.411 5.107-5.107 3.411-6.214 1.268-6.214-1.268-5.107-3.411-3.411-5.107-1.268-6.214 1.268-6.214 3.411-5.107 5.107-3.411 6.214-1.268zM27.054 24.107q2.661-3.625 2.661-8.107v-0.054l-1.821 1.589-4.286-4 1.125-5.768 2.393 0.214q-2.679-3.679-6.946-5.036l0.946 2.214-5.125 2.839-5.125-2.839 0.946-2.214q-4.268 1.357-6.946 5.036l2.411-0.214 1.107 5.768-4.286 4-1.821-1.589v0.054q0 4.482 2.661 8.107l0.536-2.357 5.821 0.714 2.482 5.321-2.071 1.232q2.089 0.696 4.286 0.696t4.286-0.696l-2.071-1.232 2.482-5.321 5.821-0.714z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-tty\" viewBox=\"0 0 32 32\">\r\n            <title>tty</title>\r\n            <path d=\"M8 23.429v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM4.571 16.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM14.857 23.429v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM11.429 16.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM1.179 13.714q-0.5 0-0.839-0.339t-0.339-0.821v-2.304h9.179v2.304q0 0.482-0.339 0.821t-0.821 0.339h-6.839zM21.714 23.429v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM18.286 16.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM28.571 23.429v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM25.143 16.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM32 9.286v0.232h-9.179v-0.179q0-1.857-6.821-1.821-6.821 0.018-6.821 1.821v0.179h-9.179v-0.232q0-0.304 0.152-0.768t0.607-1.143 1.17-1.348 1.973-1.357 2.857-1.205 4-0.848 5.241-0.33 5.232 0.33 4 0.848 2.866 1.205 1.973 1.357 1.17 1.348 0.607 1.143 0.152 0.768zM32 16.571v3.429q0 0.25-0.161 0.411t-0.411 0.161h-3.429q-0.25 0-0.411-0.161t-0.161-0.411v-3.429q0-0.25 0.161-0.411t0.411-0.161h3.429q0.25 0 0.411 0.161t0.161 0.411zM32 10.25v2.304q0 0.482-0.339 0.821t-0.821 0.339h-6.857q-0.482 0-0.821-0.339t-0.339-0.821v-2.304h9.179z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-binoculars\" viewBox=\"0 0 32 32\">\r\n            <title>binoculars</title>\r\n            <path d=\"M12.571 5.714v13.714q0 0.464-0.339 0.804t-0.804 0.339v10.286q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-9.143l4.446-15.589q0.125-0.411 0.554-0.411h7.571zM18.286 5.714v12.571h-4.571v-12.571h4.571zM32 21.714v9.143q0 0.464-0.339 0.804t-0.804 0.339h-9.143q-0.464 0-0.804-0.339t-0.339-0.804v-10.286q-0.464 0-0.804-0.339t-0.339-0.804v-13.714h7.571q0.429 0 0.554 0.411zM13.143 0.571v4h-6.286v-4q0-0.25 0.161-0.411t0.411-0.161h5.143q0.25 0 0.411 0.161t0.161 0.411zM25.143 0.571v4h-6.286v-4q0-0.25 0.161-0.411t0.411-0.161h5.143q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-plug\" viewBox=\"0 0 32 32\">\r\n            <title>plug</title>\r\n            <path d=\"M31.339 8.089q0.661 0.661 0.661 1.607t-0.661 1.625l-7.161 7.143 2.679 2.679-2.857 2.857q-2.911 2.911-6.955 3.33t-7.348-1.795l-6.464 6.464h-3.232v-3.232l6.464-6.464q-2.214-3.304-1.795-7.348t3.33-6.955l2.857-2.857 2.679 2.679 7.143-7.161q0.679-0.661 1.625-0.661t1.607 0.661 0.661 1.616-0.661 1.616l-7.143 7.161 4.179 4.179 7.161-7.143q0.679-0.661 1.625-0.661t1.607 0.661z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-slideshare\" viewBox=\"0 0 32 32\">\r\n            <title>slideshare</title>\r\n            <path d=\"M15.589 13.214q0 1.482-1.134 2.545t-2.723 1.063-2.723-1.063-1.134-2.545q0-1.5 1.134-2.554t2.723-1.054 2.723 1.054 1.134 2.554zM24.554 13.214q0 1.482-1.125 2.545t-2.732 1.063q-1.589 0-2.723-1.063t-1.134-2.545q0-1.5 1.134-2.554t2.723-1.054q1.607 0 2.732 1.054t1.125 2.554zM28.571 16.429v-11.911q0-1.554-0.571-2.205t-1.982-0.652h-19.857q-1.482 0-2.009 0.607t-0.527 2.25v12.018q0.768 0.411 1.58 0.714t1.446 0.5 1.446 0.33 1.268 0.196 1.25 0.071 1.045 0.009 1.009-0.036 0.795-0.036q1.214-0.018 1.696 0.482 0.107 0.107 0.179 0.161 0.464 0.446 1.089 0.911 0.125-1.625 2.107-1.554 0.089 0 0.652 0.027t0.768 0.036 0.813 0.018 0.946-0.018 0.973-0.080 1.089-0.152 1.107-0.241 1.196-0.348 1.205-0.482 1.286-0.616zM31.482 16.339q-2.161 2.661-6.643 4.5 1.5 5.089-0.411 8.304-1.179 2.018-3.268 2.643-1.857 0.571-3.25-0.268-1.536-0.911-1.464-2.929l-0.018-5.821v-0.018q-0.143-0.036-0.438-0.107t-0.42-0.089l-0.018 6.036q0.071 2.036-1.482 2.929-1.411 0.839-3.268 0.268-2.089-0.643-3.25-2.679-1.875-3.214-0.393-8.268-4.482-1.839-6.643-4.5-0.446-0.661-0.071-1.125t1.071 0.018q0.054 0.036 0.196 0.125t0.196 0.143v-12.393q0-1.286 0.839-2.196t2.036-0.911h22.446q1.196 0 2.036 0.911t0.839 2.196v12.393l0.375-0.268q0.696-0.482 1.071-0.018t-0.071 1.125z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-twitch\" viewBox=\"0 0 32 32\">\r\n            <title>twitch</title>\r\n            <path d=\"M16 7.75v7.75h-2.589v-7.75h2.589zM23.107 7.75v7.75h-2.589v-7.75h2.589zM23.107 21.321l4.518-4.536v-14.196h-21.321v18.732h5.821v3.875l3.875-3.875h7.107zM30.214 0v18.089l-7.75 7.75h-5.821l-3.875 3.875h-3.875v-3.875h-7.107v-20.679l1.946-5.161h26.482z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-yelp\" viewBox=\"0 0 32 32\">\r\n            <title>yelp</title>\r\n            <path d=\"M13.804 23.554v2.268q-0.018 5.214-0.107 5.446-0.214 0.571-0.911 0.714-0.964 0.161-3.241-0.679t-2.902-1.589q-0.232-0.268-0.304-0.643-0.018-0.214 0.071-0.464 0.071-0.179 0.607-0.839t3.232-3.857q0.018 0 1.071-1.25 0.268-0.339 0.705-0.438t0.884 0.063q0.429 0.179 0.67 0.518t0.223 0.75zM11.143 19.071q-0.054 0.982-0.929 1.25l-2.143 0.696q-4.911 1.571-5.214 1.571-0.625-0.036-0.964-0.643-0.214-0.446-0.304-1.339-0.143-1.357 0.018-2.973t0.536-2.223 1-0.571q0.232 0 3.607 1.375 1.25 0.518 2.054 0.839l1.5 0.607q0.411 0.161 0.634 0.545t0.205 0.866zM25.893 24.375q-0.125 0.964-1.634 2.875t-2.42 2.268q-0.661 0.25-1.125-0.125-0.25-0.179-3.286-5.125l-0.839-1.375q-0.25-0.375-0.205-0.821t0.348-0.821q0.625-0.768 1.482-0.464 0.018 0.018 2.125 0.714 3.625 1.179 4.321 1.42t0.839 0.366q0.5 0.393 0.393 1.089zM13.893 13.089q0.089 1.821-0.964 2.179-1.036 0.304-2.036-1.268l-6.75-10.679q-0.143-0.625 0.339-1.107 0.732-0.768 3.705-1.598t4.009-0.563q0.714 0.179 0.875 0.804 0.054 0.321 0.393 5.455t0.429 6.777zM25.714 15.018q0.054 0.696-0.464 1.054-0.268 0.179-5.875 1.536-1.196 0.268-1.625 0.411l0.018-0.036q-0.411 0.107-0.821-0.071t-0.661-0.571q-0.536-0.839 0-1.554 0.018-0.018 1.339-1.821 2.232-3.054 2.679-3.643t0.607-0.696q0.5-0.339 1.161-0.036 0.857 0.411 2.196 2.384t1.446 2.991v0.054z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-newspaper-o\" viewBox=\"0 0 37 32\">\r\n            <title>newspaper-o</title>\r\n            <path d=\"M18.286 9.143h-6.857v6.857h6.857v-6.857zM20.571 20.571v2.286h-11.429v-2.286h11.429zM20.571 6.857v11.429h-11.429v-11.429h11.429zM32 20.571v2.286h-9.143v-2.286h9.143zM32 16v2.286h-9.143v-2.286h9.143zM32 11.429v2.286h-9.143v-2.286h9.143zM32 6.857v2.286h-9.143v-2.286h9.143zM4.571 24v-17.143h-2.286v17.143q0 0.464 0.339 0.804t0.804 0.339 0.804-0.339 0.339-0.804zM34.286 24v-19.429h-27.429v19.429q0 0.589-0.196 1.143h26.482q0.464 0 0.804-0.339t0.339-0.804zM36.571 2.286v21.714q0 1.429-1 2.429t-2.429 1h-29.714q-1.429 0-2.429-1t-1-2.429v-19.429h4.571v-2.286h32z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-wifi\" viewBox=\"0 0 37 32\">\r\n            <title>wifi</title>\r\n            <path d=\"M18.286 27.196q-0.357 0-1.661-1.313t-1.304-1.67q0-0.571 1.116-0.964t1.848-0.393 1.848 0.393 1.116 0.964q0 0.357-1.304 1.67t-1.661 1.313zM23.107 22.357q-0.036 0-0.714-0.446t-1.813-0.893-2.295-0.446-2.295 0.446-1.804 0.893-0.723 0.446q-0.321 0-1.67-1.339t-1.348-1.661q0-0.232 0.179-0.411 1.393-1.375 3.5-2.161t4.161-0.786 4.161 0.786 3.5 2.161q0.179 0.179 0.179 0.411 0 0.321-1.348 1.661t-1.67 1.339zM27.982 17.5q-0.196 0-0.411-0.143-2.429-1.875-4.5-2.759t-4.786-0.884q-1.518 0-3.045 0.393t-2.661 0.946-2.027 1.107-1.411 0.946-0.554 0.393q-0.304 0-1.643-1.339t-1.339-1.661q0-0.214 0.179-0.393 2.357-2.357 5.714-3.661t6.786-1.304 6.786 1.304 5.714 3.661q0.179 0.179 0.179 0.393 0 0.321-1.339 1.661t-1.643 1.339zM32.821 12.661q-0.196 0-0.393-0.161-3.196-2.804-6.634-4.223t-7.509-1.42-7.509 1.42-6.634 4.223q-0.196 0.161-0.393 0.161-0.304 0-1.652-1.339t-1.348-1.661q0-0.232 0.179-0.411 3.339-3.321 7.946-5.143t9.411-1.821 9.411 1.821 7.946 5.143q0.179 0.179 0.179 0.411 0 0.321-1.348 1.661t-1.652 1.339z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-calculator\" viewBox=\"0 0 32 32\">\r\n            <title>calculator</title>\r\n            <path d=\"M6.857 27.429q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM13.714 27.429q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM6.857 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM20.571 27.429q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM13.714 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM6.857 13.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM20.571 20.571q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM13.714 13.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM27.429 27.429v-6.857q0-0.929-0.679-1.607t-1.607-0.679-1.607 0.679-0.679 1.607v6.857q0 0.929 0.679 1.607t1.607 0.679 1.607-0.679 0.679-1.607zM20.571 13.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM27.429 8v-4.571q0-0.464-0.339-0.804t-0.804-0.339h-22.857q-0.464 0-0.804 0.339t-0.339 0.804v4.571q0 0.464 0.339 0.804t0.804 0.339h22.857q0.464 0 0.804-0.339t0.339-0.804zM27.429 13.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM29.714 2.286v27.429q0 0.929-0.679 1.607t-1.607 0.679h-25.143q-0.929 0-1.607-0.679t-0.679-1.607v-27.429q0-0.929 0.679-1.607t1.607-0.679h25.143q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paypal\" viewBox=\"0 0 32 32\">\r\n            <title>paypal</title>\r\n            <path d=\"M19.857 7.964q0-2.839-4.232-2.839h-1.25q-0.571 0-1.063 0.384t-0.616 0.938l-1.125 4.929q-0.036 0.089-0.036 0.286 0 0.429 0.304 0.705t0.732 0.277h0.946q1.232 0 2.295-0.232t2.009-0.732 1.491-1.455 0.545-2.259zM30.643 10.679q0 4.732-3.929 7.643-3.911 2.875-10.929 2.875h-1.089q-0.571 0-1.054 0.384t-0.607 0.938l-1.304 5.643q-0.143 0.643-0.723 1.098t-1.241 0.455h-3.804q-0.554 0-0.946-0.357t-0.393-0.911q0-0.179 0.232-1.161h2.696q0.607 0 1.143-0.42t0.679-1.009l1.304-5.643q0.143-0.589 0.67-1.018t1.134-0.429h1.089q6.964 0 10.839-2.857t3.875-7.518q0-2.304-0.911-3.696 3.268 1.643 3.268 5.982zM27.375 7.375q0 4.714-3.946 7.643-3.893 2.875-10.929 2.875h-1.071q-0.571 0-1.063 0.393t-0.616 0.946l-1.304 5.625q-0.143 0.643-0.714 1.098t-1.232 0.455h-3.821q-0.554 0-0.938-0.348t-0.384-0.92q0-0.143 0.036-0.357l5.357-23.232q0.143-0.643 0.723-1.098t1.241-0.455h7.929q1.214 0 2.232 0.071t2.152 0.268 2.027 0.536 1.723 0.902 1.384 1.321 0.884 1.848 0.33 2.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-google-wallet\" viewBox=\"0 0 32 32\">\r\n            <title>google-wallet</title>\r\n            <path d=\"M10.75 10.482q0.339 1.089 0.554 2.205t0.304 2.527-0.25 2.839-1.107 2.589q-0.375-1.446-1.196-2.804t-1.705-2.268-1.768-1.616-1.402-1.027-0.589-0.339q-1.107-0.607-1.455-1.786t0.259-2.286 1.804-1.455 2.304 0.259q2.464 1.482 4.25 3.161zM16.554 5.357q0.196 0.446 0.366 0.821t0.652 1.795 0.759 2.688 0.455 3.205 0 3.67-0.848 3.741-1.884 3.723q-0.911 1.286-2.464 1.286-0.964 0-1.75-0.554-1.018-0.714-1.232-1.946t0.5-2.268q1.071-1.518 1.446-3.482t0.232-3.563-0.571-3.223-0.696-2.286-0.393-0.929q-0.554-1.125-0.152-2.313t1.527-1.741q0.607-0.304 1.339-0.304 0.839 0 1.58 0.446t1.134 1.232zM22.286 17.304q-0.304 2.857-1.286 5.554-0.304-2.339-1.125-4.393 0.446-3.107-0.089-6.446-0.482-3.179-1.679-6.107 2.036 1.607 3.786 3.768 0.161 0.661 0.268 1.429 0.464 3.196 0.125 6.196zM27.143 1.714q0.161 0.304 0.42 0.884t0.777 2.098 0.902 3.179 0.607 4.063 0.089 4.804-0.839 5.357-2.009 5.777q-0.393 0.857-1.179 1.348t-1.696 0.491q-0.696 0-1.321-0.286-1.196-0.554-1.652-1.786t0.080-2.429q1.036-2.25 1.607-4.598t0.67-4.277-0.063-3.813-0.473-3.223-0.688-2.473-0.58-1.607-0.277-0.58q-0.607-1.161-0.205-2.42t1.563-1.866q0.661-0.357 1.446-0.357 0.875 0 1.634 0.455t1.188 1.259z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-visa\" viewBox=\"0 0 41 32\">\r\n            <title>cc-visa</title>\r\n            <path d=\"M35.268 17.679h-2.464q0.25-0.661 1.179-3.196l0.054-0.161q0.071-0.179 0.179-0.464t0.161-0.464l0.214 0.982zM9.482 16.518l-1.036-5.268q-0.196-0.964-1.339-0.964h-4.786l-0.036 0.232q5.554 1.411 7.196 6zM12.679 10.286l-2.893 7.821-0.304-1.589q-0.464-1.25-1.518-2.313t-2.339-1.58l2.411 9.107h3.125l4.661-11.446h-3.143zM15.161 21.75h2.964l1.857-11.464h-2.964zM28.875 10.571q-1.232-0.482-2.661-0.482-2.196 0-3.589 1.054t-1.411 2.732q-0.018 1.821 2.589 3.107 0.857 0.411 1.196 0.732t0.339 0.696q0 0.536-0.536 0.821t-1.232 0.286q-1.536 0-2.786-0.589l-0.393-0.196-0.411 2.571q1.321 0.607 3.304 0.607 2.321 0.018 3.723-1.054t1.438-2.857q0-1.893-2.5-3.107-0.875-0.446-1.268-0.75t-0.393-0.679q0-0.393 0.438-0.688t1.259-0.295q1.25-0.018 2.214 0.429l0.268 0.143zM36.464 10.286h-2.286q-1.161 0-1.554 0.964l-4.393 10.5h3.107l0.625-1.714h3.786q0.089 0.393 0.357 1.714h2.75zM41.143 4.571v22.857q0 0.929-0.679 1.607t-1.607 0.679h-36.571q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h36.571q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-mastercard\" viewBox=\"0 0 41 32\">\r\n            <title>cc-mastercard</title>\r\n            <path d=\"M11.982 16.661h-0.232q-0.839 0-0.839 0.571 0 0.393 0.357 0.393 0.304 0 0.5-0.268t0.214-0.696zM19.036 16.018h1.107v-0.054q0.018-0.071 0.009-0.116t-0.018-0.125-0.036-0.143-0.080-0.116-0.134-0.089-0.205-0.036q-0.5 0-0.643 0.679zM28.679 16.661h-0.214q-0.857 0-0.857 0.571 0 0.393 0.357 0.393 0.304 0 0.5-0.268t0.214-0.696zM34.375 16.196q0-0.732-0.536-0.732-0.339 0-0.554 0.357t-0.214 0.911q0 0.75 0.5 0.75 0.357 0 0.58-0.357t0.223-0.929zM8.571 13.679h1.554l-0.786 4.679h-1l0.571-3.589-1.268 3.589h-0.696l-0.071-3.571-0.607 3.571h-0.946l0.786-4.679h1.446l0.036 2.911zM13.089 15.589q0 0.107-0.071 0.75-0.286 1.804-0.304 2.018h-0.839l0.018-0.393q-0.357 0.464-1.036 0.464-0.411 0-0.67-0.286t-0.259-0.75q0-0.696 0.464-1.080t1.304-0.384q0.25 0 0.411 0.018 0-0.054 0.009-0.098t0.018-0.080 0.009-0.054q0-0.357-0.643-0.357-0.518 0-1.054 0.179 0-0.071 0.125-0.857 0.679-0.196 1.196-0.196 1.321 0 1.321 1.107zM15.875 14.554l-0.143 0.875q-0.393-0.054-0.732-0.054-0.482 0-0.482 0.304 0 0.143 0.080 0.214t0.384 0.196q0.714 0.339 0.714 1.071 0 1.286-1.554 1.268-0.607 0-1.036-0.107 0-0.036 0.125-0.875 0.518 0.143 0.911 0.143 0.571 0 0.571-0.339 0-0.125-0.080-0.205t-0.384-0.223q-0.768-0.357-0.768-1.054 0-1.286 1.5-1.286 0.536 0 0.893 0.071zM17.446 14.554h0.5l-0.125 0.929h-0.518q-0.036 0.304-0.116 0.723t-0.125 0.688-0.045 0.321q0 0.286 0.339 0.286 0.143 0 0.286-0.036l-0.143 0.839q-0.375 0.125-0.714 0.125-0.768 0-0.804-0.839 0-0.214 0.143-1 0.054-0.357 0.446-2.607h0.982zM21.071 15.857q0 0.411-0.125 0.929h-1.982q-0.054 0.393 0.179 0.589t0.679 0.196q0.536 0 1.036-0.25l-0.161 0.964q-0.536 0.143-1.018 0.143-1.696 0-1.696-1.696 0-0.982 0.491-1.616t1.241-0.634q0.625 0 0.991 0.375t0.366 1zM23.554 14.536q-0.232 0.411-0.393 1.107-0.393-0.036-0.554 0.429t-0.446 2.286h-1l0.054-0.25q0.393-2.321 0.518-3.554h0.911l-0.054 0.589q0.25-0.375 0.455-0.527t0.509-0.080zM26.893 13.804l-0.161 1.018q-0.5-0.25-0.893-0.25-0.554 0-0.911 0.491t-0.357 1.259q0 0.536 0.241 0.839t0.688 0.304q0.375 0 0.857-0.232l-0.179 1.054q-0.5 0.143-0.893 0.143-0.804 0-1.277-0.545t-0.473-1.473q0-1.25 0.634-2.045t1.634-0.795q0.464 0 1.089 0.232zM29.786 15.589q0 0.321-0.071 0.75-0.232 1.411-0.304 2.018h-0.821l0.018-0.393q-0.357 0.464-1.054 0.464-0.411 0-0.661-0.286t-0.25-0.75q0-0.696 0.455-1.080t1.295-0.384q0.268 0 0.411 0.018 0.036-0.125 0.036-0.232 0-0.357-0.643-0.357-0.518 0-1.054 0.179 0-0.071 0.143-0.857 0.679-0.196 1.196-0.196 1.304 0 1.304 1.107zM32.304 14.536q-0.25 0.429-0.375 1.107-0.411-0.036-0.563 0.411t-0.455 2.304h-1l0.054-0.25q0.339-1.857 0.518-3.554h0.929q0 0.196-0.071 0.589 0.268-0.375 0.473-0.527t0.491-0.080zM34.821 13.679h1l-0.768 4.679h-0.946l0.054-0.339q-0.411 0.411-0.929 0.411-0.554 0-0.884-0.429t-0.33-1.143q0-0.946 0.491-1.643t1.152-0.696q0.554 0 0.946 0.518zM36.804 16q0-2.643-1.295-4.875t-3.536-3.536-4.884-1.304q-3.232 0-5.857 1.964 2.268 2.071 3.054 5.071h-0.893q-0.786-2.679-2.821-4.518-2.036 1.839-2.821 4.518h-0.893q0.786-3 3.054-5.071-2.625-1.964-5.857-1.964-2.643 0-4.884 1.304t-3.536 3.536-1.295 4.875 1.295 4.875 3.536 3.536 4.884 1.304q3.232 0 5.857-1.964-2.143-1.982-2.946-4.714h0.893q0.821 2.464 2.714 4.161 1.893-1.696 2.714-4.161h0.893q-0.804 2.732-2.946 4.714 2.625 1.964 5.857 1.964 2.643 0 4.884-1.304t3.536-3.536 1.295-4.875zM41.143 4.571v22.857q0 0.929-0.679 1.607t-1.607 0.679h-36.571q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h36.571q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-discover\" viewBox=\"0 0 41 32\">\r\n            <title>cc-discover</title>\r\n            <path d=\"M5.589 13.875q0 0.911-0.643 1.5-0.518 0.464-1.589 0.464h-0.304v-3.929h0.304q1.089 0 1.589 0.482 0.643 0.554 0.643 1.482zM37.304 12.714q0 0.929-1.143 0.929h-0.339v-1.804h0.357q1.125 0 1.125 0.875zM6.786 13.875q0-1.321-0.893-2.152t-2.304-0.83h-1.696v5.946h1.696q1.321 0 2.125-0.679 1.071-0.911 1.071-2.286zM7.321 16.839h1.161v-5.946h-1.161v5.946zM13.036 15.036q0-0.714-0.366-1.107t-1.348-0.75q-0.518-0.179-0.705-0.339t-0.188-0.411q0-0.286 0.241-0.473t0.616-0.188q0.518 0 0.946 0.482l0.607-0.786q-0.732-0.661-1.75-0.661-0.786 0-1.321 0.491t-0.536 1.205q0 0.625 0.321 0.991t1.143 0.652q0.661 0.232 0.804 0.339 0.339 0.214 0.339 0.607 0 0.357-0.25 0.598t-0.643 0.241q-0.857 0-1.268-0.786l-0.75 0.714q0.786 1.143 2.054 1.143 0.911 0 1.482-0.545t0.571-1.42zM18 16.643v-1.375q-0.661 0.661-1.393 0.661-0.875 0-1.438-0.58t-0.563-1.473q0-0.857 0.563-1.455t1.384-0.598q0.768 0 1.446 0.679v-1.375q-0.714-0.357-1.429-0.357-1.321 0-2.241 0.902t-0.92 2.205 0.911 2.205 2.232 0.902q0.75 0 1.446-0.339zM40 27.429v-9.411q-1.161 0.714-2.58 1.5t-4.241 2.089-5.884 2.455-7.455 2.402-9 2.107h28.018q0.464 0 0.804-0.339t0.339-0.804zM24.804 13.911q0-1.339-0.946-2.286t-2.286-0.946-2.286 0.946-0.946 2.286 0.946 2.286 2.286 0.946 2.286-0.946 0.946-2.286zM27.518 17l2.571-6.107h-1.268l-1.607 4-1.589-4h-1.268l2.536 6.107h0.625zM30.607 16.839h3.286v-1h-2.125v-1.607h2.054v-1h-2.054v-1.321h2.125v-1.018h-3.286v5.946zM37.589 16.839h1.429l-1.875-2.5q1.357-0.286 1.357-1.679 0-0.839-0.554-1.304t-1.554-0.464h-1.732v5.946h1.161v-2.375h0.161zM41.143 4.679v22.643q0 1-0.688 1.696t-1.67 0.696h-36.429q-0.982 0-1.67-0.696t-0.688-1.696v-22.643q0-1 0.688-1.696t1.67-0.696h36.429q0.982 0 1.67 0.696t0.688 1.696z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-amex\" viewBox=\"0 0 41 32\">\r\n            <title>cc-amex</title>\r\n            <path d=\"M2.125 12.179h1.589l-0.804-1.929zM13.214 21.571l1.321-1.411-1.25-1.411h-2.911v0.875h2.536v0.982h-2.536v0.964h2.839zM16.036 20.179l1.768 1.964v-3.875zM21.179 19.339q0-0.589-0.714-0.589h-1.5v1.232h1.482q0.732 0 0.732-0.643zM26.339 19.268q0-0.518-0.75-0.518h-1.464v1.089h1.446q0.768 0 0.768-0.571zM21.375 10.946q0-0.518-0.75-0.518h-1.464v1.071h1.446q0.768 0 0.768-0.554zM29.571 12.179h1.589l-0.786-1.929zM12.482 9.411v4.839h-1.179v-3.786l-1.679 3.786h-1.018l-1.679-3.786v3.786h-2.357l-0.446-1.071h-2.411l-0.446 1.071h-1.25l2.071-4.839h1.714l1.964 4.589v-4.589h1.893l1.518 3.286 1.375-3.286h1.929zM22.411 19.339q0 0.357-0.098 0.625t-0.25 0.446-0.402 0.295-0.464 0.179-0.563 0.080-0.563 0.018-0.58-0.009-0.527-0.009v1.625h-2.25l-1.429-1.607-1.482 1.607h-4.571v-4.839h4.643l1.429 1.589 1.464-1.589h3.696q1.946 0 1.946 1.589zM17.214 13.25v1h-3.875v-4.839h3.875v1.018h-2.714v0.875h2.643v0.982h-2.643v0.964h2.714zM41.143 23.232v4.089q0 0.982-0.688 1.688t-1.67 0.705h-36.429q-0.982 0-1.67-0.705t-0.688-1.688v-12.107h1.982l0.446-1.089h0.982l0.446 1.089h3.893v-0.821l0.339 0.821h2.018l0.357-0.839v0.839h9.661v-1.768l0.179-0.018q0.179 0 0.179 0.25v1.536h4.982v-0.411q0.411 0.214 0.982 0.321t0.938 0.116 1.125-0.009 0.92-0.018l0.446-1.089h1l0.446 1.089h4.054v-1.036l0.607 1.036h3.25v-6.75h-3.214v0.786l-0.446-0.786h-3.304v0.786l-0.411-0.786h-4.446q-1.232 0-1.946 0.393v-0.393h-3.071v0.393q-0.429-0.393-1.304-0.393h-11.214l-0.768 1.732-0.768-1.732h-3.536v0.786l-0.393-0.786h-3.018l-1.393 3.196v-6.982q0-0.982 0.688-1.688t1.67-0.705h36.429q0.982 0 1.67 0.705t0.688 1.688v12.107h-2.143q-0.911 0-1.446 0.393v-0.393h-3.161q-0.982 0-1.393 0.393v-0.393h-5.643v0.393q-0.554-0.393-1.554-0.393h-3.732v0.393q-0.411-0.393-1.625-0.393h-4.179l-0.964 1.036-0.893-1.036h-6.232v6.75h6.125l0.982-1.054 0.929 1.054h3.768v-1.589h0.375q1.054 0 1.607-0.232v1.821h3.107v-1.768h0.143q0.143 0 0.179 0.036t0.036 0.179v1.554h9.446q1.018 0 1.571-0.429v0.429h3q1.071 0 1.696-0.304zM27.607 19.054q0 0.411-0.214 0.768t-0.607 0.518q0.446 0.161 0.607 0.464t0.161 0.821v0.964h-1.161v-0.804q0-0.589-0.214-0.777t-0.821-0.188h-1.232v1.768h-1.161v-4.839h2.75q0.857 0 1.375 0.268t0.518 1.036zM22.661 10.714q0 0.429-0.223 0.786t-0.598 0.518q0.464 0.161 0.616 0.455t0.152 0.83v0.946h-1.161q0-0.161 0.009-0.473t0-0.446-0.054-0.33-0.152-0.286-0.313-0.152-0.527-0.063h-1.25v1.75h-1.143v-4.839l2.732 0.018q0.875 0 1.393 0.259t0.518 1.027zM32.107 21.589v1h-3.857v-4.839h3.857v1h-2.696v0.875h2.643v0.982h-2.643v0.964zM24.5 9.411v4.839h-1.179v-4.839h1.179zM36.875 21.054q0 1.536-1.821 1.536h-2.25v-1.036h2.25q0.607 0 0.607-0.446 0-0.286-0.304-0.375t-0.741-0.089-0.884-0.063-0.75-0.402-0.304-0.982q0-0.696 0.464-1.071t1.179-0.375h2.321v1.018h-2.125q-0.643 0-0.643 0.446 0 0.286 0.313 0.366t0.75 0.071 0.875 0.045 0.75 0.384 0.313 0.973zM41.143 20.161v1.804q-0.429 0.625-1.571 0.625h-2.232v-1.036h2.232q0.589 0 0.589-0.446 0-0.232-0.223-0.339t-0.554-0.098-0.714-0.036-0.714-0.143-0.554-0.429-0.223-0.866q0-0.696 0.473-1.071t1.188-0.375h2.304v1.018h-2.107q-0.643 0-0.643 0.446 0 0.357 0.518 0.393t1.223 0.089 1.009 0.464zM38.196 9.429v4.821h-1.643l-2.179-3.625v3.625h-2.357l-0.464-1.071h-2.393l-0.446 1.071h-1.339q-2.304 0-2.304-2.375 0-2.464 2.375-2.464h1.125v1.054q-0.125 0-0.5-0.018t-0.509-0.009-0.411 0.036-0.384 0.116-0.259 0.241-0.205 0.411-0.054 0.598q0 0.679 0.241 1.036t0.884 0.357h0.518l1.643-3.804h1.732l1.946 4.571v-4.571h1.768l2.036 3.357v-3.357h1.179z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-paypal\" viewBox=\"0 0 41 32\">\r\n            <title>cc-paypal</title>\r\n            <path d=\"M5.75 15.125h-0.268q-0.339 0-0.339-0.321 0-0.5 0.339-1.518 0.089-0.268 0.268-0.348t0.5-0.080q1.375 0 1.375 0.875 0 0.732-0.545 1.063t-1.33 0.33zM11.857 18q-0.839 0-0.839-0.518 0-1.107 2.196-1.107l0.054 0.054q-0.089 1.571-1.411 1.571zM25.679 15.161h-0.268q-0.339 0-0.339-0.339 0-0.5 0.339-1.518 0.089-0.268 0.259-0.339t0.509-0.071q1.375 0 1.375 0.875 0 0.732-0.545 1.063t-1.33 0.33zM31.786 18.018q-0.839 0-0.839-0.536 0-1.107 2.196-1.107l0.054 0.054q-0.089 1.589-1.411 1.589zM6.661 11.464h-2.286q-0.143 0-0.259 0.071t-0.152 0.134-0.125 0.223q-0.054 0.125-0.804 3.393t-0.75 3.429q0 0.125 0.098 0.223t0.241 0.098h1.107q0.446 0 0.58-0.616l0.268-1.232t0.58-0.616q0.839 0 1.563-0.134t1.438-0.438 1.134-0.938 0.42-1.509q0-0.643-0.259-1.089t-0.732-0.652-0.955-0.277-1.107-0.071zM12.839 13.179q-0.679 0-1.321 0.107-0.036 0-0.152 0.018t-0.161 0.027l-0.134 0.027t-0.134 0.036-0.116 0.054-0.116 0.071-0.089 0.089-0.080 0.125-0.071 0.161q-0.161 0.518-0.161 0.696t0.161 0.179q0.089 0 0.384-0.089t0.348-0.107q0.536-0.143 1.036-0.143 1.321 0 1.321 0.643 0 0.196-0.179 0.25-0.143 0.036-0.321 0.054t-0.384 0.027-0.313 0.027q-0.679 0.071-1.152 0.179t-1.009 0.348-0.813 0.696-0.277 1.116q0 0.679 0.464 1.063t1.143 0.384q0.429 0 0.813-0.116t0.589-0.232 0.688-0.42q-0.054 0.125-0.054 0.268t0.098 0.241 0.223 0.098h1q0.018-0.018 0.125-0.063t0.134-0.063 0.089-0.063 0.089-0.098 0.045-0.143l0.804-3.464q0.071-0.232 0.071-0.536 0-1.446-2.589-1.446zM22.268 13.268h-1.321q-0.393 0-0.696 0.411-0.089 0.125-0.527 0.911t-0.83 1.455-0.464 0.688l-0.089-0.071q0-1.375-0.482-2.964-0.018-0.089-0.063-0.152t-0.107-0.116-0.116-0.089-0.152-0.054-0.152-0.027-0.17-0.018-0.161-0.009h-0.33q-0.679 0-0.679 0.375l0.018 0.089q0.089 0.946 0.446 2.696t0.446 2.554q0.036 0.286 0.036 0.429 0 0.339-0.545 1.098t-0.545 1.045q0 0.232 0.714 0.232 1.089 0 1.357-0.446l4.375-7.411q0.179-0.357 0.179-0.464 0-0.161-0.143-0.161zM26.589 11.5h-2.304q-0.321 0-0.518 0.411-0.107 0.232-0.83 3.42t-0.723 3.402q0 0.357 0.768 0.357h0.455t0.17-0.018 0.152-0.036 0.152-0.054 0.116-0.080 0.098-0.107 0.054-0.152l0.375-1.625q0.036-0.179 0.188-0.304t0.348-0.125q0.839 0 1.563-0.125t1.438-0.438 1.134-0.938 0.42-1.5q0-0.643-0.259-1.089t-0.732-0.652-0.955-0.277-1.107-0.071zM32.768 13.179q-0.464 0-1.321 0.107-0.679 0.107-0.857 0.286-0.125 0.143-0.196 0.339-0.143 0.429-0.143 0.696 0 0.179 0.143 0.179 0.018 0 0.732-0.214 0.536-0.143 1.036-0.143 1.321 0 1.321 0.643 0 0.214-0.179 0.25-0.071 0.018-1.018 0.125-0.679 0.071-1.152 0.179t-1.009 0.348-0.813 0.696-0.277 1.116 0.464 1.045 1.143 0.384q0.429 0 0.804-0.107t0.607-0.232 0.679-0.429q-0.054 0.268-0.054 0.286 0 0.089 0.036 0.152t0.116 0.098 0.143 0.063 0.188 0.036 0.17 0.009h0.313q0.75 0 0.857-0.446l0.804-3.464q0.054-0.268 0.054-0.554 0-1.446-2.589-1.446zM38.518 11.554h-0.982q-0.446 0-0.589 0.714-0.179 0.786-0.652 2.982t-0.759 3.393v0.089q0 0.286 0.286 0.321h1.036q0.179 0 0.33-0.116t0.188-0.295l1.482-6.679h-0.018l0.018-0.089q0-0.125-0.098-0.223t-0.241-0.098zM41.143 4.571v22.857q0 0.929-0.679 1.607t-1.607 0.679h-36.571q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h36.571q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc-stripe\" viewBox=\"0 0 41 32\">\r\n            <title>cc-stripe</title>\r\n            <path d=\"M28.518 16.125q0 1.232-0.375 1.893-0.339 0.625-0.929 0.625-0.411 0-0.732-0.161v-4q0.518-0.536 1.018-0.536 1.018 0 1.018 2.179zM36.339 15.482h-1.964q0.107-1.75 1-1.75 0.911 0 0.964 1.75zM8.5 17.893q0-1.054-0.589-1.634t-1.804-1.027q-0.643-0.232-0.929-0.429t-0.286-0.446q0-0.464 0.679-0.464 1.036 0 2.214 0.589l0.321-2q-1.196-0.571-2.661-0.571-1.375 0-2.196 0.679-0.857 0.696-0.857 1.946 0 1.036 0.58 1.616t1.777 1.009q0.696 0.25 0.973 0.455t0.277 0.491q0 0.554-0.857 0.554-0.518 0-1.25-0.223t-1.286-0.545l-0.321 2.018q1.286 0.732 3 0.732 1.446 0 2.304-0.661 0.911-0.732 0.911-2.089zM13.768 14.054l0.339-1.982h-1.714v-2.411l-2.304 0.375-0.321 2.036-0.821 0.143-0.304 1.839h1.107v3.911q0 1.5 0.786 2.143 0.679 0.536 1.982 0.536 0.571 0 1.411-0.196v-2.107q-0.571 0.125-0.786 0.125-0.75 0-0.75-0.893v-3.518h1.375zM19.411 14.5v-2.482q-0.268-0.054-0.5-0.054-0.571 0-0.991 0.286t-0.598 0.821l-0.179-1h-2.339v8.411h2.679v-5.464q0.464-0.554 1.464-0.554 0.286 0 0.464 0.036zM20.071 20.482h2.679v-8.411h-2.679v8.411zM31.179 16.036q0-2.179-0.804-3.196-0.714-0.929-1.982-0.929-1.143 0-2.089 1l-0.143-0.839h-2.357v11.518l2.679-0.446v-2.696q0.643 0.196 1.214 0.196 1.482 0 2.393-1 1.089-1.161 1.089-3.607zM22.821 9.821q0-0.589-0.411-1t-1-0.411-1 0.411-0.411 1 0.411 1.009 1 0.42 1-0.42 0.411-1.009zM38.857 16.196q0-2.018-0.857-3.143-0.893-1.143-2.571-1.143-1.714 0-2.705 1.179t-0.991 3.214q0 2.286 1.125 3.357 0.982 0.982 2.875 0.982 1.804 0 2.857-0.714l-0.286-1.839q-1.018 0.554-2.286 0.554-0.768 0-1.125-0.339-0.411-0.339-0.5-1.179h4.429q0.036-0.25 0.036-0.929zM41.143 4.571v22.857q0 0.929-0.679 1.607t-1.607 0.679h-36.571q-0.929 0-1.607-0.679t-0.679-1.607v-22.857q0-0.929 0.679-1.607t1.607-0.679h36.571q0.929 0 1.607 0.679t0.679 1.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bell-slash\" viewBox=\"0 0 37 32\">\r\n            <title>bell-slash</title>\r\n            <path d=\"M27.821 15.214q1.089 6.357 5.321 9.929 0 0.929-0.679 1.607t-1.607 0.679h-8q0 1.893-1.339 3.232t-3.232 1.339-3.223-1.33-1.348-3.223zM18.286 30.571q0.286 0 0.286-0.286t-0.286-0.286q-1.054 0-1.813-0.759t-0.759-1.813q0-0.286-0.286-0.286t-0.286 0.286q0 1.304 0.92 2.223t2.223 0.92zM36.179 2q0.143 0.179 0.134 0.42t-0.188 0.402l-33.429 28.964q-0.179 0.143-0.42 0.125t-0.384-0.196l-1.5-1.714q-0.143-0.179-0.134-0.42t0.188-0.384l3.321-2.875q-0.339-0.571-0.339-1.179 0.893-0.75 1.625-1.571t1.518-2.134 1.33-2.83 0.893-3.679 0.348-4.643q0-2.714 2.089-5.045t5.482-2.83q-0.143-0.339-0.143-0.696 0-0.714 0.5-1.214t1.214-0.5 1.214 0.5 0.5 1.214q0 0.357-0.143 0.696 2.214 0.321 3.911 1.473t2.643 2.813l7.464-6.482q0.179-0.143 0.42-0.125t0.384 0.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bell-slash-o\" viewBox=\"0 0 37 32\">\r\n            <title>bell-slash-o</title>\r\n            <path d=\"M18.571 30.286q0-0.286-0.286-0.286-1.054 0-1.813-0.759t-0.759-1.813q0-0.286-0.286-0.286t-0.286 0.286q0 1.304 0.92 2.223t2.223 0.92q0.286 0 0.286-0.286zM8.982 21.804l15.661-13.571q-0.75-1.571-2.366-2.616t-3.991-1.045q-1.661 0-3.027 0.563t-2.17 1.438-1.232 1.839-0.429 1.875q0 6.857-2.446 11.518zM33.143 25.143q0 0.929-0.679 1.607t-1.607 0.679h-8q0 1.893-1.339 3.232t-3.232 1.339-3.223-1.33-1.348-3.223l2.661-2.304h13.518q-2.964-3.339-4.054-8.196l1.982-1.732q1.089 6.357 5.321 9.929zM34.679 0.286l1.5 1.714q0.143 0.179 0.134 0.42t-0.188 0.402l-33.429 28.964q-0.179 0.143-0.42 0.125t-0.384-0.196l-1.5-1.714q-0.143-0.179-0.134-0.42t0.188-0.384l3.321-2.875q-0.339-0.571-0.339-1.179 0.893-0.75 1.625-1.571t1.518-2.134 1.33-2.83 0.893-3.679 0.348-4.643q0-2.714 2.089-5.045t5.482-2.83q-0.143-0.339-0.143-0.696 0-0.714 0.5-1.214t1.214-0.5 1.214 0.5 0.5 1.214q0 0.357-0.143 0.696 2.214 0.321 3.911 1.473t2.643 2.813l7.464-6.482q0.179-0.143 0.42-0.125t0.384 0.196z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-trash\" viewBox=\"0 0 25 32\">\r\n            <title>trash</title>\r\n            <path d=\"M9.143 24.571v-12.571q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v12.571q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM13.714 24.571v-12.571q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v12.571q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM18.286 24.571v-12.571q0-0.25-0.161-0.411t-0.411-0.161h-1.143q-0.25 0-0.411 0.161t-0.161 0.411v12.571q0 0.25 0.161 0.411t0.411 0.161h1.143q0.25 0 0.411-0.161t0.161-0.411zM8.571 6.857h8l-0.857-2.089q-0.125-0.161-0.304-0.196h-5.661q-0.179 0.036-0.304 0.196zM25.143 7.429v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v16.929q0 1.482-0.839 2.563t-2.018 1.080h-14.857q-1.179 0-2.018-1.045t-0.839-2.527v-17h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h5.518l1.25-2.982q0.268-0.661 0.964-1.125t1.411-0.464h5.714q0.714 0 1.411 0.464t0.964 1.125l1.25 2.982h5.518q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-copyright\" viewBox=\"0 0 32 32\">\r\n            <title>copyright</title>\r\n            <path d=\"M20.536 19.179v1.946q0 0.893-0.652 1.589t-1.679 1.080-2.107 0.58-2.098 0.196q-3.661 0-6.116-2.482t-2.455-6.179q0-3.625 2.429-6.054t6.054-2.429q0.607 0 1.348 0.080t1.661 0.321 1.652 0.607 1.232 1.009 0.5 1.446v1.946q0 0.286-0.286 0.286h-2.107q-0.286 0-0.286-0.286v-1.25q0-0.768-1.17-1.205t-2.455-0.438q-2.5 0-4.080 1.634t-1.58 4.241q0 2.696 1.634 4.455t4.17 1.759q1.214 0 2.464-0.429t1.25-1.179v-1.25q0-0.125 0.080-0.205t0.188-0.080h2.125q0.107 0 0.196 0.080t0.089 0.205zM13.714 4.571q-2.321 0-4.438 0.911t-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911 4.437-0.911 3.643-2.438 2.438-3.643 0.911-4.438-0.911-4.438-2.438-3.643-3.643-2.438-4.438-0.911zM27.429 16q0 3.732-1.839 6.884t-4.991 4.991-6.884 1.839-6.884-1.839-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839 6.884 1.839 4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-at\" viewBox=\"0 0 32 32\">\r\n            <title>at</title>\r\n            <path d=\"M17.357 13.839q0-1.929-0.955-3.018t-2.634-1.089q-1.125 0-2.214 0.545t-1.964 1.509-1.42 2.446-0.545 3.214q0 2 0.955 3.089t2.688 1.089q1.714 0 3.143-1.188t2.188-2.964 0.759-3.634zM27.429 16q0 1.982-0.661 3.518t-1.759 2.411-2.348 1.33-2.589 0.491q-0.107 0-0.277 0.009t-0.295 0.009q-1.696 0-2.536-0.946-0.5-0.589-0.589-1.482-0.929 1.179-2.348 1.964t-3.098 0.786q-2.875 0-4.455-1.705t-1.58-4.813q0-2.804 1.179-5.179t3.196-3.759 4.393-1.384q1.554 0 2.768 0.634t1.893 1.777l0.036-0.339 0.196-1q0.018-0.107 0.098-0.214t0.17-0.107h2.107q0.089 0 0.232 0.196 0.089 0.089 0.054 0.286l-2.143 10.964q-0.089 0.429-0.089 0.857 0 0.696 0.223 0.929t0.795 0.232q0.5-0.018 1.018-0.098t1.304-0.429 1.375-0.893 1.018-1.598 0.429-2.446q0-5.214-3.107-8.321t-8.321-3.107q-2.321 0-4.438 0.911t-3.643 2.438-2.438 3.643-0.911 4.438 0.911 4.438 2.438 3.643 3.643 2.438 4.438 0.911q4.071 0 7.232-2.571 0.196-0.161 0.429-0.143t0.375 0.214l0.732 0.875q0.143 0.214 0.125 0.429-0.036 0.232-0.214 0.393-1.821 1.482-4.063 2.286t-4.616 0.804q-2.786 0-5.321-1.089t-4.375-2.929-2.929-4.375-1.089-5.321 1.089-5.321 2.929-4.375 4.375-2.929 5.321-1.089q6.143 0 9.929 3.786t3.786 9.929z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-eyedropper\" viewBox=\"0 0 32 32\">\r\n            <title>eyedropper</title>\r\n            <path d=\"M30.321 1.679q1.679 1.679 1.679 4.045t-1.679 4.027l-4.018 3.982 1.857 1.857q0.179 0.179 0.179 0.411t-0.179 0.411l-3.75 3.75q-0.179 0.179-0.411 0.179t-0.411-0.179l-1.875-1.875-10.768 10.768q-0.661 0.661-1.607 0.661h-3.625l-4.571 2.286-1.143-1.143 2.286-4.571v-3.625q0-0.946 0.661-1.607l10.768-10.768-1.875-1.875q-0.179-0.179-0.179-0.411t0.179-0.411l3.75-3.75q0.179-0.179 0.411-0.179t0.411 0.179l1.857 1.857 3.982-4.018q1.661-1.679 4.027-1.679t4.045 1.679zM9.143 26.286l10.286-10.286-3.429-3.429-10.286 10.286v3.429h3.429z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-paint-brush\" viewBox=\"0 0 32 32\">\r\n            <title>paint-brush</title>\r\n            <path d=\"M28.839 0q1.25 0 2.188 0.83t0.938 2.080q0 1.125-0.804 2.696-5.929 11.232-8.304 13.429-1.732 1.625-3.893 1.625-2.25 0-3.866-1.652t-1.616-3.92q0-2.286 1.643-3.786l11.393-10.339q1.054-0.964 2.321-0.964zM12.607 18.464q0.696 1.357 1.902 2.321t2.688 1.357l0.018 1.268q0.071 3.804-2.313 6.196t-6.223 2.393q-2.196 0-3.893-0.83t-2.723-2.277-1.545-3.268-0.518-3.929q0.125 0.089 0.732 0.536t1.107 0.795 1.054 0.652 0.821 0.304q0.732 0 0.982-0.661 0.446-1.179 1.027-2.009t1.241-1.357 1.571-0.848 1.839-0.455 2.232-0.188z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-birthday-cake\" viewBox=\"0 0 32 32\">\r\n            <title>birthday-cake</title>\r\n            <path d=\"M32 25.143v6.857h-32v-6.857q0.804 0 1.518-0.25t1.054-0.491 0.839-0.67q0.536-0.482 0.92-0.679t1.009-0.196 0.991 0.196 0.938 0.679q0.518 0.446 0.839 0.679t1.036 0.482 1.536 0.25q0.804 0 1.518-0.259t1.036-0.482 0.857-0.67q0.375-0.339 0.58-0.482t0.554-0.268 0.777-0.125q0.625 0 1.009 0.196t0.92 0.679q0.5 0.429 0.839 0.67t1.054 0.491 1.518 0.25 1.518-0.25 1.054-0.491 0.839-0.67q0.536-0.482 0.92-0.679t1.009-0.196q0.607 0 0.991 0.196t0.92 0.679q0.5 0.429 0.839 0.67t1.054 0.491 1.518 0.25zM32 19.429v3.429q-0.625 0-0.991-0.196t-0.938-0.679q-0.518-0.446-0.839-0.679t-1.036-0.482-1.518-0.25q-0.821 0-1.536 0.25t-1.036 0.482-0.839 0.679q-0.393 0.339-0.589 0.482t-0.554 0.268-0.786 0.125q-0.625 0-1.009-0.196t-0.92-0.679q-0.518-0.446-0.839-0.679t-1.036-0.482-1.536-0.25q-0.804 0-1.518 0.259t-1.036 0.482-0.857 0.67q-0.375 0.339-0.58 0.482t-0.554 0.268-0.777 0.125q-0.625 0-1.009-0.196t-0.92-0.679q-0.5-0.429-0.839-0.67t-1.054-0.491-1.518-0.25q-0.821 0-1.536 0.25t-1.036 0.482-0.839 0.679q-0.536 0.482-0.92 0.679t-1.009 0.196v-3.429q0-1.429 1-2.429t2.429-1h1.143v-8h4.571v8h4.571v-8h4.571v8h4.571v-8h4.571v8h1.143q1.429 0 2.429 1t1 2.429zM9.143 4q0 1.375-0.643 2.116t-1.643 0.741q-0.946 0-1.616-0.67t-0.67-1.616q0-0.518 0.17-0.911t0.42-0.607 0.554-0.5 0.554-0.563 0.42-0.795 0.17-1.196q0.679 0 1.482 1.321t0.804 2.679zM18.286 4q0 1.375-0.643 2.116t-1.643 0.741q-0.946 0-1.616-0.67t-0.67-1.616q0-0.518 0.17-0.911t0.42-0.607 0.554-0.5 0.554-0.563 0.42-0.795 0.17-1.196q0.679 0 1.482 1.321t0.804 2.679zM27.429 4q0 1.375-0.643 2.116t-1.643 0.741q-0.946 0-1.616-0.67t-0.67-1.616q0-0.518 0.17-0.911t0.42-0.607 0.554-0.5 0.554-0.563 0.42-0.795 0.17-1.196q0.679 0 1.482 1.321t0.804 2.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-area-chart\" viewBox=\"0 0 37 32\">\r\n            <title>area-chart</title>\r\n            <path d=\"M36.571 27.429v2.286h-36.571v-27.429h2.286v25.143h34.286zM29.714 9.143l4.571 16h-29.714v-10.286l8-10.286 10.286 10.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pie-chart\" viewBox=\"0 0 32 32\">\r\n            <title>pie-chart</title>\r\n            <path d=\"M13.714 15.893l9.75 9.75q-1.893 1.929-4.42 3t-5.33 1.071q-3.732 0-6.884-1.839t-4.991-4.991-1.839-6.884 1.839-6.884 4.991-4.991 6.884-1.839v13.607zM17.054 16h13.804q0 2.804-1.071 5.33t-3 4.42zM29.714 13.714h-13.714v-13.714q3.732 0 6.884 1.839t4.991 4.991 1.839 6.884z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-line-chart\" viewBox=\"0 0 37 32\">\r\n            <title>line-chart</title>\r\n            <path d=\"M36.571 27.429v2.286h-36.571v-27.429h2.286v25.143h34.286zM34.286 5.143v7.768q0 0.375-0.348 0.527t-0.634-0.134l-2.161-2.161-11.304 11.304q-0.179 0.179-0.411 0.179t-0.411-0.179l-4.161-4.161-7.429 7.429-3.429-3.429 10.446-10.446q0.179-0.179 0.411-0.179t0.411 0.179l4.161 4.161 8.286-8.286-2.161-2.161q-0.286-0.286-0.134-0.634t0.527-0.348h7.768q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-lastfm\" viewBox=\"0 0 32 32\">\r\n            <title>lastfm</title>\r\n            <path d=\"M23.071 12.571q0 0.107 0.179 0.732 0.179 0.518 0.446 0.884t0.732 0.607 0.786 0.357 0.982 0.295q5.804 1.625 5.804 5.929 0 2.607-1.884 4.33t-4.545 1.723q-1.054 0-1.991-0.33t-1.634-0.813-1.375-1.33-1.125-1.563-0.955-1.848-0.777-1.839-0.705-1.902-0.634-1.696q-0.571-1.446-1.098-2.384t-1.313-1.723-1.857-1.143-2.536-0.357q-1.714 0-3.268 0.991t-2.464 2.58-0.911 3.304q0 2.857 1.902 4.991t4.705 2.134q3.161 0 4.607-1.696 1-1.125 1.482-2.071l1.5 2.714q-0.268 0.607-0.786 1.25l0.018 0.018q-2.339 2.714-6.929 2.714-2.625 0-4.813-1.411t-3.402-3.705-1.214-4.902q0-1.875 0.777-3.679t2.071-3.152 3.071-2.17 3.652-0.821q1.554 0 2.839 0.339t2.205 0.893 1.696 1.429 1.295 1.768 1.045 2.089 0.902 2.223 0.893 2.33 0.982 2.268q1.714 3.571 4.161 3.571 1.446 0 2.473-0.866t1.027-2.295q0-0.75-0.339-1.286t-0.902-0.821-1.295-0.563-1.509-0.482-1.563-0.607-1.446-0.929-1.161-1.464-0.696-2.188q-0.054-0.286-0.054-0.589 0-1.964 1.563-3.429t3.545-1.393q1.393 0.054 2.152 0.259t1.616 0.955h-0.018q0.214 0.196 0.411 0.438t0.464 0.643 0.339 0.491l-2.304 1.768q-0.464-0.875-0.964-1.25v-0.018q-0.411-0.375-1.732-0.375-0.875 0-1.5 0.589t-0.625 1.482z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-lastfm-square\" viewBox=\"0 0 32 32\">\r\n            <title>lastfm-square</title>\r\n            <path d=\"M25.571 18.786q0-3.089-4.179-4.268-0.625-0.179-0.946-0.295t-0.679-0.446-0.518-0.83q0-0.036-0.036-0.152t-0.054-0.214-0.018-0.134q0-0.643 0.438-1.063t1.080-0.42q0.964 0 1.268 0.268h-0.018q0.357 0.268 0.696 0.911l1.661-1.268q-0.696-0.964-0.875-1.143-0.589-0.518-1.205-0.696t-1.527-0.179q-1.429 0-2.536 1.027t-1.107 2.455q0 0.125 0.036 0.411 0.286 1.714 1.152 2.5t2.652 1.304q0.518 0.143 0.875 0.277t0.804 0.384 0.688 0.616 0.241 0.83v0.089q0.018 1.036-0.723 1.661t-1.795 0.625q-1.732 0-2.982-2.571-0.411-0.839-0.92-2.17t-0.857-2.241-0.964-1.973-1.321-1.705-1.848-1.080-2.625-0.438q-1.804 0-3.429 1t-2.571 2.643-0.893 3.429v0.018q0.071 1.929 0.902 3.554t2.384 2.634 3.5 1.009q3.321 0 4.982-1.964 0.357-0.482 0.554-0.911l-1.071-1.946q-0.75 1.429-1.768 2.071t-2.607 0.643q-2.054 0-3.411-1.554t-1.357-3.643q0-1.875 1.464-3.375t3.321-1.5q2 0 3.036 0.955t1.857 3.080q0.143 0.375 0.455 1.223t0.509 1.366 0.563 1.33 0.688 1.321 0.813 1.116 0.991 0.955 1.179 0.589 1.429 0.241q1.911 0 3.268-1.241t1.357-3.116zM27.429 7.429v17.143q0 2.125-1.509 3.634t-3.634 1.509h-17.143q-2.125 0-3.634-1.509t-1.509-3.634v-17.143q0-2.125 1.509-3.634t3.634-1.509h17.143q2.125 0 3.634 1.509t1.509 3.634z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-toggle-off\" viewBox=\"0 0 37 32\">\r\n            <title>toggle-off</title>\r\n            <path d=\"M20.571 16q0-1.857-0.723-3.545t-1.955-2.92-2.92-1.955-3.545-0.723-3.545 0.723-2.92 1.955-1.955 2.92-0.723 3.545 0.723 3.545 1.955 2.92 2.92 1.955 3.545 0.723 3.545-0.723 2.92-1.955 1.955-2.92 0.723-3.545zM34.286 16q0-1.857-0.723-3.545t-1.955-2.92-2.92-1.955-3.545-0.723h-6.893q2.125 1.607 3.366 4t1.241 5.143-1.241 5.143-3.366 4h6.893q1.857 0 3.545-0.723t2.92-1.955 1.955-2.92 0.723-3.545zM36.571 16q0 2.321-0.911 4.438t-2.438 3.643-3.643 2.438-4.438 0.911h-13.714q-2.321 0-4.438-0.911t-3.643-2.438-2.438-3.643-0.911-4.438 0.911-4.438 2.438-3.643 3.643-2.438 4.438-0.911h13.714q2.321 0 4.438 0.911t3.643 2.438 2.438 3.643 0.911 4.438z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-toggle-on\" viewBox=\"0 0 37 32\">\r\n            <title>toggle-on</title>\r\n            <path d=\"M0 16q0-2.321 0.911-4.438t2.438-3.643 3.643-2.438 4.438-0.911h13.714q2.321 0 4.438 0.911t3.643 2.438 2.438 3.643 0.911 4.438-0.911 4.438-2.438 3.643-3.643 2.438-4.438 0.911h-13.714q-2.321 0-4.438-0.911t-3.643-2.438-2.438-3.643-0.911-4.438zM25.143 25.143q1.857 0 3.545-0.723t2.92-1.955 1.955-2.92 0.723-3.545-0.723-3.545-1.955-2.92-2.92-1.955-3.545-0.723-3.545 0.723-2.92 1.955-1.955 2.92-0.723 3.545 0.723 3.545 1.955 2.92 2.92 1.955 3.545 0.723z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bicycle\" viewBox=\"0 0 41 32\">\r\n            <title>bicycle</title>\r\n            <path d=\"M13.607 20.571h-5.607q-0.714 0-1.027-0.625t0.116-1.196l3.357-4.482q-1.161-0.554-2.446-0.554-2.357 0-4.036 1.679t-1.679 4.036 1.679 4.036 4.036 1.679q2.054 0 3.625-1.295t1.982-3.277zM10.286 18.286h3.321q-0.321-1.518-1.339-2.643zM18.857 18.286l5.143-6.857h-8.571l-1.768 2.357q1.875 1.839 2.25 4.5h2.946zM38.857 19.429q0-2.357-1.679-4.036t-4.036-1.679q-1.071 0-2.161 0.429l3.107 4.643q0.268 0.411 0.179 0.875t-0.482 0.714q-0.268 0.196-0.643 0.196-0.625 0-0.946-0.518l-3.107-4.643q-1.661 1.696-1.661 4.018 0 2.357 1.679 4.036t4.036 1.679 4.036-1.679 1.679-4.036zM41.143 19.429q0 3.304-2.348 5.652t-5.652 2.348-5.652-2.348-2.348-5.652q0-1.732 0.705-3.277t1.955-2.67l-1.161-1.75-6.304 8.375q-0.321 0.464-0.911 0.464h-3.518q-0.411 2.929-2.661 4.893t-5.25 1.964q-3.304 0-5.652-2.348t-2.348-5.652 2.348-5.652 5.652-2.348q2.036 0 3.839 0.982l2.446-3.268h-4q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h6.857v2.286h7.768l-1.518-2.286h-3.964q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571q0.589 0 0.946 0.5l4.768 7.143q1.625-0.786 3.429-0.786 3.304 0 5.652 2.348t2.348 5.652z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-boundaries\" viewBox=\"0 0 32 32\">\r\n            <title>boundaries</title>\r\n            <path d=\"M1.522 1.326c-0.725 0.725-1.315 1.367-1.315 1.419 0 0.135 4.474 4.608 4.608 4.608 0.052 0 0.715-0.621 1.471-1.367l1.377-1.377-2.299-2.299c-1.274-1.274-2.351-2.309-2.413-2.309s-0.704 0.59-1.429 1.326z\"></path>\r\n            <path d=\"M26.335 3.852l-3.034 3.024-1.429-1.419c-1.429-1.419-1.439-1.419-1.916-1.419-0.383 0-0.549 0.062-0.818 0.3l-0.342 0.3-0.031 4.381c-0.031 4.671-0.021 4.784 0.476 5.168 0.249 0.197 0.435 0.207 4.65 0.207 4.898 0 4.878 0 5.168-0.694 0.28-0.652 0.145-0.891-1.388-2.444l-1.419-1.419 3.034-3.034c2.62-2.62 3.024-3.065 3.024-3.335 0-0.259-0.197-0.507-1.17-1.481-0.953-0.953-1.222-1.16-1.471-1.16-0.259 0-0.735 0.435-3.335 3.024z\"></path>\r\n            <path d=\"M7.684 7.384c-0.746 0.756-1.367 1.419-1.367 1.471 0 0.135 4.474 4.608 4.608 4.608s2.744-2.61 2.744-2.744c0-0.062-1.036-1.139-2.309-2.413l-2.299-2.299-1.377 1.377z\"></path>\r\n            <path d=\"M13.794 13.494c-0.746 0.756-1.367 1.419-1.367 1.471 0 0.062 1.025 1.129 2.278 2.382l2.278 2.278 1.419-1.429 1.429-1.419-4.66-4.66-1.377 1.377z\"></path>\r\n            <path d=\"M19.904 19.604c-0.746 0.756-1.367 1.419-1.367 1.471 0 0.062 1.025 1.129 2.278 2.382l2.278 2.278 1.419-1.429 1.429-1.419-4.66-4.66-1.377 1.377z\"></path>\r\n            <path d=\"M3.666 18.63c-0.383 0.228-0.601 0.777-0.497 1.212 0.041 0.186 0.59 0.828 1.481 1.729l1.398 1.419-3.024 3.034c-2.62 2.62-3.024 3.065-3.024 3.335 0 0.259 0.197 0.507 1.17 1.481 0.953 0.953 1.222 1.16 1.471 1.16 0.259 0 0.735-0.435 3.335-3.024l3.034-3.024 1.429 1.419c1.419 1.408 1.439 1.419 1.905 1.419 0.538 0 0.922-0.238 1.108-0.704 0.083-0.207 0.114-1.502 0.093-4.671l-0.031-4.381-0.342-0.3-0.331-0.3h-4.432c-4.173 0-4.443 0.010-4.743 0.197z\"></path>\r\n            <path d=\"M26.014 25.714c-0.746 0.756-1.367 1.419-1.367 1.471 0 0.062 1.025 1.129 2.278 2.382l2.278 2.278 1.419-1.429 1.429-1.419-4.66-4.66-1.377 1.377z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-industry\" viewBox=\"0 0 32 32\">\r\n            <title>industry</title>\r\n            <path d=\"M9.040 2.704c-0.96 0.496-2.64 1.904-2.64 2.224 0 0.336 0.304 0.672 0.608 0.672 0.128 0 0.576-0.32 1.024-0.704 0.432-0.368 1.072-0.848 1.408-1.040l0.624-0.352 0.88 0.8c1.776 1.616 2.336 1.648 4 0.176l1.072-0.96 0.448 0.304c0.24 0.176 0.544 0.448 0.672 0.592 0.432 0.528 1.472 1.184 1.888 1.184 0.576 0 1.584-0.576 2.64-1.488 0.896-0.768 1.072-1.152 0.704-1.52-0.32-0.32-0.544-0.224-1.456 0.56-0.48 0.432-1.088 0.896-1.36 1.040l-0.48 0.288-1.12-0.944c-0.624-0.528-1.28-0.992-1.472-1.056-0.608-0.192-1.216 0.080-2.304 1.056l-1.088 0.96-0.448-0.368c-0.256-0.208-0.784-0.64-1.168-0.976-0.896-0.752-1.568-0.88-2.432-0.448z\"></path>\r\n            <path d=\"M4.688 7.472c-0.144 0.048-0.208 0.432-0.208 1.104v1.024h4.16v-0.864c0-1.28-0.16-1.376-2.128-1.36-0.896 0-1.728 0.048-1.824 0.096z\"></path>\r\n            <path d=\"M4.512 19.952l0.048 9.568 11.84 0.048c10.992 0.032 11.856 0.016 12.048-0.24 0.144-0.208 0.192-2.048 0.192-7.888 0-7.872-0.016-8-0.64-8-0.144 0-1.424 0.976-2.848 2.16l-2.576 2.16-0.048-2.128c-0.048-2.048-0.064-2.112-0.4-2.16-0.256-0.032-1.264 0.592-3.392 2.112-1.664 1.2-3.072 2.176-3.12 2.176s-0.112-0.96-0.128-2.128c-0.048-2.016-0.064-2.112-0.384-2.16-0.24-0.032-1.328 0.656-3.36 2.112l-3.024 2.16-0.048-3.68-0.032-3.664h-4.16l0.032 9.552zM12.288 21.792c0.288 0.288 0.272 4.192-0.032 4.432-0.144 0.128-0.8 0.176-1.872 0.144l-1.664-0.048-0.048-2.144c-0.016-1.184 0-2.256 0.032-2.368 0.112-0.288 3.312-0.288 3.584-0.016zM19.28 24v2.32l-1.664 0.048c-1.072 0.032-1.728-0.016-1.872-0.144-0.304-0.24-0.32-4.144-0.032-4.432 0.144-0.144 0.72-0.192 1.888-0.16l1.68 0.048v2.32zM26.32 24v2.32h-3.68l-0.048-2.144c-0.016-1.184 0-2.256 0.048-2.368 0.048-0.176 0.496-0.208 1.872-0.176l1.808 0.048v2.32z\"></path>\r\n            <path d=\"M9.44 24v1.6h2.080v-3.2h-2.080v1.6z\"></path>\r\n            <path d=\"M16.48 24v1.6h2.080v-3.2h-2.080v1.6z\"></path>\r\n            <path d=\"M23.36 24v1.6h2.24v-3.2h-2.24v1.6z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-bus\" viewBox=\"0 0 32 32\">\r\n            <title>bus</title>\r\n            <path d=\"M6.857 21.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM25.143 21.714q0-0.946-0.67-1.616t-1.616-0.67-1.616 0.67-0.67 1.616 0.67 1.616 1.616 0.67 1.616-0.67 0.67-1.616zM24.321 14.643l-1.286-6.857q-0.089-0.411-0.402-0.67t-0.723-0.259h-16.393q-0.411 0-0.723 0.259t-0.402 0.67l-1.286 6.857q-0.089 0.536 0.25 0.946t0.875 0.411h18.964q0.536 0 0.875-0.411t0.25-0.946zM20.286 3.714q0-0.357-0.25-0.607t-0.607-0.25h-11.429q-0.357 0-0.607 0.25t-0.25 0.607 0.25 0.607 0.607 0.25h11.429q0.357 0 0.607-0.25t0.25-0.607zM27.429 16.661v10.768h-2.286v2.286q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616v-2.286h-13.714v2.286q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616v-2.286h-2.286v-10.768q0-2 0.446-3.982l1.839-8.107q0.161-1.393 1.741-2.446t4.107-1.589 5.58-0.536 5.58 0.536 4.107 1.589 1.741 2.446l1.875 8.107q0.411 1.821 0.411 3.982z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ioxhost\" viewBox=\"0 0 37 32\">\r\n            <title>ioxhost</title>\r\n            <path d=\"M26.125 14.857q0 0.625-0.446 1.080t-1.089 0.455h-12.536q-0.643 0-1.089-0.455t-0.446-1.080 0.446-1.080 1.089-0.455h12.536q0.643 0 1.089 0.455t0.446 1.080zM29.946 14.857q0-1.536-0.411-3.036h-17.536q-0.643 0-1.089-0.446t-0.446-1.071q0-0.643 0.446-1.089t1.089-0.446h16.214q-1.571-2.554-4.196-4.054t-5.714-1.5q-3.161 0-5.848 1.563t-4.25 4.241-1.563 5.839q0 1.536 0.411 3.036h17.536q0.643 0 1.089 0.446t0.446 1.071q0 0.643-0.446 1.089t-1.089 0.446h-16.214q1.571 2.554 4.205 4.054t5.723 1.5q2.357 0 4.518-0.92t3.714-2.482 2.482-3.714 0.929-4.527zM36.571 10.304q0 0.625-0.446 1.071t-1.089 0.446h-2.339q0.304 1.518 0.304 3.036 0 2.982-1.17 5.705t-3.134 4.696-4.688 3.143-5.705 1.17q-4.393 0-8.009-2.375t-5.384-6.25h-3.375q-0.643 0-1.089-0.446t-0.446-1.089q0-0.625 0.446-1.071t1.089-0.446h2.357q-0.304-1.518-0.304-3.036 0-2.982 1.17-5.705t3.134-4.696 4.688-3.143 5.723-1.17q4.375 0 7.991 2.375t5.384 6.25h3.357q0.643 0 1.089 0.446t0.446 1.089z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-angellist\" viewBox=\"0 0 23 32\">\r\n            <title>angellist</title>\r\n            <path d=\"M17.018 6.75l-2.036 5.857 2.089 0.375q2.946-8.054 2.946-9.25 0-1-0.679-1-1.018 0-2.321 4.018zM11.679 19.018l0.589 1.571q0.661-0.75 1.268-1.196l-0.589-0.098t-0.688-0.125-0.58-0.152zM6.464 3.018q0 1.75 2.839 9.304 0.321-0.179 0.875-0.179 0.268 0 1.339 0.089l-2.161-6.268q-1.339-3.929-2.196-3.929-0.339 0-0.518 0.313t-0.179 0.67zM5.054 16.571q0 0.643 0.92 2.125t2.098 2.732 1.786 1.25q0.25 0 0.455-0.232t0.205-0.482q0-0.429-0.571-1.821-0.232-0.571-0.571-1.286t-0.848-1.589-1.098-1.446-1.107-0.571q-0.357 0-0.813 0.482t-0.455 0.839zM2.232 22.554q0 0.732 0.446 1.857 1.054 2.589 3.277 4.054t5.027 1.464q4.054 0 6.821-3.036 2.714-3.018 2.714-7.625 0-0.768-0.018-1.196t-0.205-1.107-0.545-1q-1-0.875-3.777-1.348t-4.83-0.473q-0.661 0-0.875 0.196-0.214 0.089-0.214 0.625 0 0.607 0.384 1.071t0.991 0.714 1.384 0.42 1.563 0.205 1.518 0.071 1.25 0h0.411q0.429 0 0.714 0.339 0.268 0.339 0.339 0.982-0.5 0.5-1.714 0.964-1.089 0.393-1.661 0.821-1.143 0.821-1.938 2.036t-0.795 2.446q0 0.554 0.33 1.58t0.33 1.563l-0.054 0.214q-0.071 0.214-0.071 0.25-2.446-0.179-2.607-3.857-0.143 0.036-0.732 0.036 0.036 0.125 0.036 0.375 0 0.946-0.723 1.598t-1.688 0.652q-1.464 0-2.973-1.393t-1.509-2.839q0-0.607 0.589-1.196 0.929 1.143 1.071 1.357 1.375 1.857 2.375 1.857 0.214 0 0.473-0.152t0.259-0.366q0-0.607-1.563-2.589t-2.080-1.982q-0.768 0-1.25 0.795t-0.482 1.616zM0.196 22.714q0-1.804 0.759-2.911t2.438-1.571q-0.5-1.321-0.5-1.857 0-1.107 1.089-2.196t2.179-1.089q0.518 0 1.25 0.268-2.911-8.25-2.911-10.125 0-1.429 0.732-2.33t2.125-0.902q2.339 0 5.804 10.375 0.107 0.304 0.143 0.411 0.107-0.286 0.518-1.42t0.777-2.116 0.964-2.277 1.152-2.196 1.259-1.545 1.366-0.643q1.268 0 2 0.875t0.732 2.179q0 1.929-2.839 9.821 1.089 0.268 1.795 0.821t1.045 1.393 0.464 1.67 0.125 1.973q0 2.679-0.839 5t-2.357 4.018-3.768 2.679-4.964 0.982q-1.982 0-3.982-0.75-2.661-1.018-4.607-3.42t-1.946-5.116z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cc\" viewBox=\"0 0 37 32\">\r\n            <title>cc</title>\r\n            <path d=\"M14.018 18h3.696q-0.25 2.821-1.759 4.438t-3.83 1.616q-2.893 0-4.545-2.071t-1.652-5.643q0-3.464 1.661-5.563t4.161-2.098q2.643 0 4.143 1.554t1.732 4.411h-3.625q-0.089-1.143-0.634-1.768t-1.455-0.625q-1.018 0-1.58 1.080t-0.563 3.17q0 0.857 0.089 1.5t0.321 1.241 0.714 0.92 1.179 0.321q1.696 0 1.946-2.482zM26.732 18h3.679q-0.25 2.821-1.75 4.438t-3.821 1.616q-2.893 0-4.545-2.071t-1.652-5.643q0-3.464 1.661-5.563t4.161-2.098q2.643 0 4.143 1.554t1.732 4.411h-3.643q-0.071-1.143-0.625-1.768t-1.446-0.625q-1.018 0-1.58 1.080t-0.563 3.17q0 0.857 0.089 1.5t0.321 1.241 0.705 0.92 1.17 0.321q0.875 0 1.366-0.679t0.598-1.804zM33.143 15.875q0-3.696-0.277-5.482t-1.080-2.875q-0.107-0.143-0.241-0.25t-0.384-0.268-0.286-0.196q-1.536-1.125-12.446-1.125-11.161 0-12.679 1.125-0.089 0.071-0.313 0.205t-0.375 0.25-0.259 0.259q-0.804 1.071-1.071 2.848t-0.268 5.509q0 3.714 0.268 5.491t1.071 2.866q0.107 0.143 0.268 0.268t0.366 0.25 0.313 0.214q0.786 0.589 4.277 0.875t8.402 0.286q10.893 0 12.446-1.161 0.089-0.071 0.304-0.196t0.366-0.25 0.241-0.286q0.821-1.071 1.089-2.839t0.268-5.518zM36.571 2.286v27.429h-36.571v-27.429h36.571z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sheqel\" viewBox=\"0 0 32 32\">\r\n            <title>sheqel</title>\r\n            <path d=\"M17.714 11.143v8.857q0 0.25-0.161 0.411t-0.411 0.161h-2.857q-0.25 0-0.411-0.161t-0.161-0.411v-8.857q0-2-1.429-3.429t-3.429-1.429h-4.857v20.571q0 0.25-0.161 0.411t-0.411 0.161h-2.857q-0.25 0-0.411-0.161t-0.161-0.411v-24q0-0.25 0.161-0.411t0.411-0.161h8.286q2.411 0 4.446 1.188t3.223 3.223 1.188 4.446zM24.571 2.857v15.714q0 2.411-1.188 4.446t-3.223 3.223-4.446 1.188h-8.286q-0.25 0-0.411-0.161t-0.161-0.411v-17.143q0-0.25 0.161-0.411t0.411-0.161h2.857q0.25 0 0.411 0.161t0.161 0.411v13.714h4.857q2 0 3.429-1.429t1.429-3.429v-15.714q0-0.25 0.161-0.411t0.411-0.161h2.857q0.25 0 0.411 0.161t0.161 0.411z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-meanpath\" viewBox=\"0 0 32 32\">\r\n            <title>meanpath</title>\r\n            <path d=\"M23.411 15.036v2.036q0 0.429-0.241 0.679t-0.67 0.25h-3.607q-0.429 0-0.679-0.25t-0.25-0.679v-2.036q0-0.429 0.25-0.679t0.679-0.25h3.607q0.429 0 0.67 0.25t0.241 0.679zM14.661 19.143v-4.464q0-0.946-0.58-1.527t-1.527-0.58h-2.375q-1.214 0-1.714 0.929-0.5-0.929-1.714-0.929h-2.321q-0.946 0-1.527 0.58t-0.58 1.527v4.464q0 0.393 0.375 0.393h0.982q0.393 0 0.393-0.393v-4.107q0-0.429 0.241-0.679t0.688-0.25h1.679q0.429 0 0.679 0.25t0.25 0.679v4.107q0 0.393 0.375 0.393h0.964q0.393 0 0.393-0.393v-4.107q0-0.429 0.25-0.679t0.679-0.25h1.732q0.429 0 0.67 0.25t0.241 0.679v4.107q0 0.393 0.393 0.393h0.982q0.375 0 0.375-0.393zM25.179 17.429v-2.75q0-0.946-0.589-1.527t-1.536-0.58h-4.714q-0.946 0-1.536 0.58t-0.589 1.527v7.321q0 0.375 0.393 0.375h0.982q0.375 0 0.375-0.375v-3.214q0.554 0.75 1.679 0.75h3.411q0.946 0 1.536-0.58t0.589-1.527zM27.429 6.429v19.143q0 1.714-1.214 2.929t-2.929 1.214h-19.143q-1.714 0-2.929-1.214t-1.214-2.929v-19.143q0-1.714 1.214-2.929t2.929-1.214h19.143q1.714 0 2.929 1.214t1.214 2.929z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-buysellads\" viewBox=\"0 0 32 32\">\r\n            <title>buysellads</title>\r\n            <path d=\"M16.339 19.393h-5.25l2.625-9.839zM17.875 25.143h5.554l-5.786-18.286h-7.857l-5.786 18.286h5.554l6.839-5.607zM27.429 7.429v17.143q0 2.107-1.518 3.625t-3.625 1.518h-17.143q-2.107 0-3.625-1.518t-1.518-3.625v-17.143q0-2.107 1.518-3.625t3.625-1.518h17.143q2.107 0 3.625 1.518t1.518 3.625z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-connectdevelop\" viewBox=\"0 0 37 32\">\r\n            <title>connectdevelop</title>\r\n            <path d=\"M36.571 15.982q0 0.375-0.232 0.652t-0.589 0.348l-3.661 6.357q0.054 0.161 0.054 0.321 0 0.357-0.223 0.634t-0.58 0.348l-3.446 6.018q0.054 0.143 0.054 0.286 0 0.411-0.295 0.714t-0.723 0.304q-0.446 0-0.732-0.321h-7.143q-0.304 0.357-0.768 0.357t-0.768-0.357h-7.125q-0.304 0.357-0.768 0.357-0.411 0-0.714-0.295t-0.304-0.723q0-0.143 0.071-0.357l-3.446-5.982q-0.357-0.071-0.58-0.348t-0.223-0.634q0-0.161 0.054-0.321l-3.679-6.357q-0.357-0.089-0.58-0.366t-0.223-0.634q0-0.375 0.241-0.652t0.598-0.348l3.554-6.143q0-0.018-0.009-0.054t-0.009-0.054q0-0.643 0.607-0.911l3.732-6.482q-0.071-0.179-0.071-0.321 0-0.429 0.304-0.723t0.714-0.295q0.464 0 0.786 0.375h7.071q0.286-0.375 0.768-0.375t0.768 0.375h7.107q0.321-0.375 0.786-0.375 0.411 0 0.714 0.295t0.304 0.723q0 0.107-0.071 0.321l3.696 6.393q0.411 0.018 0.696 0.313t0.286 0.688q0 0.232-0.125 0.482l3.339 5.786q0.339 0.071 0.563 0.348t0.223 0.634zM18.982 30.25h6.946l-6.107-6.321h-2.554l-6.107 6.321h6.429q0.321-0.286 0.696-0.286t0.696 0.286zM2 15.75q0.018 0.071 0.018 0.232 0 0.179-0.036 0.268l3.714 6.429q0.036 0 0.080 0.018t0.098 0.045l0.089 0.045 3.357-3.554v-6.196l-3.339-3.464q-0.232 0.143-0.518 0.179zM17.607 1.75h-6.929l3.393 3.571 9.893-3.571h-5q-0.286 0.286-0.679 0.286t-0.679-0.286zM30.161 23.393q0.018-0.107 0.089-0.196l-1.143-1.214-0.304 1.411h1.357zM28.268 23.393l0.393-1.875-4.5-4.75-5.286 5.482 1.125 1.143h8.268zM26.696 29.964l0.286-0.5 1.161-5.536h-7.625l5.946 6.125q0.143-0.071 0.232-0.089zM10.321 30.25h0.089l6.107-6.321h-6.661v5.982l0.071 0.107q0.25 0.089 0.393 0.232zM9.857 23.393h7.179l1.143-1.179-5.518-5.732-2.804 2.964v3.946zM6.411 23.393h2.911v-3.375l-3 3.161q0.071 0.143 0.089 0.214zM6.393 8.661q0 0.018 0.009 0.036t0.009 0.036q0 0.286-0.143 0.518l3.054 3.161v-4.804zM9.857 7.411v5.554l2.732 2.804 5.304-5.607-3.982-4.214zM9.929 1.982l-0.071 0.143v4.714l3.661-1.321-3.411-3.589q-0.107 0.036-0.179 0.054zM25.839 1.75h-0.286l-11.089 4 3.804 4.018zM18.268 10.536l-5.304 5.625 5.554 5.696 5.286-5.482zM12.286 16.107l-2.429-2.518v5.071zM18.536 22.607l-0.75 0.786h1.518zM24.536 16.393l4.25 4.482 2.357-11.143-0.054-0.089-0.018-0.018zM30.679 9.25q-0.143-0.232-0.143-0.518v-0.036l-3.857-6.714q-0.089-0.018-0.232-0.089l-7.804 8.268 5.536 5.839zM9.321 7.036v-3.982l-2.911 5.036zM9.321 23.929h-2.911l2.911 5.054v-5.054zM28.696 23.929l-0.857 4.054 2.321-4.054h-1.464zM30.875 22.679l3.696-6.446q-0.036-0.179-0.036-0.25 0-0.018 0.054-0.286l-3.054-5.286-2.304 10.929 1.375 1.464q0.089-0.054 0.268-0.125z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-dashcube\" viewBox=\"0 0 32 32\">\r\n            <title>dashcube</title>\r\n            <path d=\"M0 12.143q0-2.339 1.634-4.045t3.973-1.705h13.25l6.286-6.393v26.25q0 2.357-1.634 4.054t-3.973 1.696h-13.929q-2.339 0-3.973-1.696t-1.634-4.054v-14.107zM22 25.607l-3.143-3.214v-7.589q0-0.821-0.571-1.411t-1.393-0.589h-8.643q-0.821 0-1.393 0.589t-0.571 1.411v8.786q0 0.821 0.58 1.42t1.384 0.598h13.75z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-forumbee\" viewBox=\"0 0 32 32\">\r\n            <title>forumbee</title>\r\n            <path d=\"M16.679 2.679q-5.661 2.161-9.929 6.473t-6.393 10.009q-0.357-1.589-0.357-3.143 0-3.714 1.83-6.866t4.973-4.982 6.857-1.83q1.464 0 3.018 0.339zM21.482 4.804q1.661 1.161 2.929 2.768-6.946 2.018-12.045 7.152t-7.080 12.080q-1.661-1.286-2.768-2.893 2-6.893 7.054-11.982t11.911-7.125zM8.393 28.625q2.054-6.357 6.777-11.107t11.063-6.857q0.714 1.643 0.964 3.482-5.214 2.143-9.214 6.161t-6.125 9.25q-1.839-0.25-3.464-0.929zM27.429 29.661q-3.446-0.893-6.554-2.054-2.411 1.5-5.179 1.911 1.946-3.661 4.893-6.616t6.589-4.92q-0.375 2.714-1.804 5.071 1.161 3.125 2.054 6.607z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-leanpub\" viewBox=\"0 0 37 32\">\r\n            <title>leanpub</title>\r\n            <path d=\"M33.804 7l2.768 22.714q-2.339 0-4.589-1.018-3.571-1.625-7.018-1.625-4.036 0-6.679 2.643-2.643-2.643-6.679-2.643-3.446 0-7.018 1.625-2.286 1.018-4.5 1.018h-0.089l2.768-22.714q4-2.268 8.607-2.268 4.161 0 6.911 1.893 2.75-1.893 6.911-1.893 4.607 0 8.607 2.268zM24.964 24.625q2.304 0 4.143 0.509t4.643 1.67l-2.214-18.232q-3.054-1.393-6.571-1.393-4 0-6.679 2.518-2.679-2.518-6.679-2.518-3.518 0-6.571 1.393l-2.214 18.232q1.875-0.768 2.955-1.161t2.652-0.705 3.179-0.313q3.607 0 6.679 1.929 3.071-1.929 6.679-1.929zM25.679 24.018l-0.982-16.196q-3.768 0.071-6.411 2.768-2.714-2.768-6.679-2.768-3.143 0-6 1.179l-2.036 16.804q2.214-0.911 4.080-1.357t3.955-0.446q3.732 0 6.679 1.821 3.071-1.911 6.679-1.821z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-sellsy\" viewBox=\"0 0 37 32\">\r\n            <title>sellsy</title>\r\n            <path d=\"M26.786 24.482v-13.089q0-0.375-0.268-0.643t-0.625-0.268h-1.661q-0.357 0-0.625 0.268t-0.268 0.643v13.089q0 0.357 0.268 0.625t0.625 0.268h1.661q0.357 0 0.625-0.268t0.268-0.625zM21.714 24.482v-9.482q0-0.357-0.268-0.625t-0.625-0.268h-1.804q-0.357 0-0.625 0.268t-0.268 0.625v9.482q0 0.357 0.268 0.625t0.625 0.268h1.804q0.357 0 0.625-0.268t0.268-0.625zM16.5 24.482v-7.661q0-0.357-0.268-0.625t-0.625-0.268h-1.804q-0.357 0-0.625 0.268t-0.268 0.625v7.661q0 0.357 0.268 0.625t0.625 0.268h1.804q0.357 0 0.625-0.268t0.268-0.625zM11.286 24.482v-6.464q0-0.357-0.268-0.625t-0.625-0.268h-1.804q-0.357 0-0.625 0.268t-0.268 0.625v6.464q0 0.357 0.268 0.625t0.625 0.268h1.804q0.357 0 0.625-0.268t0.268-0.625zM36.571 21.875q0 2.964-2.107 5.071t-5.071 2.107h-22.214q-2.964 0-5.071-2.107t-2.107-5.071q0-2.071 1.125-3.83t3-2.652q-0.179-0.607-0.179-1.304 0-2.018 1.438-3.455t3.455-1.438q1.821 0 3.214 1.196 0.804-3.268 3.464-5.357t6.036-2.089q2.661 0 4.911 1.313t3.563 3.563 1.313 4.911q0 1.179-0.25 2.179 2.411 0.589 3.946 2.545t1.536 4.42z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-shirtsinbulk\" viewBox=\"0 0 32 32\">\r\n            <title>shirtsinbulk</title>\r\n            <path d=\"M0 0h27.429v24.857l-13.857 6.036-13.571-6.036v-24.857zM25.643 23.696v-16.536h-23.857v16.536l11.804 5.25zM25.643 5.375v-3.589h-23.857v3.589h23.857zM3.232 10.696v2.054h-0.661v-2.054h0.661zM3.232 13.339v2.054h-0.661v-2.054h0.661zM3.232 15.982v2.054h-0.661v-2.054h0.661zM3.232 18.625v2.054h-0.661v-2.054h0.661zM3.232 21.268v2.054h-0.661v-2.054h0.661zM3.696 23.821l0.268-0.607 1.875 0.839-0.268 0.589zM6.125 24.893l0.268-0.607 1.875 0.821-0.268 0.607zM8.536 25.964l0.268-0.607 1.875 0.821-0.268 0.607zM10.964 27.018l0.268-0.589 1.857 0.821-0.268 0.607zM14.232 27.25l1.875-0.821 0.268 0.589-1.875 0.839zM16.643 26.179l1.875-0.821 0.268 0.607-1.875 0.821zM19.071 25.107l1.875-0.821 0.268 0.607-1.875 0.821zM21.482 24.054l1.875-0.839 0.268 0.607-1.875 0.821zM4.625 2.625v0.643h-2.036v-0.643h2.036zM7.518 2.625v0.643h-2.054v-0.643h2.054zM10.411 2.625v0.643h-2.054v-0.643h2.054zM13.286 2.625v0.643h-2.036v-0.643h2.036zM16.179 2.625v0.643h-2.036v-0.643h2.036zM19.071 2.625v0.643h-2.054v-0.643h2.054zM21.964 2.625v0.643h-2.054v-0.643h2.054zM24.839 2.625v0.643h-2.036v-0.643h2.036zM3.232 8.696v1.411h-0.661v-2.054h2.054v0.643h-1.393zM7.518 8.054v0.643h-2.054v-0.643h2.054zM10.411 8.054v0.643h-2.054v-0.643h2.054zM13.286 8.054v0.643h-2.036v-0.643h2.036zM16.179 8.054v0.643h-2.036v-0.643h2.036zM19.071 8.054v0.643h-2.054v-0.643h2.054zM21.964 8.054v0.643h-2.054v-0.643h2.054zM24.196 10.107v-1.411h-1.393v-0.643h2.054v2.054h-0.661zM24.196 12.75v-2.054h0.661v2.054h-0.661zM24.196 15.393v-2.054h0.661v2.054h-0.661zM24.196 18.036v-2.054h0.661v2.054h-0.661zM24.196 20.679v-2.054h0.661v2.054h-0.661zM24.196 23.321v-2.054h0.661v2.054h-0.661zM13.571 22.696q-2.304 0-3.946-1.634t-1.643-3.955q0-2.304 1.643-3.946t3.946-1.643q2.321 0 3.955 1.643t1.634 3.946q0 2.321-1.634 3.955t-3.955 1.634zM10.625 15.893q0 0.643 0.348 1.009t0.884 0.446 1.143 0.125 1.143 0.036 0.884 0.161 0.348 0.545q0 0.875-2 0.875-1.732 0-2.196-0.911h-0.054l-0.554 1.125q1.196 0.75 2.893 0.75 0.518 0 1.009-0.089t0.991-0.286 0.813-0.589 0.313-0.946q0-0.821-0.491-1.241t-1.205-0.482-1.42-0.054-1.196-0.089-0.491-0.455q0-0.375 0.366-0.589t0.723-0.268 0.732-0.054q0.607 0 1.259 0.196t0.92 0.607h0.054l0.536-1.036q-0.054-0.018-0.375-0.152t-0.402-0.161-0.348-0.125-0.393-0.125-0.357-0.080-0.429-0.071-0.411-0.018q-0.518 0-1.009 0.089t-0.964 0.295-0.768 0.607-0.295 0.955z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-simplybuilt\" viewBox=\"0 0 37 32\">\r\n            <title>simplybuilt</title>\r\n            <path d=\"M15.411 18.429q0-2-1.42-3.42t-3.42-1.42-3.411 1.42-1.411 3.42 1.411 3.411 3.411 1.411 3.42-1.411 1.42-3.411zM30.821 18.411q0-2-1.411-3.411t-3.411-1.411-3.42 1.411-1.42 3.411q0 2.018 1.42 3.429t3.42 1.411 3.411-1.42 1.411-3.42zM36.571 3.964v24.071q0 0.786-0.563 1.348t-1.366 0.563h-32.714q-0.804 0-1.366-0.563t-0.563-1.348v-24.071q0-0.786 0.563-1.348t1.366-0.563h7.696q0.786 0 1.357 0.563t0.571 1.348v2.875h13.464v-2.875q0-0.786 0.571-1.348t1.357-0.563h7.696q0.804 0 1.366 0.563t0.563 1.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-skyatlas\" viewBox=\"0 0 37 32\">\r\n            <title>skyatlas</title>\r\n            <path d=\"M30.179 14.054q2.643 0 4.518 1.759t1.875 4.366q0 2.804-1.946 4.67t-4.768 1.866q-1.518 0-2.893-0.491t-2.464-1.313-2.107-1.893-1.946-2.259-1.848-2.366-1.938-2.25-2.089-1.893-2.429-1.313-2.839-0.491q-2.75 0-4.491 1.634t-1.741 4.366q0 2.804 1.857 4.464t4.696 1.661q1.786 0 3.714-0.67t3.446-1.759q0.089-0.071 0.375-0.33t0.536-0.429 0.393-0.17q0.25 0 0.438 0.188t0.188 0.438q0 0.429-1.071 1.375-1.804 1.571-4.188 2.536t-4.652 0.964q-2.375 0-4.384-1.036t-3.214-2.946-1.205-4.304q0-3.661 2.527-6.089t6.205-2.429q2.143 0 4.045 0.777t3.313 2.018 2.705 2.732 2.482 2.991 2.384 2.741 2.67 2.018 3.080 0.777q1.821 0 3.009-1.098t1.188-2.902q0-1.696-1.152-2.839t-2.848-1.143q-0.536 0-1.455 0.33t-1.223 0.33q-0.357 0-0.634-0.268t-0.277-0.625q0-0.321 0.152-1.018t0.152-1.054q0-2.839-1.92-4.696t-4.759-1.857q-1.036 0-1.991 0.33t-1.5 0.723-0.991 0.723-0.589 0.33q-0.268 0-0.455-0.188t-0.188-0.455q0-0.339 0.446-0.821 1.054-1.196 2.625-1.848t3.25-0.652q3.411 0 5.679 2.241t2.268 5.634q0 0.661-0.071 1.179 1.018-0.268 2.054-0.268z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cart-plus\" viewBox=\"0 0 30 32\">\r\n            <title>cart-plus</title>\r\n            <path d=\"M21.714 12.571q0-0.464-0.339-0.804t-0.804-0.339h-2.286v-2.286q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804v2.286h-2.286q-0.464 0-0.804 0.339t-0.339 0.804 0.339 0.804 0.804 0.339h2.286v2.286q0 0.464 0.339 0.804t0.804 0.339 0.804-0.339 0.339-0.804v-2.286h2.286q0.464 0 0.804-0.339t0.339-0.804zM11.429 27.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM27.429 27.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM29.714 8v9.143q0 0.429-0.286 0.759t-0.732 0.384l-18.643 2.179q0.018 0.125 0.080 0.384t0.107 0.473 0.045 0.393q0 0.286-0.429 1.143h16.429q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-18.286q-0.464 0-0.804-0.339t-0.339-0.804q0-0.25 0.196-0.705t0.527-1.063 0.366-0.679l-3.161-14.696h-3.643q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571q0.286 0 0.509 0.116t0.357 0.277 0.232 0.438 0.134 0.473 0.098 0.527 0.080 0.455h21.446q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-cart-arrow-down\" viewBox=\"0 0 32 32\">\r\n            <title>cart-arrow-down</title>\r\n            <path d=\"M22.857 12.571q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339l-2.625 2.607v-5.232q0-0.464-0.339-0.804t-0.804-0.339-0.804 0.339-0.339 0.804v5.232l-2.625-2.607q-0.339-0.339-0.804-0.339t-0.804 0.339-0.339 0.804 0.339 0.804l4.571 4.571q0.339 0.339 0.804 0.339t0.804-0.339l4.571-4.571q0.339-0.339 0.339-0.804zM11.429 27.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM27.429 27.429q0 0.946-0.67 1.616t-1.616 0.67-1.616-0.67-0.67-1.616 0.67-1.616 1.616-0.67 1.616 0.67 0.67 1.616zM29.714 8v9.143q0 0.429-0.286 0.759t-0.732 0.384l-18.643 2.179q0.018 0.125 0.080 0.384t0.107 0.473 0.045 0.393q0 0.286-0.429 1.143h16.429q0.464 0 0.804 0.339t0.339 0.804-0.339 0.804-0.804 0.339h-18.286q-0.464 0-0.804-0.339t-0.339-0.804q0-0.25 0.196-0.705t0.527-1.063 0.366-0.679l-3.161-14.696h-3.643q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h4.571q0.286 0 0.509 0.116t0.357 0.277 0.232 0.438 0.134 0.473 0.098 0.527 0.080 0.455h21.446q0.464 0 0.804 0.339t0.339 0.804z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-diamond\" viewBox=\"0 0 37 32\">\r\n            <title>diamond</title>\r\n            <path d=\"M3.786 13.714l11.125 11.875-5.357-11.875h-5.768zM18.286 27.5l6.232-13.786h-12.464zM9.607 11.429l3.643-6.857h-4.679l-5.143 6.857h6.179zM21.661 25.589l11.125-11.875h-5.768zM12.196 11.429h12.179l-3.643-6.857h-4.893zM26.964 11.429h6.179l-5.143-6.857h-4.679zM29.482 2.75l6.857 9.143q0.25 0.321 0.232 0.741t-0.304 0.723l-17.143 18.286q-0.321 0.357-0.839 0.357t-0.839-0.357l-17.143-18.286q-0.286-0.304-0.304-0.723t0.232-0.741l6.857-9.143q0.321-0.464 0.911-0.464h20.571q0.589 0 0.911 0.464z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-ship\" viewBox=\"0 0 37 32\">\r\n            <title>ship</title>\r\n            <path d=\"M32.339 27.768q0.339-0.339 0.804-0.339t0.804 0.339l2.286 2.286-1.607 1.607-1.482-1.482-1.482 1.482q-0.321 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-2.286-2.286 1.607-1.607 1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482 1.482-1.482q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.482zM4.232 27.089q-0.339 0.339-0.804 0.339t-0.804-0.339l-2.286-2.286 1.607-1.607 1.482 1.464 1.482-1.464q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.464 1.143-1.143v-5.232l-3.75-5.607q-0.304-0.464-0.125-1.009t0.714-0.723l3.161-1.036v-5.339h2.286v-2.286h4.571v-2.286h4.571v2.286h4.571v2.286h2.286v5.339l3.161 1.036q0.536 0.179 0.714 0.723t-0.125 1.009l-3.75 5.607v5.232l0.339-0.321q0.339-0.339 0.804-0.339t0.804 0.339l1.482 1.464 1.482-1.464q0.339-0.339 0.804-0.339t0.804 0.339l2.286 2.286-1.607 1.607-1.482-1.482-1.482 1.482q-0.321 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482-1.482 1.482q-0.339 0.339-0.804 0.339t-0.804-0.339l-1.482-1.482zM11.429 6.857v2.286l6.857-2.286 6.857 2.286v-2.286h-2.286v-2.286h-9.143v2.286h-2.286z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-user-secret\" viewBox=\"0 0 32 32\">\r\n            <title>user-secret</title>\r\n            <path d=\"M10.286 27.429l1.714-8-1.714-2.286-2.286-1.143zM14.857 27.429l2.286-11.429-2.286 1.143-1.714 2.286zM17.714 9.393q-0.036-0.071-0.071-0.107-0.179-0.143-1.714-0.143-1.25 0-2.982 0.339-0.125 0.036-0.375 0.036t-0.375-0.036q-1.732-0.339-2.982-0.339-1.536 0-1.714 0.143-0.036 0.036-0.071 0.107 0.036 0.321 0.071 0.482 0.036 0.054 0.134 0.116t0.134 0.188q0.036 0.071 0.134 0.366t0.125 0.366 0.134 0.304 0.152 0.304 0.161 0.25 0.214 0.241 0.25 0.17 0.313 0.143 0.366 0.071 0.438 0.036q0.643 0 1.054-0.223t0.58-0.536 0.259-0.616 0.205-0.527 0.313-0.223h0.214q0.196 0 0.313 0.223t0.205 0.527 0.259 0.616 0.58 0.536 1.054 0.223q0.232 0 0.438-0.036t0.366-0.071 0.312-0.143 0.25-0.17 0.214-0.241 0.161-0.25 0.152-0.304 0.134-0.304 0.125-0.366 0.134-0.366q0.036-0.125 0.134-0.188t0.134-0.116q0.036-0.161 0.071-0.482zM25.143 25.089q0 2.161-1.304 3.393t-3.464 1.232h-15.607q-2.161 0-3.464-1.232t-1.304-3.393q0-1.089 0.080-2.107t0.339-2.241 0.67-2.205 1.134-1.848 1.67-1.33l-1.607-3.929h3.821q-0.393-1.143-0.393-2.286 0-0.214 0.036-0.571-3.464-0.714-3.464-1.714 0-1.018 3.75-1.768 0.304-1.107 0.92-2.393t1.259-2.036q0.571-0.661 1.357-0.661 0.536 0 1.5 0.554t1.5 0.554 1.5-0.554 1.5-0.554q0.786 0 1.357 0.661 0.643 0.75 1.259 2.036t0.92 2.393q3.75 0.75 3.75 1.768 0 1-3.464 1.714 0.125 1.446-0.357 2.857h3.821l-1.464 4.018q1.125 0.589 1.92 1.723t1.17 2.563 0.518 2.705 0.143 2.652z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-motorcycle\" viewBox=\"0 0 41 32\">\r\n            <title>motorcycle</title>\r\n            <path d=\"M41.089 18.5q0.214 1.839-0.393 3.545t-1.768 2.92-2.83 1.893-3.509 0.554q-2.875-0.196-4.991-2.232t-2.402-4.893q-0.214-1.982 0.491-3.759t2.116-3.045l-1.268-1.911q-1.714 1.429-2.696 3.464t-0.982 4.357q0 0.482-0.33 0.83t-0.813 0.348h-5.804q-0.411 2.929-2.661 4.893t-5.25 1.964q-3.304 0-5.652-2.348t-2.348-5.652 2.348-5.652 5.652-2.348q1.357 0 2.714 0.482l0.429-0.804q-2.196-1.964-5.429-1.964h-1.143q-0.464 0-0.804-0.339t-0.339-0.804 0.339-0.804 0.804-0.339h2.286q1.393 0 2.589 0.241t2.080 0.688 1.277 0.705 0.911 0.652h11.196l-1.518-2.286h-3.964q-0.536 0-0.875-0.402t-0.25-0.938q0.071-0.411 0.411-0.679t0.768-0.268h4.518q0.589 0 0.946 0.5l1.25 1.875 2.036-2.036q0.339-0.339 0.821-0.339h1.804q0.464 0 0.804 0.339t0.339 0.804v2.286q0 0.464-0.339 0.804t-0.804 0.339h-3.196l2.054 3.071q2.339-1.125 4.911-0.643 2.554 0.464 4.357 2.402t2.107 4.527zM8 25.143q2.054 0 3.625-1.295t1.982-3.277h-5.607q-0.625 0-0.982-0.554-0.321-0.571-0.018-1.125l2.625-4.946q-0.839-0.232-1.625-0.232-2.357 0-4.036 1.679t-1.679 4.036 1.679 4.036 4.036 1.679zM33.143 25.143q2.357 0 4.036-1.679t1.679-4.036-1.679-4.036-4.036-1.679q-1.071 0-2.161 0.429l3.107 4.643q0.268 0.411 0.179 0.875t-0.482 0.714q-0.268 0.196-0.643 0.196-0.625 0-0.946-0.518l-3.107-4.643q-1.661 1.696-1.661 4.018 0 2.357 1.679 4.036t4.036 1.679z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-street-view\" viewBox=\"0 0 32 32\">\r\n            <title>street-view</title>\r\n            <path d=\"M25.143 27.429q0 1.125-1.098 2.027t-2.929 1.446-4.018 0.821-4.527 0.277-4.527-0.277-4.018-0.821-2.929-1.446-1.098-2.027q0-0.875 0.589-1.58t1.625-1.188 2.107-0.795 2.339-0.527q0.464-0.089 0.857 0.188t0.464 0.741q0.089 0.464-0.188 0.857t-0.741 0.464q-1.036 0.179-1.893 0.42t-1.366 0.455-0.866 0.42-0.491 0.348-0.152 0.214q0.054 0.196 0.482 0.473t1.304 0.589 2.036 0.58 2.866 0.446 3.598 0.179 3.598-0.179 2.866-0.446 2.036-0.589 1.304-0.598 0.482-0.491q-0.018-0.071-0.152-0.196t-0.491-0.339-0.866-0.42-1.366-0.446-1.893-0.42q-0.464-0.071-0.741-0.464t-0.188-0.857q0.071-0.464 0.464-0.741t0.857-0.188q1.268 0.214 2.339 0.527t2.107 0.795 1.625 1.188 0.589 1.58zM18.286 11.429v6.857q0 0.464-0.339 0.804t-0.804 0.339h-1.143v6.857q0 0.464-0.339 0.804t-0.804 0.339h-4.571q-0.464 0-0.804-0.339t-0.339-0.804v-6.857h-1.143q-0.464 0-0.804-0.339t-0.339-0.804v-6.857q0-0.946 0.67-1.616t1.616-0.67h6.857q0.946 0 1.616 0.67t0.67 1.616zM16.571 4.571q0 1.661-1.17 2.83t-2.83 1.17-2.83-1.17-1.17-2.83 1.17-2.83 2.83-1.17 2.83 1.17 1.17 2.83z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-heartbeat\" viewBox=\"0 0 32 32\">\r\n            <title>heartbeat</title>\r\n            <path d=\"M22.857 18.286h5.446q-0.089 0.107-0.179 0.188t-0.161 0.134l-0.054 0.071-11.125 10.714q-0.321 0.321-0.786 0.321t-0.786-0.321l-11.143-10.75q-0.089-0.036-0.375-0.357h6.589q0.393 0 0.705-0.241t0.402-0.616l1.25-5.018 3.393 11.911q0.107 0.357 0.411 0.589t0.696 0.232q0.375 0 0.679-0.232t0.411-0.589l2.607-8.661 1 2q0.321 0.625 1.018 0.625zM32 10.643q0 2.589-1.839 5.357h-6.589l-1.982-3.946q-0.143-0.304-0.455-0.482t-0.652-0.143q-0.804 0.089-1 0.821l-2.304 7.679-3.5-12.25q-0.107-0.357-0.42-0.589t-0.705-0.232-0.696 0.241-0.393 0.616l-2.071 8.286h-7.554q-1.839-2.768-1.839-5.357 0-3.929 2.268-6.143t6.268-2.214q1.107 0 2.259 0.384t2.143 1.036 1.705 1.223 1.357 1.214q0.643-0.643 1.357-1.214t1.705-1.223 2.143-1.036 2.259-0.384q4 0 6.268 2.214t2.268 6.143z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-venus\" viewBox=\"0 0 23 32\">\r\n            <title>venus</title>\r\n            <path d=\"M20.571 10.286q0 3.946-2.634 6.866t-6.509 3.348v4.643h4q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-4v4q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4h-4q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h4v-4.643q-2.679-0.286-4.848-1.839t-3.321-4-0.938-5.214q0.196-2.393 1.438-4.446t3.25-3.357 4.384-1.571q3.036-0.339 5.696 0.964t4.214 3.786 1.554 5.464zM2.286 10.286q0 3.304 2.348 5.652t5.652 2.348 5.652-2.348 2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mars\" viewBox=\"0 0 32 32\">\r\n            <title>mars</title>\r\n            <path d=\"M22.857 0.571q0-0.25 0.161-0.411t0.411-0.161h7.429q0.464 0 0.804 0.339t0.339 0.804v7.429q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4.679l-7.482 7.5q1.554 1.857 2.313 4.223t0.545 4.938q-0.393 4.464-3.58 7.696t-7.652 3.679q-2.911 0.304-5.607-0.705t-4.58-2.893-2.893-4.58-0.705-5.607q0.446-4.464 3.679-7.652t7.696-3.58q2.571-0.214 4.938 0.545t4.223 2.313l7.482-7.482h-4.661q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM12.571 29.714q2.089 0 3.991-0.813t3.286-2.196 2.196-3.286 0.813-3.991-0.813-3.991-2.196-3.286-3.286-2.196-3.991-0.813-3.991 0.813-3.286 2.196-2.196 3.286-0.813 3.991 0.813 3.991 2.196 3.286 3.286 2.196 3.991 0.813z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mercury\" viewBox=\"0 0 23 32\">\r\n            <title>mercury</title>\r\n            <path d=\"M14.821 5.643q2.589 1.286 4.17 3.759t1.58 5.455q0 3.946-2.634 6.866t-6.509 3.348v2.357h1.714q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.714q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-1.714h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h1.714v-2.357q-3.875-0.429-6.509-3.348t-2.634-6.866q0-2.982 1.58-5.455t4.17-3.759q-2.946-1.714-4.071-4.875-0.107-0.286 0.063-0.527t0.473-0.241h1.232q0.375 0 0.518 0.357 0.786 1.893 2.5 3.054t3.821 1.161 3.821-1.161 2.5-3.054q0.143-0.357 0.661-0.357h1.089q0.304 0 0.473 0.241t0.063 0.527q-1.125 3.161-4.071 4.875zM10.286 22.857q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-transgender\" viewBox=\"0 0 32 32\">\r\n            <title>transgender</title>\r\n            <path d=\"M18.286 0.571q0-0.25 0.161-0.411t0.411-0.161h5.143q0.464 0 0.804 0.339t0.339 0.804v5.143q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-2.393l-4.536 4.554q2.25 2.821 2.25 6.411 0 3.946-2.634 6.866t-6.509 3.348v2.357h1.714q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.714q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-1.714h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h1.714v-2.357q-2.661-0.286-4.83-1.839t-3.33-3.991-0.946-5.205q0.286-3.643 2.857-6.313t6.196-3.080q2.107-0.25 4.071 0.339t3.536 1.839l4.554-4.536h-2.393q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM10.286 22.857q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-transgender-alt\" viewBox=\"0 0 32 32\">\r\n            <title>transgender-alt</title>\r\n            <path d=\"M22.857 0.571q0-0.25 0.161-0.411t0.411-0.161h5.143q0.464 0 0.804 0.339t0.339 0.804v5.143q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-2.393l-4.536 4.554q2.25 2.821 2.25 6.411 0 3.946-2.634 6.866t-6.509 3.348v2.357h1.714q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.714q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-1.714h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h1.714v-2.357q-3.875-0.429-6.509-3.348t-2.634-6.866q0-3.589 2.25-6.411l-0.929-0.946-1.804 1.982q-0.161 0.179-0.393 0.188t-0.411-0.134l-0.857-0.786q-0.179-0.143-0.188-0.384t0.152-0.42l1.875-2.054-1.982-2v2.393q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-5.143q0-0.464 0.339-0.804t0.804-0.339h5.143q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-2.375l1.893 1.911 1.536-1.679q0.161-0.179 0.393-0.188t0.411 0.134l0.857 0.786q0.179 0.143 0.188 0.384t-0.152 0.42l-1.607 1.768 1.018 1q2.821-2.25 6.411-2.25t6.411 2.25l4.554-4.536h-2.393q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM14.857 22.857q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-venus-double\" viewBox=\"0 0 32 32\">\r\n            <title>venus-double</title>\r\n            <path d=\"M31.964 9.446q0.214 2.768-0.938 5.214t-3.321 4-4.848 1.839v4.643h4q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-4v4q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4h-9.143v4q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4h-4q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h4v-4.643q-2.679-0.286-4.848-1.839t-3.321-4-0.938-5.214q0.304-3.679 2.938-6.366t6.295-3.027q3.679-0.375 6.732 1.679 3.054-2.054 6.732-1.679 3.661 0.339 6.295 3.027t2.938 6.366zM16 15.875q2.286-2.339 2.286-5.589t-2.286-5.589q-2.286 2.339-2.286 5.589t2.286 5.589zM10.286 18.286q2.054 0 3.893-1.018-2.75-2.946-2.75-6.982 0-4 2.75-6.982-1.839-1.018-3.893-1.018-3.304 0-5.652 2.348t-2.348 5.652 2.348 5.652 5.652 2.348zM20.571 25.143v-4.643q-2.446-0.268-4.571-1.679-2.125 1.411-4.571 1.679v4.643h9.143zM21.714 18.286q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348q-2.054 0-3.893 1.018 2.75 2.982 2.75 6.982 0 4.036-2.75 6.982 1.839 1.018 3.893 1.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mars-double\" viewBox=\"0 0 34 32\">\r\n            <title>mars-double</title>\r\n            <path d=\"M27.429 7.429q0-0.25 0.161-0.411t0.411-0.161h5.143q0.464 0 0.804 0.339t0.339 0.804v5.143q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-2.393l-4.536 4.554q1.357 1.696 1.92 3.821t0.17 4.411q-0.554 3.25-2.964 5.571t-5.679 2.786q-3.75 0.518-6.866-1.429t-4.313-5.357q-2.089-0.107-3.946-1.027t-3.17-2.375-2.027-3.438-0.571-4.107q0.161-2.411 1.393-4.5t3.25-3.42 4.429-1.598q2.107-0.25 4.063 0.339t3.545 1.839l4.554-4.536h-2.393q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h5.143q0.464 0 0.804 0.339t0.339 0.804v5.143q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-2.393l-4.536 4.554q1.054 1.321 1.661 3.018 3.25 0.161 5.857 2.214l4.554-4.536h-2.393q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM18.286 14.857q0-0.357-0.071-1.036-2.893 0.446-4.839 2.679t-1.946 5.214q0 0.357 0.071 1.036 2.893-0.446 4.839-2.679t1.946-5.214zM2.286 14.857q0 3 1.982 5.25t4.929 2.661q-0.054-0.518-0.054-1.054 0-3.75 2.411-6.598t6.036-3.509q-0.946-2.143-2.92-3.446t-4.384-1.304q-3.304 0-5.652 2.348t-2.348 5.652zM19.429 29.714q3.304 0 5.652-2.348t2.348-5.652q0-3-1.982-5.25t-4.929-2.661q0.054 0.518 0.054 1.054 0 3.75-2.411 6.598t-6.036 3.509q0.946 2.143 2.92 3.446t4.384 1.304z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-venus-mars\" viewBox=\"0 0 37 32\">\r\n            <title>venus-mars</title>\r\n            <path d=\"M29.714 0.571q0-0.25 0.161-0.411t0.411-0.161h5.143q0.464 0 0.804 0.339t0.339 0.804v5.143q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-2.393l-4.536 4.554q1.357 1.696 1.92 3.821t0.17 4.411q-0.571 3.214-2.938 5.536t-5.598 2.804q-3.982 0.607-7.304-1.607-2.089 1.393-4.571 1.661v2.357h1.714q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-1.714v1.714q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-1.714h-1.714q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h1.714v-2.357q-2.768-0.304-4.991-1.955t-3.339-4.241-0.705-5.482q0.446-3.339 2.848-5.759t5.723-2.938q4-0.607 7.321 1.607 2.607-1.732 5.714-1.732 3.589 0 6.411 2.25l4.554-4.536h-2.393q-0.25 0-0.411-0.161t-0.161-0.411v-1.143zM16 20.446q2.286-2.339 2.286-5.589t-2.286-5.589q-2.286 2.339-2.286 5.589t2.286 5.589zM2.286 14.857q0 3.304 2.348 5.652t5.652 2.348q2.089 0 3.893-1.018-2.75-2.982-2.75-6.982t2.75-6.982q-1.804-1.018-3.893-1.018-3.304 0-5.652 2.348t-2.348 5.652zM21.714 22.857q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348q-2.089 0-3.893 1.018 2.75 2.982 2.75 6.982t-2.75 6.982q1.804 1.018 3.893 1.018z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mars-stroke\" viewBox=\"0 0 32 32\">\r\n            <title>mars-stroke</title>\r\n            <path d=\"M30.857 0q0.464 0 0.804 0.339t0.339 0.804v7.429q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4.679l-4.089 4.107 2.786 2.786q0.161 0.179 0.161 0.411t-0.161 0.393l-0.821 0.821q-0.161 0.161-0.393 0.161t-0.411-0.161l-2.786-2.804-1.768 1.786q1.554 1.857 2.313 4.223t0.545 4.938q-0.393 4.464-3.58 7.696t-7.652 3.679q-2.911 0.304-5.607-0.705t-4.58-2.893-2.893-4.58-0.705-5.607q0.446-4.464 3.679-7.652t7.696-3.58q2.571-0.214 4.938 0.545t4.223 2.313l1.768-1.768-2.786-2.786q-0.161-0.179-0.161-0.411t0.161-0.393l0.821-0.821q0.161-0.161 0.393-0.161t0.411 0.161l2.786 2.786 4.089-4.089h-4.661q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h7.429zM22.857 19.429q0-2.089-0.813-3.991t-2.196-3.286-3.286-2.196-3.991-0.813-3.991 0.813-3.286 2.196-2.196 3.286-0.813 3.991 0.813 3.991 2.196 3.286 3.286 2.196 3.991 0.813 3.991-0.813 3.286-2.196 2.196-3.286 0.813-3.991z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mars-stroke-v\" viewBox=\"0 0 23 32\">\r\n            <title>mars-stroke-v</title>\r\n            <path d=\"M11.429 11.5q3.875 0.429 6.509 3.348t2.634 6.866q0 2.982-1.554 5.464t-4.214 3.786-5.696 0.964q-2.375-0.268-4.384-1.571t-3.25-3.357-1.438-4.446q-0.214-2.768 0.938-5.214t3.321-4 4.848-1.839v-2.357h-2.857q-0.25 0-0.411-0.161t-0.161-0.411v-1.143q0-0.25 0.161-0.411t0.411-0.161h2.857v-2.946l-1.643 1.643q-0.179 0.161-0.411 0.161t-0.393-0.161l-0.821-0.821q-0.161-0.161-0.161-0.393t0.161-0.411l3.607-3.589q0.339-0.339 0.804-0.339t0.804 0.339l3.607 3.589q0.161 0.179 0.161 0.411t-0.161 0.393l-0.821 0.821q-0.161 0.161-0.393 0.161t-0.411-0.161l-1.643-1.643v2.946h2.857q0.25 0 0.411 0.161t0.161 0.411v1.143q0 0.25-0.161 0.411t-0.411 0.161h-2.857v2.357zM10.286 29.714q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-mars-stroke-h\" viewBox=\"0 0 37 32\">\r\n            <title>mars-stroke-h</title>\r\n            <path d=\"M36.232 15.196q0.339 0.339 0.339 0.804t-0.339 0.804l-5.25 5.25q-0.161 0.179-0.402 0.179t-0.402-0.179l-0.804-0.804q-0.179-0.161-0.179-0.402t0.179-0.402l3.304-3.304h-5.25v4q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-4h-2.339q-0.214 2.125-1.196 4.036t-2.482 3.277-3.509 2.17-4.188 0.804q-3.214 0-5.902-1.625t-4.188-4.411-1.321-6.018q0.143-2.893 1.679-5.357t4.045-3.92 5.402-1.527q2.964-0.071 5.545 1.277t4.205 3.723 1.911 5.286h2.339v-4q0-0.25 0.161-0.411t0.411-0.161h1.143q0.25 0 0.411 0.161t0.161 0.411v4h5.25l-3.304-3.304q-0.179-0.161-0.179-0.402t0.179-0.402l0.804-0.804q0.161-0.179 0.402-0.179t0.402 0.179zM11.429 25.143q1.857 0 3.545-0.723t2.92-1.955 1.955-2.92 0.723-3.545-0.723-3.545-1.955-2.92-2.92-1.955-3.545-0.723-3.545 0.723-2.92 1.955-1.955 2.92-0.723 3.545 0.723 3.545 1.955 2.92 2.92 1.955 3.545 0.723z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-neuter\" viewBox=\"0 0 23 32\">\r\n            <title>neuter</title>\r\n            <path d=\"M20.571 10.286q0 3.946-2.634 6.866t-6.509 3.348v10.929q0 0.25-0.161 0.411t-0.411 0.161h-1.143q-0.25 0-0.411-0.161t-0.161-0.411v-10.929q-3.875-0.429-6.509-3.348t-2.634-6.866q0-2.089 0.813-3.991t2.196-3.286 3.286-2.196 3.991-0.813 3.991 0.813 3.286 2.196 2.196 3.286 0.813 3.991zM10.286 18.286q3.304 0 5.652-2.348t2.348-5.652-2.348-5.652-5.652-2.348-5.652 2.348-2.348 5.652 2.348 5.652 5.652 2.348z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-facebook-official\" viewBox=\"0 0 32 32\">\r\n            <title>facebook-official</title>\r\n            <path d=\"M25.911 2.286q0.625 0 1.071 0.446t0.446 1.071v24.393q0 0.625-0.446 1.071t-1.071 0.446h-6.982v-10.625h3.554l0.536-4.143h-4.089v-2.643q0-1 0.42-1.5t1.634-0.5l2.179-0.018v-3.696q-1.125-0.161-3.179-0.161-2.429 0-3.884 1.429t-1.455 4.036v3.054h-3.571v4.143h3.571v10.625h-13.125q-0.625 0-1.071-0.446t-0.446-1.071v-24.393q0-0.625 0.446-1.071t1.071-0.446h24.393z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-pinterest-p\" viewBox=\"0 0 23 32\">\r\n            <title>pinterest-p</title>\r\n            <path d=\"M0 10.661q0-1.929 0.67-3.634t1.848-2.973 2.714-2.196 3.304-1.393 3.607-0.464q2.821 0 5.25 1.188t3.946 3.455 1.518 5.125q0 1.714-0.339 3.357t-1.071 3.161-1.786 2.67-2.589 1.839-3.375 0.688q-1.214 0-2.411-0.571t-1.714-1.571q-0.179 0.696-0.5 2.009t-0.42 1.696-0.366 1.268-0.464 1.268-0.571 1.116-0.821 1.384-1.107 1.545l-0.25 0.089-0.161-0.179q-0.268-2.804-0.268-3.357 0-1.643 0.384-3.688t1.188-5.134 0.929-3.625q-0.571-1.161-0.571-3.018 0-1.482 0.929-2.786t2.357-1.304q1.089 0 1.696 0.723t0.607 1.83q0 1.179-0.786 3.411t-0.786 3.339q0 1.125 0.804 1.866t1.946 0.741q0.982 0 1.821-0.446t1.402-1.214 1-1.696 0.679-1.973 0.357-1.982 0.116-1.777q0-3.089-1.955-4.813t-5.098-1.723q-3.571 0-5.964 2.313t-2.393 5.866q0 0.786 0.223 1.518t0.482 1.161 0.482 0.813 0.223 0.545q0 0.5-0.268 1.304t-0.661 0.804q-0.036 0-0.304-0.054-0.911-0.268-1.616-1t-1.089-1.688-0.58-1.929-0.196-1.902z\"></path>\r\n        </symbol>\r\n        <symbol id=\"icon-landlot\" viewBox=\"0 0 28 32\">\r\n\t\t\t<title>landlot</title>\r\n\t\t\t<path d=\"M14.302 0.023c-0.816 0.085-1.639 0.389-2.351 0.862-0.398 0.264-1.143 1.002-1.447 1.433-0.425 0.604-0.754 1.388-0.911 2.158-0.098 0.487-0.104 1.499-0.016 1.989 0.163 0.895 0.487 1.816 0.846 2.416 0.98 1.633 2.191 3.187 3.856 4.937 0.304 0.32 0.565 0.581 0.578 0.581 0.039 0 0.862-0.96 1.466-1.714 1.378-1.721 2.798-3.719 3.177-4.473 0.415-0.82 0.578-1.522 0.604-2.58 0.016-0.594 0.007-0.738-0.049-1.081-0.451-2.638-2.717-4.585-5.296-4.545-0.189 0-0.395 0.010-0.457 0.016zM15.543 2.106c1.123 0.238 2.070 1.13 2.39 2.253 0.065 0.229 0.075 0.333 0.075 0.849 0 0.758-0.075 1.064-0.405 1.629-0.389 0.663-1.094 1.215-1.855 1.447-0.261 0.078-0.336 0.085-0.842 0.088-0.663 0.003-0.918-0.052-1.437-0.307-0.911-0.451-1.561-1.303-1.75-2.309-0.059-0.313-0.020-1.107 0.065-1.414 0.173-0.598 0.575-1.198 1.078-1.607 0.496-0.402 1.019-0.614 1.701-0.692 0.189-0.023 0.751 0.013 0.98 0.062z\"></path>\r\n\t\t\t<path d=\"M21.636 6.047c-0.118 1.006-0.238 1.571-0.46 2.165-0.124 0.333-0.385 0.875-0.526 1.097-0.042 0.069-0.078 0.134-0.078 0.144s0.65 0.016 1.443 0.016h1.447l-14.563 14.563-5.339-5.339 0.007-4.604 0.010-4.604 5.404-0.016-0.075-0.124c-0.216-0.346-0.62-1.505-0.754-2.165-0.046-0.225-0.101-0.562-0.121-0.751-0.020-0.186-0.042-0.372-0.049-0.415l-0.013-0.072h-7.017l-0.189 0.072c-0.258 0.095-0.558 0.392-0.666 0.663l-0.078 0.196v24.196l0.104 0.219c0.124 0.265 0.333 0.477 0.591 0.604l0.186 0.091h26.678l0.186-0.091c0.105-0.052 0.255-0.16 0.336-0.242 0.209-0.209 0.307-0.418 0.346-0.738 0.020-0.173 0.029-4.487 0.023-12.153l-0.010-11.886-0.075-0.186c-0.108-0.264-0.353-0.522-0.62-0.653l-0.219-0.108-5.891-0.020-0.016 0.14zM24.914 19.69v8.751h-11.608l-3.092-3.092 0.976-0.963c0.536-0.529 3.458-3.399 6.491-6.377 3.037-2.978 5.894-5.786 6.351-6.243 0.457-0.454 0.842-0.826 0.859-0.826 0.013 0 0.023 3.938 0.023 8.751zM7.020 25.029l3.412 3.412h-6.873v-3.412c0-1.878 0.010-3.412 0.026-3.412 0.013 0 1.558 1.535 3.435 3.412z\"></path>\r\n\t\t\t<path d=\"M16.62 21.927v0.604h1.175v4.735h1.175v-5.943h-2.351v0.604z\"></path>\r\n\t\t\t<path d=\"M20.16 21.365c-0.007 0.023-0.010 0.291-0.007 0.594l0.010 0.555 1.185 0.010 1.182 0.007v1.175h-2.384v1.175h2.384v1.208h-2.384l0.007 0.578 0.010 0.581 3.543 0.016v-5.943h-1.763c-1.411 0-1.77 0.010-1.783 0.042z\"></path>\r\n\t\t\t<path d=\"M4.767 13.633v0.604h1.175v4.735h1.175v-5.943h-2.351v0.604z\"></path>\r\n\t\t\t<path d=\"M8.307 13.071c-0.007 0.023-0.010 0.291-0.007 0.594l0.010 0.555 1.185 0.010 1.182 0.007v1.175h-2.384l0.007 1.77 0.010 1.773 3.543 0.016v-1.208h-2.351v-1.175h2.351v-3.559h-1.763c-1.411 0-1.77 0.010-1.783 0.042z\"></path>\r\n\t\t</symbol>\t\r\n\t</defs>\r\n</svg>\r\n\t\t\t\r\n\t\t\t\r\n\t\t\t\r\n\t\t\t\r\n\t\t\t\r\n\t\t\t");
 // EXTERNAL MODULE: ./node_modules/react-router-dom/node_modules/warning/warning.js
-var warning_warning = __webpack_require__(192);
-var warning_default = /*#__PURE__*/__webpack_require__.n(warning_warning);
+var warning = __webpack_require__(197);
+var warning_default = /*#__PURE__*/__webpack_require__.n(warning);
 
 // EXTERNAL MODULE: ./node_modules/prop-types/index.js
 var prop_types = __webpack_require__(3);
@@ -47249,14 +47790,14 @@ var browser = __webpack_require__(44);
 var browser_default = /*#__PURE__*/__webpack_require__.n(browser);
 
 // EXTERNAL MODULE: ./node_modules/invariant/browser.js
-var invariant_browser = __webpack_require__(32);
+var invariant_browser = __webpack_require__(33);
 var invariant_browser_default = /*#__PURE__*/__webpack_require__.n(invariant_browser);
 
 // EXTERNAL MODULE: ./node_modules/resolve-pathname/index.js
-var resolve_pathname = __webpack_require__(193);
+var resolve_pathname = __webpack_require__(198);
 
 // EXTERNAL MODULE: ./node_modules/value-equal/index.js
-var value_equal = __webpack_require__(194);
+var value_equal = __webpack_require__(199);
 
 // CONCATENATED MODULE: ./node_modules/history/es/PathUtils.js
 var addLeadingSlash = function addLeadingSlash(path) {
@@ -48282,8 +48823,8 @@ var createMemoryHistory_createMemoryHistory = function createMemoryHistory() {
 
 
 // EXTERNAL MODULE: ./node_modules/react-router/node_modules/warning/warning.js
-var node_modules_warning_warning = __webpack_require__(74);
-var warning_warning_default = /*#__PURE__*/__webpack_require__.n(node_modules_warning_warning);
+var warning_warning = __webpack_require__(75);
+var warning_warning_default = /*#__PURE__*/__webpack_require__.n(warning_warning);
 
 // CONCATENATED MODULE: ./node_modules/react-router/es/Router.js
 var Router__extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -48664,8 +49205,8 @@ MemoryRouter_MemoryRouter.propTypes = {
 
 
 /* harmony default export */ var react_router_dom_es_MemoryRouter = (es_MemoryRouter);
-// EXTERNAL MODULE: ./node_modules/path-to-regexp/index.js
-var path_to_regexp = __webpack_require__(195);
+// EXTERNAL MODULE: ./node_modules/react-router/node_modules/path-to-regexp/index.js
+var path_to_regexp = __webpack_require__(200);
 var path_to_regexp_default = /*#__PURE__*/__webpack_require__.n(path_to_regexp);
 
 // CONCATENATED MODULE: ./node_modules/react-router/es/matchPath.js
@@ -49453,7 +49994,7 @@ Switch_Switch.propTypes = {
 
 /* harmony default export */ var react_router_dom_es_matchPath = (es_matchPath);
 // EXTERNAL MODULE: ./node_modules/react-router/node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js
-var hoist_non_react_statics_cjs = __webpack_require__(567);
+var hoist_non_react_statics_cjs = __webpack_require__(572);
 var hoist_non_react_statics_cjs_default = /*#__PURE__*/__webpack_require__.n(hoist_non_react_statics_cjs);
 
 // CONCATENATED MODULE: ./node_modules/react-router/es/withRouter.js
@@ -49898,11 +50439,11 @@ function _objectWithoutPropertiesLoose(source, excluded) {
   return target;
 }
 // EXTERNAL MODULE: ./node_modules/hoist-non-react-statics/dist/hoist-non-react-statics.cjs.js
-var dist_hoist_non_react_statics_cjs = __webpack_require__(568);
+var dist_hoist_non_react_statics_cjs = __webpack_require__(573);
 var dist_hoist_non_react_statics_cjs_default = /*#__PURE__*/__webpack_require__.n(dist_hoist_non_react_statics_cjs);
 
 // EXTERNAL MODULE: ./node_modules/react-is/index.js
-var react_is = __webpack_require__(196);
+var react_is = __webpack_require__(201);
 var react_is_default = /*#__PURE__*/__webpack_require__.n(react_is);
 
 // CONCATENATED MODULE: ./node_modules/react-redux/es/utils/Subscription.js
@@ -50710,15 +51251,15 @@ thunk.withExtraArgument = createThunkMiddleware;
 
 /* harmony default export */ var redux_thunk_es = (thunk);
 // EXTERNAL MODULE: ./node_modules/redux-logger/dist/redux-logger.js
-var redux_logger = __webpack_require__(574);
+var redux_logger = __webpack_require__(579);
 var redux_logger_default = /*#__PURE__*/__webpack_require__.n(redux_logger);
 
 // EXTERNAL MODULE: ./node_modules/redux-devtools-extension/index.js
-var redux_devtools_extension = __webpack_require__(575);
+var redux_devtools_extension = __webpack_require__(580);
 var redux_devtools_extension_default = /*#__PURE__*/__webpack_require__.n(redux_devtools_extension);
 
 // EXTERNAL MODULE: ./node_modules/history/createHashHistory.js
-var history_createHashHistory = __webpack_require__(576);
+var history_createHashHistory = __webpack_require__(581);
 var createHashHistory_default = /*#__PURE__*/__webpack_require__.n(history_createHashHistory);
 
 // EXTERNAL MODULE: ./node_modules/moment/moment.js
@@ -50726,7 +51267,7 @@ var moment = __webpack_require__(0);
 var moment_default = /*#__PURE__*/__webpack_require__.n(moment);
 
 // EXTERNAL MODULE: ./assets/api/singapore-children-residents-by-subzone-jun-2017.geojson
-var singapore_children_residents_by_subzone_jun_2017_geojson = __webpack_require__(582);
+var singapore_children_residents_by_subzone_jun_2017_geojson = __webpack_require__(587);
 var singapore_children_residents_by_subzone_jun_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_children_residents_by_subzone_jun_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/children/childrenSubzoneData.js
@@ -50858,7 +51399,7 @@ function fetchChildrenSubzoneDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-children-residents-by-area-jun-2017.geojson
-var singapore_children_residents_by_area_jun_2017_geojson = __webpack_require__(583);
+var singapore_children_residents_by_area_jun_2017_geojson = __webpack_require__(588);
 var singapore_children_residents_by_area_jun_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_children_residents_by_area_jun_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/children/childrenAreaData.js
@@ -50990,7 +51531,7 @@ function fetchChildrenAreaDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-pre-school-locations-2017.geojson
-var singapore_pre_school_locations_2017_geojson = __webpack_require__(584);
+var singapore_pre_school_locations_2017_geojson = __webpack_require__(589);
 var singapore_pre_school_locations_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_pre_school_locations_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/children/preschoolLocationData.js
@@ -51122,7 +51663,7 @@ function fetchPreschoolLocationDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-childcare-services-2017.geojson
-var singapore_childcare_services_2017_geojson = __webpack_require__(585);
+var singapore_childcare_services_2017_geojson = __webpack_require__(590);
 var singapore_childcare_services_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_childcare_services_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/children/childcareServicesData.js
@@ -51254,7 +51795,7 @@ function fetchChildcareServicesDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-elderly-residents-by-subzone-jun-2017.geojson
-var singapore_elderly_residents_by_subzone_jun_2017_geojson = __webpack_require__(586);
+var singapore_elderly_residents_by_subzone_jun_2017_geojson = __webpack_require__(591);
 var singapore_elderly_residents_by_subzone_jun_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_elderly_residents_by_subzone_jun_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/elderly/elderlySubzoneData.js
@@ -51386,7 +51927,7 @@ function fetchElderlySubzoneDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-elderly-residents-by-area-jun-2017.geojson
-var singapore_elderly_residents_by_area_jun_2017_geojson = __webpack_require__(587);
+var singapore_elderly_residents_by_area_jun_2017_geojson = __webpack_require__(592);
 var singapore_elderly_residents_by_area_jun_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_elderly_residents_by_area_jun_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/elderly/elderlyAreaData.js
@@ -51518,7 +52059,7 @@ function fetchElderlyAreaDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-eldercare-services-2017.geojson
-var singapore_eldercare_services_2017_geojson = __webpack_require__(588);
+var singapore_eldercare_services_2017_geojson = __webpack_require__(593);
 var singapore_eldercare_services_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_eldercare_services_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/elderly/eldercareServicesData.js
@@ -51650,7 +52191,7 @@ function fetchEldercareServicesDataIfNeeded() {
   };
 }
 // EXTERNAL MODULE: ./assets/api/singapore-chas-clinics-2017.geojson
-var singapore_chas_clinics_2017_geojson = __webpack_require__(589);
+var singapore_chas_clinics_2017_geojson = __webpack_require__(594);
 var singapore_chas_clinics_2017_geojson_default = /*#__PURE__*/__webpack_require__.n(singapore_chas_clinics_2017_geojson);
 
 // CONCATENATED MODULE: ./src/app/redux/modules/elderly/chasClinicsData.js
@@ -52257,11 +52798,11 @@ var classnames = __webpack_require__(46);
 var classnames_default = /*#__PURE__*/__webpack_require__.n(classnames);
 
 // EXTERNAL MODULE: ./node_modules/lodash.isfunction/index.js
-var lodash_isfunction = __webpack_require__(590);
+var lodash_isfunction = __webpack_require__(595);
 var lodash_isfunction_default = /*#__PURE__*/__webpack_require__.n(lodash_isfunction);
 
 // EXTERNAL MODULE: ./node_modules/lodash.isobject/index.js
-var lodash_isobject = __webpack_require__(591);
+var lodash_isobject = __webpack_require__(596);
 var lodash_isobject_default = /*#__PURE__*/__webpack_require__.n(lodash_isobject);
 
 // CONCATENATED MODULE: ./node_modules/react-popper/lib/Manager.js
@@ -52393,7 +52934,7 @@ Target_Target.propTypes = {
 
 /* harmony default export */ var lib_Target = (Target_Target);
 // EXTERNAL MODULE: ./node_modules/popper.js/dist/esm/popper.js
-var esm_popper = __webpack_require__(592);
+var esm_popper = __webpack_require__(597);
 
 // CONCATENATED MODULE: ./node_modules/react-popper/lib/Popper.js
 var Popper__extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -52709,7 +53250,7 @@ Arrow_Arrow.propTypes = {
 
 
 // EXTERNAL MODULE: ./node_modules/lodash.tonumber/index.js
-var lodash_tonumber = __webpack_require__(593);
+var lodash_tonumber = __webpack_require__(598);
 var lodash_tonumber_default = /*#__PURE__*/__webpack_require__.n(lodash_tonumber);
 
 // CONCATENATED MODULE: ./node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js
@@ -59100,7 +59641,7 @@ SidebarLink_SidebarLink.defaultProps = {
 
 /* harmony default export */ var sidebar_SidebarLink = (SidebarLink_SidebarLink);
 // EXTERNAL MODULE: ./node_modules/react-motion/lib/react-motion.js
-var react_motion = __webpack_require__(594);
+var react_motion = __webpack_require__(599);
 var react_motion_default = /*#__PURE__*/__webpack_require__.n(react_motion);
 
 // CONCATENATED MODULE: ./src/app/components/sidebar/SidebarCategory.js
@@ -59421,15 +59962,15 @@ AnimatedView_AnimatedView.propTypes = {
 
 /* harmony default export */ var components_AnimatedView = (react_router_dom_es_withRouter(AnimatedView_AnimatedView));
 // EXTERNAL MODULE: ./node_modules/leaflet/dist/leaflet-src.js
-var leaflet_src = __webpack_require__(142);
+var leaflet_src = __webpack_require__(145);
 var leaflet_src_default = /*#__PURE__*/__webpack_require__.n(leaflet_src);
 
 // EXTERNAL MODULE: ./assets/img/onemap.png
-var onemap = __webpack_require__(602);
+var onemap = __webpack_require__(607);
 var onemap_default = /*#__PURE__*/__webpack_require__.n(onemap);
 
 // EXTERNAL MODULE: ./node_modules/chart.js/src/chart.js
-var chart = __webpack_require__(603);
+var chart = __webpack_require__(608);
 var chart_default = /*#__PURE__*/__webpack_require__.n(chart);
 
 // CONCATENATED MODULE: ./src/app/components/Map.js
@@ -59500,15 +60041,15 @@ var Map_Map = function (_PureComponent) {
 			var data = graphData;
 
 			var myChart = new chart_default.a(ctx, {
-				type: 'bar',
+				type: 'line',
 				data: {
 					labels: labels,
 					datasets: [{
 						label: "COUNT",
-						fill: false,
-						backgroundColor: graphColor,
-						borderColor: borderColor,
-						borderWidth: 1,
+						backgroundColor: graphColor, // "rgba(54, 162, 235, 0.2)"
+						borderColor: borderColor, // "rgb(54, 162, 235)"    
+						pointBackgroundColor: "#ffffff",
+						borderWidth: 2,
 						data: data
 					}]
 				},
@@ -60051,7 +60592,7 @@ var Track_Track = function Track(props) {
 
 /* harmony default export */ var common_Track = (Track_Track);
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/objectWithoutProperties.js
-var helpers_objectWithoutProperties = __webpack_require__(87);
+var helpers_objectWithoutProperties = __webpack_require__(89);
 var objectWithoutProperties_default = /*#__PURE__*/__webpack_require__.n(helpers_objectWithoutProperties);
 
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/defineProperty.js
@@ -60059,11 +60600,11 @@ var helpers_defineProperty = __webpack_require__(69);
 var defineProperty_default = /*#__PURE__*/__webpack_require__.n(helpers_defineProperty);
 
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/get.js
-var get = __webpack_require__(681);
+var get = __webpack_require__(686);
 var get_default = /*#__PURE__*/__webpack_require__.n(get);
 
 // EXTERNAL MODULE: ./node_modules/add-dom-event-listener/lib/index.js
-var lib = __webpack_require__(688);
+var lib = __webpack_require__(693);
 var lib_default = /*#__PURE__*/__webpack_require__.n(lib);
 
 // CONCATENATED MODULE: ./node_modules/rc-util/es/Dom/addEventListener.js
@@ -60087,7 +60628,9 @@ function addEventListenerWrap(target, eventType, cb, option) {
 
 var Steps_calcPoints = function calcPoints(vertical, marks, dots, step, min, max) {
   browser_default()(dots ? step > 0 : true, '`Slider[step]` should be a positive number in order to make Slider[dots] work.');
-  var points = Object.keys(marks).map(parseFloat);
+  var points = Object.keys(marks).map(parseFloat).sort(function (a, b) {
+    return a - b;
+  });
   if (dots) {
     for (var i = min; i <= max; i += step) {
       if (points.indexOf(i) === -1) {
@@ -60376,7 +60919,7 @@ Handle_Handle.propTypes = {
   tabIndex: prop_types_default.a.number
 };
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/toConsumableArray.js
-var toConsumableArray = __webpack_require__(342);
+var toConsumableArray = __webpack_require__(348);
 var toConsumableArray_default = /*#__PURE__*/__webpack_require__.n(toConsumableArray);
 
 // CONCATENATED MODULE: ./node_modules/rc-util/es/KeyCode.js
@@ -60903,10 +61446,18 @@ KeyCode.isCharacterKey = function isCharacterKey(keyCode) {
 
 
 
+function isDev() {
+  return "production" !== 'production';
+}
+
 function isEventFromHandle(e, handles) {
-  return Object.keys(handles).some(function (key) {
-    return e.target === Object(react_dom["findDOMNode"])(handles[key]);
-  });
+  try {
+    return Object.keys(handles).some(function (key) {
+      return e.target === Object(react_dom["findDOMNode"])(handles[key]);
+    });
+  } catch (error) {
+    return false;
+  }
 }
 
 function isValueOutOfRange(value, _ref) {
@@ -60955,7 +61506,7 @@ function getTouchPosition(vertical, e) {
 
 function getHandleCenterPosition(vertical, handle) {
   var coords = handle.getBoundingClientRect();
-  return vertical ? coords.top + coords.height * 0.5 : coords.left + coords.width * 0.5;
+  return vertical ? coords.top + coords.height * 0.5 : window.pageXOffset + coords.left + coords.width * 0.5;
 }
 
 function ensureValueInRange(val, _ref3) {
@@ -60974,7 +61525,7 @@ function ensureValueInRange(val, _ref3) {
 function ensureValuePrecision(val, props) {
   var step = props.step;
 
-  var closestPoint = getClosestPoint(val, props);
+  var closestPoint = isFinite(getClosestPoint(val, props)) ? getClosestPoint(val, props) : 0; // eslint-disable-line
   return step === null ? closestPoint : parseFloat(closestPoint.toFixed(getPrecision(step)));
 }
 
@@ -60983,18 +61534,39 @@ function pauseEvent(e) {
   e.preventDefault();
 }
 
+function calculateNextValue(func, value, props) {
+  var operations = {
+    increase: function increase(a, b) {
+      return a + b;
+    },
+    decrease: function decrease(a, b) {
+      return a - b;
+    }
+  };
+
+  var indexToGet = operations[func](Object.keys(props.marks).indexOf(JSON.stringify(value)), 1);
+  var keyToGet = Object.keys(props.marks)[indexToGet];
+
+  if (props.step) {
+    return operations[func](value, props.step);
+  } else if (!!Object.keys(props.marks).length && !!props.marks[keyToGet]) {
+    return props.marks[keyToGet];
+  }
+  return value;
+}
+
 function getKeyboardValueMutator(e) {
   switch (e.keyCode) {
     case es_KeyCode.UP:
     case es_KeyCode.RIGHT:
       return function (value, props) {
-        return value + props.step;
+        return calculateNextValue('increase', value, props);
       };
 
     case es_KeyCode.DOWN:
     case es_KeyCode.LEFT:
       return function (value, props) {
-        return value - props.step;
+        return calculateNextValue('decrease', value, props);
       };
 
     case es_KeyCode.END:
@@ -61145,18 +61717,20 @@ function createSlider(Component) {
       _this.onClickMarkLabel = function (e, value) {
         e.stopPropagation();
         _this.onChange({ value: value });
+        _this.onEnd();
       };
 
       _this.saveSlider = function (slider) {
         _this.sliderRef = slider;
       };
 
-      if (false) {
+      if (isDev()) {
         var step = props.step,
             max = props.max,
             min = props.min;
 
-        warning(step && Math.floor(step) === step ? (max - min) % step === 0 : true, 'Slider[max] - Slider[min] (%s) should be a multiple of Slider[step] (%s)', max - min, step);
+        var isPointDiffEven = isFinite(max - min) ? (max - min) % step === 0 : true; // eslint-disable-line
+        browser_default()(step && Math.floor(step) === step ? isPointDiffEven : true, 'Slider[max] - Slider[min] (%s) should be a multiple of Slider[step] (%s)', max - min, step);
       }
       _this.handlesRefs = {};
       return _this;
@@ -61180,7 +61754,7 @@ function createSlider(Component) {
         var slider = this.sliderRef;
         var rect = slider.getBoundingClientRect();
 
-        return this.props.vertical ? rect.top : rect.left;
+        return this.props.vertical ? rect.top : rect.left + window.pageXOffset;
       }
     }, {
       key: 'getSliderLength',
@@ -61388,6 +61962,10 @@ function createSlider(Component) {
           restProps = objectWithoutProperties_default()(_ref, ['index']);
 
       delete restProps.dragging;
+      if (restProps.value === null) {
+        return null;
+      }
+
       return react_default.a.createElement(es_Handle, extends_default()({}, restProps, { key: index }));
     },
 
@@ -61440,9 +62018,9 @@ var Slider_Slider = function (_React$Component) {
       value: _this.trimAlignValue(value),
       dragging: false
     };
-    if (false) {
-      warning(!('minimumTrackStyle' in props), 'minimumTrackStyle will be deprecate, please use trackStyle instead.');
-      warning(!('maximumTrackStyle' in props), 'maximumTrackStyle will be deprecate, please use railStyle instead.');
+    if (isDev()) {
+      browser_default()(!('minimumTrackStyle' in props), 'minimumTrackStyle will be deprecate, please use trackStyle instead.');
+      browser_default()(!('maximumTrackStyle' in props), 'maximumTrackStyle will be deprecate, please use railStyle instead.');
     }
     return _this;
   }
@@ -61550,6 +62128,10 @@ var Slider_Slider = function (_React$Component) {
     value: function trimAlignValue(v) {
       var nextProps = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+      if (v === null) {
+        return null;
+      }
+
       var mergedProps = extends_default()({}, this.props, nextProps);
       var val = ensureValueInRange(v, mergedProps);
       return ensureValuePrecision(val, mergedProps);
@@ -61616,13 +62198,15 @@ Slider_Slider.propTypes = {
   value: prop_types_default.a.number,
   disabled: prop_types_default.a.bool,
   autoFocus: prop_types_default.a.bool,
-  tabIndex: prop_types_default.a.number
+  tabIndex: prop_types_default.a.number,
+  min: prop_types_default.a.number,
+  max: prop_types_default.a.number
 };
 
 
 /* harmony default export */ var es_Slider = (createSlider(Slider_Slider));
 // EXTERNAL MODULE: ./node_modules/shallowequal/index.js
-var shallowequal = __webpack_require__(700);
+var shallowequal = __webpack_require__(705);
 var shallowequal_default = /*#__PURE__*/__webpack_require__.n(shallowequal);
 
 // CONCATENATED MODULE: ./node_modules/rc-slider/es/Range.js
@@ -61653,7 +62237,7 @@ var Range_Range = function (_React$Component) {
     _this.onEnd = function () {
       _this.setState({
         handle: null
-      }, _this.blur);
+      });
       _this.removeDocumentEvents();
       _this.props.onAfterChange(_this.getValue());
     };
@@ -61702,7 +62286,7 @@ var Range_Range = function (_React$Component) {
 
       this.setState({ bounds: nextBounds });
 
-      if (bounds.some(function (v) {
+      if (value.some(function (v) {
         return isValueOutOfRange(v, nextProps);
       })) {
         var newValues = value.map(function (v) {
@@ -62080,7 +62664,9 @@ Range_Range.propTypes = {
   pushable: prop_types_default.a.oneOfType([prop_types_default.a.bool, prop_types_default.a.number]),
   allowCross: prop_types_default.a.bool,
   disabled: prop_types_default.a.bool,
-  tabIndex: prop_types_default.a.arrayOf(prop_types_default.a.number)
+  tabIndex: prop_types_default.a.arrayOf(prop_types_default.a.number),
+  min: prop_types_default.a.number,
+  max: prop_types_default.a.number
 };
 Range_Range.defaultProps = {
   count: 1,
@@ -63873,7 +64459,7 @@ function mergeChildren(prev, next) {
   return ret;
 }
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/typeof.js
-var helpers_typeof = __webpack_require__(152);
+var helpers_typeof = __webpack_require__(155);
 var typeof_default = /*#__PURE__*/__webpack_require__.n(helpers_typeof);
 
 // CONCATENATED MODULE: ./node_modules/css-animation/es/Event.js
@@ -64007,7 +64593,7 @@ var TransitionEvents = {
 
 /* harmony default export */ var Event = (TransitionEvents);
 // EXTERNAL MODULE: ./node_modules/component-classes/index.js
-var component_classes = __webpack_require__(701);
+var component_classes = __webpack_require__(706);
 var component_classes_default = /*#__PURE__*/__webpack_require__.n(component_classes);
 
 // CONCATENATED MODULE: ./node_modules/css-animation/es/index.js
@@ -66246,7 +66832,7 @@ es_Slider.createSliderWithTooltip = createSliderWithTooltip;
 /* harmony default export */ var rc_slider_es = (es_Slider);
 
 // EXTERNAL MODULE: ./assets/img/loading.gif
-var loading = __webpack_require__(344);
+var loading = __webpack_require__(350);
 var loading_default = /*#__PURE__*/__webpack_require__.n(loading);
 
 // CONCATENATED MODULE: ./src/app/redux/actions.js
@@ -67917,7 +68503,7 @@ if (false) {
 }
 
 /***/ }),
-/* 549 */
+/* 554 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67930,7 +68516,7 @@ if (false) {
  * LICENSE file in the root directory of this source tree.
  */
 
-var k=__webpack_require__(136),n="function"===typeof Symbol&&Symbol.for,p=n?Symbol.for("react.element"):60103,q=n?Symbol.for("react.portal"):60106,r=n?Symbol.for("react.fragment"):60107,t=n?Symbol.for("react.strict_mode"):60108,u=n?Symbol.for("react.profiler"):60114,v=n?Symbol.for("react.provider"):60109,w=n?Symbol.for("react.context"):60110,x=n?Symbol.for("react.concurrent_mode"):60111,y=n?Symbol.for("react.forward_ref"):60112,z=n?Symbol.for("react.suspense"):60113,A=n?Symbol.for("react.memo"):
+var k=__webpack_require__(139),n="function"===typeof Symbol&&Symbol.for,p=n?Symbol.for("react.element"):60103,q=n?Symbol.for("react.portal"):60106,r=n?Symbol.for("react.fragment"):60107,t=n?Symbol.for("react.strict_mode"):60108,u=n?Symbol.for("react.profiler"):60114,v=n?Symbol.for("react.provider"):60109,w=n?Symbol.for("react.context"):60110,x=n?Symbol.for("react.concurrent_mode"):60111,y=n?Symbol.for("react.forward_ref"):60112,z=n?Symbol.for("react.suspense"):60113,A=n?Symbol.for("react.memo"):
 60115,B=n?Symbol.for("react.lazy"):60116,C="function"===typeof Symbol&&Symbol.iterator;function aa(a,b,e,c,d,g,h,f){if(!a){a=void 0;if(void 0===b)a=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var l=[e,c,d,g,h,f],m=0;a=Error(b.replace(/%s/g,function(){return l[m++]}));a.name="Invariant Violation"}a.framesToPop=1;throw a;}}
 function D(a){for(var b=arguments.length-1,e="https://reactjs.org/docs/error-decoder.html?invariant="+a,c=0;c<b;c++)e+="&args[]="+encodeURIComponent(arguments[c+1]);aa(!1,"Minified React error #"+a+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",e)}var E={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},F={};
 function G(a,b,e){this.props=a;this.context=b;this.refs=F;this.updater=e||E}G.prototype.isReactComponent={};G.prototype.setState=function(a,b){"object"!==typeof a&&"function"!==typeof a&&null!=a?D("85"):void 0;this.updater.enqueueSetState(this,a,b,"setState")};G.prototype.forceUpdate=function(a){this.updater.enqueueForceUpdate(this,a,"forceUpdate")};function H(){}H.prototype=G.prototype;function I(a,b,e){this.props=a;this.context=b;this.refs=F;this.updater=e||E}var J=I.prototype=new H;
@@ -67948,7 +68534,7 @@ __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:K,assign:k
 
 
 /***/ }),
-/* 550 */
+/* 555 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -67964,7 +68550,7 @@ __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:K,assign:k
 /*
  Modernizr 3.0.0pre (Custom Build) | MIT
 */
-var aa=__webpack_require__(2),n=__webpack_require__(136),ba=__webpack_require__(551);function ca(a,b,c,d,e,f,g,h){if(!a){a=void 0;if(void 0===b)a=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var k=[c,d,e,f,g,h],l=0;a=Error(b.replace(/%s/g,function(){return k[l++]}));a.name="Invariant Violation"}a.framesToPop=1;throw a;}}
+var aa=__webpack_require__(2),n=__webpack_require__(139),ba=__webpack_require__(556);function ca(a,b,c,d,e,f,g,h){if(!a){a=void 0;if(void 0===b)a=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var k=[c,d,e,f,g,h],l=0;a=Error(b.replace(/%s/g,function(){return k[l++]}));a.name="Invariant Violation"}a.framesToPop=1;throw a;}}
 function t(a){for(var b=arguments.length-1,c="https://reactjs.org/docs/error-decoder.html?invariant="+a,d=0;d<b;d++)c+="&args[]="+encodeURIComponent(arguments[d+1]);ca(!1,"Minified React error #"+a+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",c)}aa?void 0:t("227");function da(a,b,c,d,e,f,g,h,k){var l=Array.prototype.slice.call(arguments,3);try{b.apply(c,l)}catch(m){this.onError(m)}}
 var ea=!1,fa=null,ha=!1,ia=null,ja={onError:function(a){ea=!0;fa=a}};function ka(a,b,c,d,e,f,g,h,k){ea=!1;fa=null;da.apply(ja,arguments)}function la(a,b,c,d,e,f,g,h,k){ka.apply(this,arguments);if(ea){if(ea){var l=fa;ea=!1;fa=null}else t("198"),l=void 0;ha||(ha=!0,ia=l)}}var ma=null,na={};
 function oa(){if(ma)for(var a in na){var b=na[a],c=ma.indexOf(a);-1<c?void 0:t("96",a);if(!pa[c]){b.extractEvents?void 0:t("97",a);pa[c]=b;c=b.eventTypes;for(var d in c){var e=void 0;var f=c[d],g=b,h=d;qa.hasOwnProperty(h)?t("99",h):void 0;qa[h]=f;var k=f.phasedRegistrationNames;if(k){for(e in k)k.hasOwnProperty(e)&&ra(k[e],g,h);e=!0}else f.registrationName?(ra(f.registrationName,g,h),e=!0):e=!1;e?void 0:t("98",d,a)}}}}
@@ -68204,21 +68790,21 @@ var ei={default:bi},fi=ei&&bi||ei;module.exports=fi.default||fi;
 
 
 /***/ }),
-/* 551 */
+/* 556 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 if (true) {
-  module.exports = __webpack_require__(552);
+  module.exports = __webpack_require__(557);
 } else {
   module.exports = require('./cjs/scheduler.development.js');
 }
 
 
 /***/ }),
-/* 552 */
+/* 557 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68247,14 +68833,14 @@ exports.unstable_shouldYield=function(){return!f&&(null!==d&&d.expirationTime<l|
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 553 */
+/* 558 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(554)
+module.exports = __webpack_require__(559)
 
 
 /***/ }),
-/* 554 */
+/* 559 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68263,22 +68849,22 @@ module.exports = __webpack_require__(554)
 /* eslint-disable global-require */
 
 if (true) {
-  module.exports = __webpack_require__(555);
+  module.exports = __webpack_require__(560);
 } else {
   module.exports = require('./index.dev');
 }
 
 /***/ }),
-/* 555 */
+/* 560 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-module.exports.AppContainer = __webpack_require__(556);
+module.exports.AppContainer = __webpack_require__(561);
 
 /***/ }),
-/* 556 */
+/* 561 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68287,13 +68873,13 @@ module.exports.AppContainer = __webpack_require__(556);
 /* eslint-disable global-require */
 
 if (true) {
-  module.exports = __webpack_require__(557);
+  module.exports = __webpack_require__(562);
 } else {
   module.exports = require('./AppContainer.dev');
 }
 
 /***/ }),
-/* 557 */
+/* 562 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68339,7 +68925,7 @@ var AppContainer = function (_Component) {
 module.exports = AppContainer;
 
 /***/ }),
-/* 558 */
+/* 563 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* smoothscroll v0.4.0 - 2018 - Dustan Kasten, Jeremias Menichelli - MIT License */
@@ -68784,37 +69370,37 @@ module.exports = AppContainer;
 
 
 /***/ }),
-/* 559 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 560 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 561 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 562 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 563 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
 /* 564 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 565 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 566 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 567 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 568 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 569 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68827,7 +69413,7 @@ module.exports = AppContainer;
 
 
 
-var ReactPropTypesSecret = __webpack_require__(565);
+var ReactPropTypesSecret = __webpack_require__(570);
 
 function emptyFunction() {}
 
@@ -68880,7 +69466,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 565 */
+/* 570 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68899,7 +69485,7 @@ module.exports = ReactPropTypesSecret;
 
 
 /***/ }),
-/* 566 */
+/* 571 */
 /***/ (function(module, exports) {
 
 module.exports = Array.isArray || function (arr) {
@@ -68908,7 +69494,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ }),
-/* 567 */
+/* 572 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68983,7 +69569,7 @@ module.exports = hoistNonReactStatics;
 
 
 /***/ }),
-/* 568 */
+/* 573 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -68993,7 +69579,7 @@ module.exports = hoistNonReactStatics;
  * Copyright 2015, Yahoo! Inc.
  * Copyrights licensed under the New BSD License. See the accompanying LICENSE file for terms.
  */
-var ReactIs = __webpack_require__(196);
+var ReactIs = __webpack_require__(201);
 var REACT_STATICS = {
     childContextTypes: true,
     contextType: true,
@@ -69077,7 +69663,7 @@ module.exports = hoistNonReactStatics;
 
 
 /***/ }),
-/* 569 */
+/* 574 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69098,7 +69684,7 @@ exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===
 
 
 /***/ }),
-/* 570 */
+/* 575 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69110,11 +69696,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41)))
 
 /***/ }),
-/* 571 */
+/* 576 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ponyfill_js__ = __webpack_require__(573);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ponyfill_js__ = __webpack_require__(578);
 /* global window */
 
 
@@ -69135,10 +69721,10 @@ if (typeof self !== 'undefined') {
 var result = Object(__WEBPACK_IMPORTED_MODULE_0__ponyfill_js__["a" /* default */])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41), __webpack_require__(572)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41), __webpack_require__(577)(module)))
 
 /***/ }),
-/* 572 */
+/* 577 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -69168,7 +69754,7 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 573 */
+/* 578 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -69193,7 +69779,7 @@ function symbolObservablePonyfill(root) {
 
 
 /***/ }),
-/* 574 */
+/* 579 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {!function(e,t){ true?t(exports):"function"==typeof define&&define.amd?define(["exports"],t):t(e.reduxLogger=e.reduxLogger||{})}(this,function(e){"use strict";function t(e,t){e.super_=t,e.prototype=Object.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}})}function r(e,t){Object.defineProperty(this,"kind",{value:e,enumerable:!0}),t&&t.length&&Object.defineProperty(this,"path",{value:t,enumerable:!0})}function n(e,t,r){n.super_.call(this,"E",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0}),Object.defineProperty(this,"rhs",{value:r,enumerable:!0})}function o(e,t){o.super_.call(this,"N",e),Object.defineProperty(this,"rhs",{value:t,enumerable:!0})}function i(e,t){i.super_.call(this,"D",e),Object.defineProperty(this,"lhs",{value:t,enumerable:!0})}function a(e,t,r){a.super_.call(this,"A",e),Object.defineProperty(this,"index",{value:t,enumerable:!0}),Object.defineProperty(this,"item",{value:r,enumerable:!0})}function f(e,t,r){var n=e.slice((r||t)+1||e.length);return e.length=t<0?e.length+t:t,e.push.apply(e,n),e}function u(e){var t="undefined"==typeof e?"undefined":N(e);return"object"!==t?t:e===Math?"math":null===e?"null":Array.isArray(e)?"array":"[object Date]"===Object.prototype.toString.call(e)?"date":"function"==typeof e.toString&&/^\/.*\//.test(e.toString())?"regexp":"object"}function l(e,t,r,c,s,d,p){s=s||[],p=p||[];var g=s.slice(0);if("undefined"!=typeof d){if(c){if("function"==typeof c&&c(g,d))return;if("object"===("undefined"==typeof c?"undefined":N(c))){if(c.prefilter&&c.prefilter(g,d))return;if(c.normalize){var h=c.normalize(g,d,e,t);h&&(e=h[0],t=h[1])}}}g.push(d)}"regexp"===u(e)&&"regexp"===u(t)&&(e=e.toString(),t=t.toString());var y="undefined"==typeof e?"undefined":N(e),v="undefined"==typeof t?"undefined":N(t),b="undefined"!==y||p&&p[p.length-1].lhs&&p[p.length-1].lhs.hasOwnProperty(d),m="undefined"!==v||p&&p[p.length-1].rhs&&p[p.length-1].rhs.hasOwnProperty(d);if(!b&&m)r(new o(g,t));else if(!m&&b)r(new i(g,e));else if(u(e)!==u(t))r(new n(g,e,t));else if("date"===u(e)&&e-t!==0)r(new n(g,e,t));else if("object"===y&&null!==e&&null!==t)if(p.filter(function(t){return t.lhs===e}).length)e!==t&&r(new n(g,e,t));else{if(p.push({lhs:e,rhs:t}),Array.isArray(e)){var w;e.length;for(w=0;w<e.length;w++)w>=t.length?r(new a(g,w,new i(void 0,e[w]))):l(e[w],t[w],r,c,g,w,p);for(;w<t.length;)r(new a(g,w,new o(void 0,t[w++])))}else{var x=Object.keys(e),S=Object.keys(t);x.forEach(function(n,o){var i=S.indexOf(n);i>=0?(l(e[n],t[n],r,c,g,n,p),S=f(S,i)):l(e[n],void 0,r,c,g,n,p)}),S.forEach(function(e){l(void 0,t[e],r,c,g,e,p)})}p.length=p.length-1}else e!==t&&("number"===y&&isNaN(e)&&isNaN(t)||r(new n(g,e,t)))}function c(e,t,r,n){return n=n||[],l(e,t,function(e){e&&n.push(e)},r),n.length?n:void 0}function s(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":s(o[r.path[n]],r.index,r.item);break;case"D":delete o[r.path[n]];break;case"E":case"N":o[r.path[n]]=r.rhs}}else switch(r.kind){case"A":s(e[t],r.index,r.item);break;case"D":e=f(e,t);break;case"E":case"N":e[t]=r.rhs}return e}function d(e,t,r){if(e&&t&&r&&r.kind){for(var n=e,o=-1,i=r.path?r.path.length-1:0;++o<i;)"undefined"==typeof n[r.path[o]]&&(n[r.path[o]]="number"==typeof r.path[o]?[]:{}),n=n[r.path[o]];switch(r.kind){case"A":s(r.path?n[r.path[o]]:n,r.index,r.item);break;case"D":delete n[r.path[o]];break;case"E":case"N":n[r.path[o]]=r.rhs}}}function p(e,t,r){if(r.path&&r.path.length){var n,o=e[t],i=r.path.length-1;for(n=0;n<i;n++)o=o[r.path[n]];switch(r.kind){case"A":p(o[r.path[n]],r.index,r.item);break;case"D":o[r.path[n]]=r.lhs;break;case"E":o[r.path[n]]=r.lhs;break;case"N":delete o[r.path[n]]}}else switch(r.kind){case"A":p(e[t],r.index,r.item);break;case"D":e[t]=r.lhs;break;case"E":e[t]=r.lhs;break;case"N":e=f(e,t)}return e}function g(e,t,r){if(e&&t&&r&&r.kind){var n,o,i=e;for(o=r.path.length-1,n=0;n<o;n++)"undefined"==typeof i[r.path[n]]&&(i[r.path[n]]={}),i=i[r.path[n]];switch(r.kind){case"A":p(i[r.path[n]],r.index,r.item);break;case"D":i[r.path[n]]=r.lhs;break;case"E":i[r.path[n]]=r.lhs;break;case"N":delete i[r.path[n]]}}}function h(e,t,r){if(e&&t){var n=function(n){r&&!r(e,t,n)||d(e,t,n)};l(e,t,n)}}function y(e){return"color: "+F[e].color+"; font-weight: bold"}function v(e){var t=e.kind,r=e.path,n=e.lhs,o=e.rhs,i=e.index,a=e.item;switch(t){case"E":return[r.join("."),n,"→",o];case"N":return[r.join("."),o];case"D":return[r.join(".")];case"A":return[r.join(".")+"["+i+"]",a];default:return[]}}function b(e,t,r,n){var o=c(e,t);try{n?r.groupCollapsed("diff"):r.group("diff")}catch(e){r.log("diff")}o?o.forEach(function(e){var t=e.kind,n=v(e);r.log.apply(r,["%c "+F[t].text,y(t)].concat(P(n)))}):r.log("—— no diff ——");try{r.groupEnd()}catch(e){r.log("—— diff end —— ")}}function m(e,t,r,n){switch("undefined"==typeof e?"undefined":N(e)){case"object":return"function"==typeof e[n]?e[n].apply(e,P(r)):e[n];case"function":return e(t);default:return e}}function w(e){var t=e.timestamp,r=e.duration;return function(e,n,o){var i=["action"];return i.push("%c"+String(e.type)),t&&i.push("%c@ "+n),r&&i.push("%c(in "+o.toFixed(2)+" ms)"),i.join(" ")}}function x(e,t){var r=t.logger,n=t.actionTransformer,o=t.titleFormatter,i=void 0===o?w(t):o,a=t.collapsed,f=t.colors,u=t.level,l=t.diff,c="undefined"==typeof t.titleFormatter;e.forEach(function(o,s){var d=o.started,p=o.startedTime,g=o.action,h=o.prevState,y=o.error,v=o.took,w=o.nextState,x=e[s+1];x&&(w=x.prevState,v=x.started-d);var S=n(g),k="function"==typeof a?a(function(){return w},g,o):a,j=D(p),E=f.title?"color: "+f.title(S)+";":"",A=["color: gray; font-weight: lighter;"];A.push(E),t.timestamp&&A.push("color: gray; font-weight: lighter;"),t.duration&&A.push("color: gray; font-weight: lighter;");var O=i(S,j,v);try{k?f.title&&c?r.groupCollapsed.apply(r,["%c "+O].concat(A)):r.groupCollapsed(O):f.title&&c?r.group.apply(r,["%c "+O].concat(A)):r.group(O)}catch(e){r.log(O)}var N=m(u,S,[h],"prevState"),P=m(u,S,[S],"action"),C=m(u,S,[y,h],"error"),F=m(u,S,[w],"nextState");if(N)if(f.prevState){var L="color: "+f.prevState(h)+"; font-weight: bold";r[N]("%c prev state",L,h)}else r[N]("prev state",h);if(P)if(f.action){var T="color: "+f.action(S)+"; font-weight: bold";r[P]("%c action    ",T,S)}else r[P]("action    ",S);if(y&&C)if(f.error){var M="color: "+f.error(y,h)+"; font-weight: bold;";r[C]("%c error     ",M,y)}else r[C]("error     ",y);if(F)if(f.nextState){var _="color: "+f.nextState(w)+"; font-weight: bold";r[F]("%c next state",_,w)}else r[F]("next state",w);l&&b(h,w,r,k);try{r.groupEnd()}catch(e){r.log("—— log end ——")}})}function S(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=Object.assign({},L,e),r=t.logger,n=t.stateTransformer,o=t.errorTransformer,i=t.predicate,a=t.logErrors,f=t.diffPredicate;if("undefined"==typeof r)return function(){return function(e){return function(t){return e(t)}}};if(e.getState&&e.dispatch)return console.error("[redux-logger] redux-logger not installed. Make sure to pass logger instance as middleware:\n// Logger with default options\nimport { logger } from 'redux-logger'\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n// Or you can create your own logger with custom options http://bit.ly/redux-logger-options\nimport createLogger from 'redux-logger'\nconst logger = createLogger({\n  // ...options\n});\nconst store = createStore(\n  reducer,\n  applyMiddleware(logger)\n)\n"),function(){return function(e){return function(t){return e(t)}}};var u=[];return function(e){var r=e.getState;return function(e){return function(l){if("function"==typeof i&&!i(r,l))return e(l);var c={};u.push(c),c.started=O.now(),c.startedTime=new Date,c.prevState=n(r()),c.action=l;var s=void 0;if(a)try{s=e(l)}catch(e){c.error=o(e)}else s=e(l);c.took=O.now()-c.started,c.nextState=n(r());var d=t.diff&&"function"==typeof f?f(r,l):t.diff;if(x(u,Object.assign({},t,{diff:d})),u.length=0,c.error)throw c.error;return s}}}}var k,j,E=function(e,t){return new Array(t+1).join(e)},A=function(e,t){return E("0",t-e.toString().length)+e},D=function(e){return A(e.getHours(),2)+":"+A(e.getMinutes(),2)+":"+A(e.getSeconds(),2)+"."+A(e.getMilliseconds(),3)},O="undefined"!=typeof performance&&null!==performance&&"function"==typeof performance.now?performance:Date,N="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},P=function(e){if(Array.isArray(e)){for(var t=0,r=Array(e.length);t<e.length;t++)r[t]=e[t];return r}return Array.from(e)},C=[];k="object"===("undefined"==typeof global?"undefined":N(global))&&global?global:"undefined"!=typeof window?window:{},j=k.DeepDiff,j&&C.push(function(){"undefined"!=typeof j&&k.DeepDiff===c&&(k.DeepDiff=j,j=void 0)}),t(n,r),t(o,r),t(i,r),t(a,r),Object.defineProperties(c,{diff:{value:c,enumerable:!0},observableDiff:{value:l,enumerable:!0},applyDiff:{value:h,enumerable:!0},applyChange:{value:d,enumerable:!0},revertChange:{value:g,enumerable:!0},isConflict:{value:function(){return"undefined"!=typeof j},enumerable:!0},noConflict:{value:function(){return C&&(C.forEach(function(e){e()}),C=null),c},enumerable:!0}});var F={E:{color:"#2196F3",text:"CHANGED:"},N:{color:"#4CAF50",text:"ADDED:"},D:{color:"#F44336",text:"DELETED:"},A:{color:"#2196F3",text:"ARRAY:"}},L={level:"log",logger:console,logErrors:!0,collapsed:void 0,predicate:void 0,duration:!1,timestamp:!0,stateTransformer:function(e){return e},actionTransformer:function(e){return e},errorTransformer:function(e){return e},colors:{title:function(){return"inherit"},prevState:function(){return"#9E9E9E"},action:function(){return"#03A9F4"},nextState:function(){return"#4CAF50"},error:function(){return"#F20404"}},diff:!1,diffPredicate:void 0,transformer:void 0},T=function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{},t=e.dispatch,r=e.getState;return"function"==typeof t||"function"==typeof r?S()({dispatch:t,getState:r}):void console.error("\n[redux-logger v3] BREAKING CHANGE\n[redux-logger v3] Since 3.0.0 redux-logger exports by default logger with default settings.\n[redux-logger v3] Change\n[redux-logger v3] import createLogger from 'redux-logger'\n[redux-logger v3] to\n[redux-logger v3] import { createLogger } from 'redux-logger'\n")};e.defaults=L,e.createLogger=S,e.logger=T,e.default=T,Object.defineProperty(e,"__esModule",{value:!0})});
@@ -69201,7 +69787,7 @@ function symbolObservablePonyfill(root) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 575 */
+/* 580 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69228,7 +69814,7 @@ exports.devToolsEnhancer = (
 
 
 /***/ }),
-/* 576 */
+/* 581 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69242,19 +69828,19 @@ var _warning = __webpack_require__(44);
 
 var _warning2 = _interopRequireDefault(_warning);
 
-var _invariant = __webpack_require__(32);
+var _invariant = __webpack_require__(33);
 
 var _invariant2 = _interopRequireDefault(_invariant);
 
-var _LocationUtils = __webpack_require__(577);
+var _LocationUtils = __webpack_require__(582);
 
-var _PathUtils = __webpack_require__(197);
+var _PathUtils = __webpack_require__(202);
 
-var _createTransitionManager = __webpack_require__(578);
+var _createTransitionManager = __webpack_require__(583);
 
 var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
 
-var _DOMUtils = __webpack_require__(579);
+var _DOMUtils = __webpack_require__(584);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -69558,7 +70144,7 @@ var createHashHistory = function createHashHistory() {
 exports.default = createHashHistory;
 
 /***/ }),
-/* 577 */
+/* 582 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69569,15 +70155,15 @@ exports.locationsAreEqual = exports.createLocation = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _resolvePathname = __webpack_require__(193);
+var _resolvePathname = __webpack_require__(198);
 
 var _resolvePathname2 = _interopRequireDefault(_resolvePathname);
 
-var _valueEqual = __webpack_require__(194);
+var _valueEqual = __webpack_require__(199);
 
 var _valueEqual2 = _interopRequireDefault(_valueEqual);
 
-var _PathUtils = __webpack_require__(197);
+var _PathUtils = __webpack_require__(202);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -69642,7 +70228,7 @@ var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a
 };
 
 /***/ }),
-/* 578 */
+/* 583 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69733,7 +70319,7 @@ var createTransitionManager = function createTransitionManager() {
 exports.default = createTransitionManager;
 
 /***/ }),
-/* 579 */
+/* 584 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -69794,7 +70380,7 @@ var isExtraneousPopstateEvent = exports.isExtraneousPopstateEvent = function isE
 };
 
 /***/ }),
-/* 580 */
+/* 585 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -69822,256 +70408,258 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 581 */
+/* 586 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./af": 198,
-	"./af.js": 198,
-	"./ar": 199,
-	"./ar-dz": 200,
-	"./ar-dz.js": 200,
-	"./ar-kw": 201,
-	"./ar-kw.js": 201,
-	"./ar-ly": 202,
-	"./ar-ly.js": 202,
-	"./ar-ma": 203,
-	"./ar-ma.js": 203,
-	"./ar-sa": 204,
-	"./ar-sa.js": 204,
-	"./ar-tn": 205,
-	"./ar-tn.js": 205,
-	"./ar.js": 199,
-	"./az": 206,
-	"./az.js": 206,
-	"./be": 207,
-	"./be.js": 207,
-	"./bg": 208,
-	"./bg.js": 208,
-	"./bm": 209,
-	"./bm.js": 209,
-	"./bn": 210,
-	"./bn.js": 210,
-	"./bo": 211,
-	"./bo.js": 211,
-	"./br": 212,
-	"./br.js": 212,
-	"./bs": 213,
-	"./bs.js": 213,
-	"./ca": 214,
-	"./ca.js": 214,
-	"./cs": 215,
-	"./cs.js": 215,
-	"./cv": 216,
-	"./cv.js": 216,
-	"./cy": 217,
-	"./cy.js": 217,
-	"./da": 218,
-	"./da.js": 218,
-	"./de": 219,
-	"./de-at": 220,
-	"./de-at.js": 220,
-	"./de-ch": 221,
-	"./de-ch.js": 221,
-	"./de.js": 219,
-	"./dv": 222,
-	"./dv.js": 222,
-	"./el": 223,
-	"./el.js": 223,
-	"./en-au": 224,
-	"./en-au.js": 224,
-	"./en-ca": 225,
-	"./en-ca.js": 225,
-	"./en-gb": 226,
-	"./en-gb.js": 226,
-	"./en-ie": 227,
-	"./en-ie.js": 227,
-	"./en-il": 228,
-	"./en-il.js": 228,
-	"./en-nz": 229,
-	"./en-nz.js": 229,
-	"./eo": 230,
-	"./eo.js": 230,
-	"./es": 231,
-	"./es-do": 232,
-	"./es-do.js": 232,
-	"./es-us": 233,
-	"./es-us.js": 233,
-	"./es.js": 231,
-	"./et": 234,
-	"./et.js": 234,
-	"./eu": 235,
-	"./eu.js": 235,
-	"./fa": 236,
-	"./fa.js": 236,
-	"./fi": 237,
-	"./fi.js": 237,
-	"./fo": 238,
-	"./fo.js": 238,
-	"./fr": 239,
-	"./fr-ca": 240,
-	"./fr-ca.js": 240,
-	"./fr-ch": 241,
-	"./fr-ch.js": 241,
-	"./fr.js": 239,
-	"./fy": 242,
-	"./fy.js": 242,
-	"./gd": 243,
-	"./gd.js": 243,
-	"./gl": 244,
-	"./gl.js": 244,
-	"./gom-latn": 245,
-	"./gom-latn.js": 245,
-	"./gu": 246,
-	"./gu.js": 246,
-	"./he": 247,
-	"./he.js": 247,
-	"./hi": 248,
-	"./hi.js": 248,
-	"./hr": 249,
-	"./hr.js": 249,
-	"./hu": 250,
-	"./hu.js": 250,
-	"./hy-am": 251,
-	"./hy-am.js": 251,
-	"./id": 252,
-	"./id.js": 252,
-	"./is": 253,
-	"./is.js": 253,
-	"./it": 254,
-	"./it.js": 254,
-	"./ja": 255,
-	"./ja.js": 255,
-	"./jv": 256,
-	"./jv.js": 256,
-	"./ka": 257,
-	"./ka.js": 257,
-	"./kk": 258,
-	"./kk.js": 258,
-	"./km": 259,
-	"./km.js": 259,
-	"./kn": 260,
-	"./kn.js": 260,
-	"./ko": 261,
-	"./ko.js": 261,
-	"./ky": 262,
-	"./ky.js": 262,
-	"./lb": 263,
-	"./lb.js": 263,
-	"./lo": 264,
-	"./lo.js": 264,
-	"./lt": 265,
-	"./lt.js": 265,
-	"./lv": 266,
-	"./lv.js": 266,
-	"./me": 267,
-	"./me.js": 267,
-	"./mi": 268,
-	"./mi.js": 268,
-	"./mk": 269,
-	"./mk.js": 269,
-	"./ml": 270,
-	"./ml.js": 270,
-	"./mn": 271,
-	"./mn.js": 271,
-	"./mr": 272,
-	"./mr.js": 272,
-	"./ms": 273,
-	"./ms-my": 274,
-	"./ms-my.js": 274,
-	"./ms.js": 273,
-	"./mt": 275,
-	"./mt.js": 275,
-	"./my": 276,
-	"./my.js": 276,
-	"./nb": 277,
-	"./nb.js": 277,
-	"./ne": 278,
-	"./ne.js": 278,
-	"./nl": 279,
-	"./nl-be": 280,
-	"./nl-be.js": 280,
-	"./nl.js": 279,
-	"./nn": 281,
-	"./nn.js": 281,
-	"./pa-in": 282,
-	"./pa-in.js": 282,
-	"./pl": 283,
-	"./pl.js": 283,
-	"./pt": 284,
-	"./pt-br": 285,
-	"./pt-br.js": 285,
-	"./pt.js": 284,
-	"./ro": 286,
-	"./ro.js": 286,
-	"./ru": 287,
-	"./ru.js": 287,
-	"./sd": 288,
-	"./sd.js": 288,
-	"./se": 289,
-	"./se.js": 289,
-	"./si": 290,
-	"./si.js": 290,
-	"./sk": 291,
-	"./sk.js": 291,
-	"./sl": 292,
-	"./sl.js": 292,
-	"./sq": 293,
-	"./sq.js": 293,
-	"./sr": 294,
-	"./sr-cyrl": 295,
-	"./sr-cyrl.js": 295,
-	"./sr.js": 294,
-	"./ss": 296,
-	"./ss.js": 296,
-	"./sv": 297,
-	"./sv.js": 297,
-	"./sw": 298,
-	"./sw.js": 298,
-	"./ta": 299,
-	"./ta.js": 299,
-	"./te": 300,
-	"./te.js": 300,
-	"./tet": 301,
-	"./tet.js": 301,
-	"./tg": 302,
-	"./tg.js": 302,
-	"./th": 303,
-	"./th.js": 303,
-	"./tl-ph": 304,
-	"./tl-ph.js": 304,
-	"./tlh": 305,
-	"./tlh.js": 305,
-	"./tr": 306,
-	"./tr.js": 306,
-	"./tzl": 307,
-	"./tzl.js": 307,
-	"./tzm": 308,
-	"./tzm-latn": 309,
-	"./tzm-latn.js": 309,
-	"./tzm.js": 308,
-	"./ug-cn": 310,
-	"./ug-cn.js": 310,
-	"./uk": 311,
-	"./uk.js": 311,
-	"./ur": 312,
-	"./ur.js": 312,
-	"./uz": 313,
-	"./uz-latn": 314,
-	"./uz-latn.js": 314,
-	"./uz.js": 313,
-	"./vi": 315,
-	"./vi.js": 315,
-	"./x-pseudo": 316,
-	"./x-pseudo.js": 316,
-	"./yo": 317,
-	"./yo.js": 317,
-	"./zh-cn": 318,
-	"./zh-cn.js": 318,
-	"./zh-hk": 319,
-	"./zh-hk.js": 319,
-	"./zh-tw": 320,
-	"./zh-tw.js": 320
+	"./af": 203,
+	"./af.js": 203,
+	"./ar": 204,
+	"./ar-dz": 205,
+	"./ar-dz.js": 205,
+	"./ar-kw": 206,
+	"./ar-kw.js": 206,
+	"./ar-ly": 207,
+	"./ar-ly.js": 207,
+	"./ar-ma": 208,
+	"./ar-ma.js": 208,
+	"./ar-sa": 209,
+	"./ar-sa.js": 209,
+	"./ar-tn": 210,
+	"./ar-tn.js": 210,
+	"./ar.js": 204,
+	"./az": 211,
+	"./az.js": 211,
+	"./be": 212,
+	"./be.js": 212,
+	"./bg": 213,
+	"./bg.js": 213,
+	"./bm": 214,
+	"./bm.js": 214,
+	"./bn": 215,
+	"./bn.js": 215,
+	"./bo": 216,
+	"./bo.js": 216,
+	"./br": 217,
+	"./br.js": 217,
+	"./bs": 218,
+	"./bs.js": 218,
+	"./ca": 219,
+	"./ca.js": 219,
+	"./cs": 220,
+	"./cs.js": 220,
+	"./cv": 221,
+	"./cv.js": 221,
+	"./cy": 222,
+	"./cy.js": 222,
+	"./da": 223,
+	"./da.js": 223,
+	"./de": 224,
+	"./de-at": 225,
+	"./de-at.js": 225,
+	"./de-ch": 226,
+	"./de-ch.js": 226,
+	"./de.js": 224,
+	"./dv": 227,
+	"./dv.js": 227,
+	"./el": 228,
+	"./el.js": 228,
+	"./en-au": 229,
+	"./en-au.js": 229,
+	"./en-ca": 230,
+	"./en-ca.js": 230,
+	"./en-gb": 231,
+	"./en-gb.js": 231,
+	"./en-ie": 232,
+	"./en-ie.js": 232,
+	"./en-il": 233,
+	"./en-il.js": 233,
+	"./en-nz": 234,
+	"./en-nz.js": 234,
+	"./eo": 235,
+	"./eo.js": 235,
+	"./es": 236,
+	"./es-do": 237,
+	"./es-do.js": 237,
+	"./es-us": 238,
+	"./es-us.js": 238,
+	"./es.js": 236,
+	"./et": 239,
+	"./et.js": 239,
+	"./eu": 240,
+	"./eu.js": 240,
+	"./fa": 241,
+	"./fa.js": 241,
+	"./fi": 242,
+	"./fi.js": 242,
+	"./fo": 243,
+	"./fo.js": 243,
+	"./fr": 244,
+	"./fr-ca": 245,
+	"./fr-ca.js": 245,
+	"./fr-ch": 246,
+	"./fr-ch.js": 246,
+	"./fr.js": 244,
+	"./fy": 247,
+	"./fy.js": 247,
+	"./gd": 248,
+	"./gd.js": 248,
+	"./gl": 249,
+	"./gl.js": 249,
+	"./gom-latn": 250,
+	"./gom-latn.js": 250,
+	"./gu": 251,
+	"./gu.js": 251,
+	"./he": 252,
+	"./he.js": 252,
+	"./hi": 253,
+	"./hi.js": 253,
+	"./hr": 254,
+	"./hr.js": 254,
+	"./hu": 255,
+	"./hu.js": 255,
+	"./hy-am": 256,
+	"./hy-am.js": 256,
+	"./id": 257,
+	"./id.js": 257,
+	"./is": 258,
+	"./is.js": 258,
+	"./it": 259,
+	"./it.js": 259,
+	"./ja": 260,
+	"./ja.js": 260,
+	"./jv": 261,
+	"./jv.js": 261,
+	"./ka": 262,
+	"./ka.js": 262,
+	"./kk": 263,
+	"./kk.js": 263,
+	"./km": 264,
+	"./km.js": 264,
+	"./kn": 265,
+	"./kn.js": 265,
+	"./ko": 266,
+	"./ko.js": 266,
+	"./ku": 267,
+	"./ku.js": 267,
+	"./ky": 268,
+	"./ky.js": 268,
+	"./lb": 269,
+	"./lb.js": 269,
+	"./lo": 270,
+	"./lo.js": 270,
+	"./lt": 271,
+	"./lt.js": 271,
+	"./lv": 272,
+	"./lv.js": 272,
+	"./me": 273,
+	"./me.js": 273,
+	"./mi": 274,
+	"./mi.js": 274,
+	"./mk": 275,
+	"./mk.js": 275,
+	"./ml": 276,
+	"./ml.js": 276,
+	"./mn": 277,
+	"./mn.js": 277,
+	"./mr": 278,
+	"./mr.js": 278,
+	"./ms": 279,
+	"./ms-my": 280,
+	"./ms-my.js": 280,
+	"./ms.js": 279,
+	"./mt": 281,
+	"./mt.js": 281,
+	"./my": 282,
+	"./my.js": 282,
+	"./nb": 283,
+	"./nb.js": 283,
+	"./ne": 284,
+	"./ne.js": 284,
+	"./nl": 285,
+	"./nl-be": 286,
+	"./nl-be.js": 286,
+	"./nl.js": 285,
+	"./nn": 287,
+	"./nn.js": 287,
+	"./pa-in": 288,
+	"./pa-in.js": 288,
+	"./pl": 289,
+	"./pl.js": 289,
+	"./pt": 290,
+	"./pt-br": 291,
+	"./pt-br.js": 291,
+	"./pt.js": 290,
+	"./ro": 292,
+	"./ro.js": 292,
+	"./ru": 293,
+	"./ru.js": 293,
+	"./sd": 294,
+	"./sd.js": 294,
+	"./se": 295,
+	"./se.js": 295,
+	"./si": 296,
+	"./si.js": 296,
+	"./sk": 297,
+	"./sk.js": 297,
+	"./sl": 298,
+	"./sl.js": 298,
+	"./sq": 299,
+	"./sq.js": 299,
+	"./sr": 300,
+	"./sr-cyrl": 301,
+	"./sr-cyrl.js": 301,
+	"./sr.js": 300,
+	"./ss": 302,
+	"./ss.js": 302,
+	"./sv": 303,
+	"./sv.js": 303,
+	"./sw": 304,
+	"./sw.js": 304,
+	"./ta": 305,
+	"./ta.js": 305,
+	"./te": 306,
+	"./te.js": 306,
+	"./tet": 307,
+	"./tet.js": 307,
+	"./tg": 308,
+	"./tg.js": 308,
+	"./th": 309,
+	"./th.js": 309,
+	"./tl-ph": 310,
+	"./tl-ph.js": 310,
+	"./tlh": 311,
+	"./tlh.js": 311,
+	"./tr": 312,
+	"./tr.js": 312,
+	"./tzl": 313,
+	"./tzl.js": 313,
+	"./tzm": 314,
+	"./tzm-latn": 315,
+	"./tzm-latn.js": 315,
+	"./tzm.js": 314,
+	"./ug-cn": 316,
+	"./ug-cn.js": 316,
+	"./uk": 317,
+	"./uk.js": 317,
+	"./ur": 318,
+	"./ur.js": 318,
+	"./uz": 319,
+	"./uz-latn": 320,
+	"./uz-latn.js": 320,
+	"./uz.js": 319,
+	"./vi": 321,
+	"./vi.js": 321,
+	"./x-pseudo": 322,
+	"./x-pseudo.js": 322,
+	"./yo": 323,
+	"./yo.js": 323,
+	"./zh-cn": 324,
+	"./zh-cn.js": 324,
+	"./zh-hk": 325,
+	"./zh-hk.js": 325,
+	"./zh-tw": 326,
+	"./zh-tw.js": 326
 };
 function webpackContext(req) {
 	return __webpack_require__(webpackContextResolve(req));
@@ -70087,58 +70675,58 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 581;
-
-/***/ }),
-/* 582 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "assets/api/singapore-children-residents-by-subzone-jun-2017.geojson";
-
-/***/ }),
-/* 583 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "assets/api/singapore-children-residents-by-area-jun-2017.geojson";
-
-/***/ }),
-/* 584 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "assets/api/singapore-pre-school-locations-2017.geojson";
-
-/***/ }),
-/* 585 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "assets/api/singapore-childcare-services-2017.geojson";
-
-/***/ }),
-/* 586 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "assets/api/singapore-elderly-residents-by-subzone-jun-2017.geojson";
+webpackContext.id = 586;
 
 /***/ }),
 /* 587 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "assets/api/singapore-elderly-residents-by-area-jun-2017.geojson";
+module.exports = __webpack_require__.p + "assets/api/singapore-children-residents-by-subzone-jun-2017.geojson";
 
 /***/ }),
 /* 588 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "assets/api/singapore-eldercare-services-2017.geojson";
+module.exports = __webpack_require__.p + "assets/api/singapore-children-residents-by-area-jun-2017.geojson";
 
 /***/ }),
 /* 589 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "assets/api/singapore-chas-clinics-2017.geojson";
+module.exports = __webpack_require__.p + "assets/api/singapore-pre-school-locations-2017.geojson";
 
 /***/ }),
 /* 590 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "assets/api/singapore-childcare-services-2017.geojson";
+
+/***/ }),
+/* 591 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "assets/api/singapore-elderly-residents-by-subzone-jun-2017.geojson";
+
+/***/ }),
+/* 592 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "assets/api/singapore-elderly-residents-by-area-jun-2017.geojson";
+
+/***/ }),
+/* 593 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "assets/api/singapore-eldercare-services-2017.geojson";
+
+/***/ }),
+/* 594 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "assets/api/singapore-chas-clinics-2017.geojson";
+
+/***/ }),
+/* 595 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global) {/**
@@ -70300,7 +70888,7 @@ module.exports = isFunction;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(41)))
 
 /***/ }),
-/* 591 */
+/* 596 */
 /***/ (function(module, exports) {
 
 /**
@@ -70343,7 +70931,7 @@ module.exports = isObject;
 
 
 /***/ }),
-/* 592 */
+/* 597 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72923,7 +73511,7 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(41)))
 
 /***/ }),
-/* 593 */
+/* 598 */
 /***/ (function(module, exports) {
 
 /**
@@ -73094,7 +73682,7 @@ module.exports = toNumber;
 
 
 /***/ }),
-/* 594 */
+/* 599 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73104,38 +73692,38 @@ exports.__esModule = true;
 
 function _interopRequire(obj) { return obj && obj.__esModule ? obj['default'] : obj; }
 
-var _Motion = __webpack_require__(595);
+var _Motion = __webpack_require__(600);
 
 exports.Motion = _interopRequire(_Motion);
 
-var _StaggeredMotion = __webpack_require__(597);
+var _StaggeredMotion = __webpack_require__(602);
 
 exports.StaggeredMotion = _interopRequire(_StaggeredMotion);
 
-var _TransitionMotion = __webpack_require__(598);
+var _TransitionMotion = __webpack_require__(603);
 
 exports.TransitionMotion = _interopRequire(_TransitionMotion);
 
-var _spring = __webpack_require__(600);
+var _spring = __webpack_require__(605);
 
 exports.spring = _interopRequire(_spring);
 
-var _presets = __webpack_require__(322);
+var _presets = __webpack_require__(328);
 
 exports.presets = _interopRequire(_presets);
 
-var _stripStyle = __webpack_require__(103);
+var _stripStyle = __webpack_require__(105);
 
 exports.stripStyle = _interopRequire(_stripStyle);
 
 // deprecated, dummy warning function
 
-var _reorderKeys = __webpack_require__(601);
+var _reorderKeys = __webpack_require__(606);
 
 exports.reorderKeys = _interopRequire(_reorderKeys);
 
 /***/ }),
-/* 595 */
+/* 600 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73153,27 +73741,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _mapToZero = __webpack_require__(137);
+var _mapToZero = __webpack_require__(140);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(103);
+var _stripStyle = __webpack_require__(105);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
-var _stepper3 = __webpack_require__(138);
+var _stepper3 = __webpack_require__(141);
 
 var _stepper4 = _interopRequireDefault(_stepper3);
 
-var _performanceNow = __webpack_require__(139);
+var _performanceNow = __webpack_require__(142);
 
 var _performanceNow2 = _interopRequireDefault(_performanceNow);
 
-var _raf = __webpack_require__(140);
+var _raf = __webpack_require__(143);
 
 var _raf2 = _interopRequireDefault(_raf);
 
-var _shouldStopAnimation = __webpack_require__(141);
+var _shouldStopAnimation = __webpack_require__(144);
 
 var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 
@@ -73408,7 +73996,7 @@ module.exports = exports['default'];
 // config)
 
 /***/ }),
-/* 596 */
+/* 601 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(process) {// Generated by CoffeeScript 1.12.2
@@ -73448,10 +74036,10 @@ module.exports = exports['default'];
 
 //# sourceMappingURL=performance-now.js.map
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(321)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(327)))
 
 /***/ }),
-/* 597 */
+/* 602 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73469,27 +74057,27 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _mapToZero = __webpack_require__(137);
+var _mapToZero = __webpack_require__(140);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(103);
+var _stripStyle = __webpack_require__(105);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
-var _stepper3 = __webpack_require__(138);
+var _stepper3 = __webpack_require__(141);
 
 var _stepper4 = _interopRequireDefault(_stepper3);
 
-var _performanceNow = __webpack_require__(139);
+var _performanceNow = __webpack_require__(142);
 
 var _performanceNow2 = _interopRequireDefault(_performanceNow);
 
-var _raf = __webpack_require__(140);
+var _raf = __webpack_require__(143);
 
 var _raf2 = _interopRequireDefault(_raf);
 
-var _shouldStopAnimation = __webpack_require__(141);
+var _shouldStopAnimation = __webpack_require__(144);
 
 var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 
@@ -73745,7 +74333,7 @@ module.exports = exports['default'];
 // config)
 
 /***/ }),
-/* 598 */
+/* 603 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -73763,31 +74351,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var _mapToZero = __webpack_require__(137);
+var _mapToZero = __webpack_require__(140);
 
 var _mapToZero2 = _interopRequireDefault(_mapToZero);
 
-var _stripStyle = __webpack_require__(103);
+var _stripStyle = __webpack_require__(105);
 
 var _stripStyle2 = _interopRequireDefault(_stripStyle);
 
-var _stepper3 = __webpack_require__(138);
+var _stepper3 = __webpack_require__(141);
 
 var _stepper4 = _interopRequireDefault(_stepper3);
 
-var _mergeDiff = __webpack_require__(599);
+var _mergeDiff = __webpack_require__(604);
 
 var _mergeDiff2 = _interopRequireDefault(_mergeDiff);
 
-var _performanceNow = __webpack_require__(139);
+var _performanceNow = __webpack_require__(142);
 
 var _performanceNow2 = _interopRequireDefault(_performanceNow);
 
-var _raf = __webpack_require__(140);
+var _raf = __webpack_require__(143);
 
 var _raf2 = _interopRequireDefault(_raf);
 
-var _shouldStopAnimation = __webpack_require__(141);
+var _shouldStopAnimation = __webpack_require__(144);
 
 var _shouldStopAnimation2 = _interopRequireDefault(_shouldStopAnimation);
 
@@ -74273,7 +74861,7 @@ module.exports = exports['default'];
 // In reality currentStyle should be 400
 
 /***/ }),
-/* 599 */
+/* 604 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74387,7 +74975,7 @@ module.exports = exports['default'];
 // to loop through and find a key's index each time), but I no longer care
 
 /***/ }),
-/* 600 */
+/* 605 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74401,7 +74989,7 @@ exports['default'] = spring;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _presets = __webpack_require__(322);
+var _presets = __webpack_require__(328);
 
 var _presets2 = _interopRequireDefault(_presets);
 
@@ -74416,7 +75004,7 @@ function spring(val, config) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 601 */
+/* 606 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74439,69 +75027,69 @@ function reorderKeys() {
 module.exports = exports['default'];
 
 /***/ }),
-/* 602 */
+/* 607 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "assets/img/onemap.png";
 
 /***/ }),
-/* 603 */
+/* 608 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
  * @namespace Chart
  */
-var Chart = __webpack_require__(604)();
+var Chart = __webpack_require__(609)();
 
 Chart.helpers = __webpack_require__(6);
 
 // @todo dispatch these helpers into appropriated helpers/helpers.* file and write unit tests!
-__webpack_require__(608)(Chart);
+__webpack_require__(613)(Chart);
 
-Chart.Animation = __webpack_require__(324);
-Chart.animationService = __webpack_require__(325);
+Chart.Animation = __webpack_require__(330);
+Chart.animationService = __webpack_require__(331);
 Chart.defaults = __webpack_require__(9);
 Chart.Element = __webpack_require__(39);
 Chart.elements = __webpack_require__(52);
-Chart.Interaction = __webpack_require__(326);
-Chart.layouts = __webpack_require__(82);
-Chart.platform = __webpack_require__(327);
-Chart.plugins = __webpack_require__(328);
-Chart.Scale = __webpack_require__(83);
+Chart.Interaction = __webpack_require__(332);
+Chart.layouts = __webpack_require__(84);
+Chart.platform = __webpack_require__(333);
+Chart.plugins = __webpack_require__(334);
+Chart.Scale = __webpack_require__(85);
 Chart.scaleService = __webpack_require__(51);
-Chart.Ticks = __webpack_require__(84);
-Chart.Tooltip = __webpack_require__(329);
+Chart.Ticks = __webpack_require__(86);
+Chart.Tooltip = __webpack_require__(335);
 
-__webpack_require__(619)(Chart);
-__webpack_require__(620)(Chart);
-
-__webpack_require__(621)(Chart);
-__webpack_require__(622)(Chart);
-__webpack_require__(623)(Chart);
 __webpack_require__(624)(Chart);
 __webpack_require__(625)(Chart);
-__webpack_require__(626)(Chart);
 
-// Controllers must be loaded after elements
-// See Chart.core.datasetController.dataElementType
+__webpack_require__(626)(Chart);
 __webpack_require__(627)(Chart);
 __webpack_require__(628)(Chart);
 __webpack_require__(629)(Chart);
 __webpack_require__(630)(Chart);
 __webpack_require__(631)(Chart);
+
+// Controllers must be loaded after elements
+// See Chart.core.datasetController.dataElementType
 __webpack_require__(632)(Chart);
 __webpack_require__(633)(Chart);
-
 __webpack_require__(634)(Chart);
 __webpack_require__(635)(Chart);
 __webpack_require__(636)(Chart);
 __webpack_require__(637)(Chart);
 __webpack_require__(638)(Chart);
+
 __webpack_require__(639)(Chart);
 __webpack_require__(640)(Chart);
+__webpack_require__(641)(Chart);
+__webpack_require__(642)(Chart);
+__webpack_require__(643)(Chart);
+__webpack_require__(644)(Chart);
+__webpack_require__(645)(Chart);
 
 // Loading built-in plugins
-var plugins = __webpack_require__(641);
+var plugins = __webpack_require__(646);
 for (var k in plugins) {
 	if (plugins.hasOwnProperty(k)) {
 		Chart.plugins.register(plugins[k]);
@@ -74574,7 +75162,7 @@ Chart.layoutService = Chart.layouts;
 
 
 /***/ }),
-/* 604 */
+/* 609 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -74630,13 +75218,13 @@ module.exports = function() {
 
 
 /***/ }),
-/* 605 */
+/* 610 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(104);
+var helpers = __webpack_require__(106);
 
 /**
  * Easing functions adapted from Robert Penner's easing equations.
@@ -74887,13 +75475,13 @@ helpers.easingEffects = effects;
 
 
 /***/ }),
-/* 606 */
+/* 611 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(104);
+var helpers = __webpack_require__(106);
 
 /**
  * @namespace Chart.helpers.canvas
@@ -75103,13 +75691,13 @@ helpers.drawRoundedRectangle = function(ctx) {
 
 
 /***/ }),
-/* 607 */
+/* 612 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var helpers = __webpack_require__(104);
+var helpers = __webpack_require__(106);
 
 /**
  * @alias Chart.helpers.options
@@ -75206,7 +75794,7 @@ module.exports = {
 
 
 /***/ }),
-/* 608 */
+/* 613 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -75214,7 +75802,7 @@ module.exports = {
 /* global document: false */
 
 
-var color = __webpack_require__(323);
+var color = __webpack_require__(329);
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
 var scaleService = __webpack_require__(51);
@@ -75847,10 +76435,10 @@ module.exports = function() {
 
 
 /***/ }),
-/* 609 */
+/* 614 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var conversions = __webpack_require__(610);
+var conversions = __webpack_require__(615);
 
 var convert = function() {
    return new Converter();
@@ -75944,7 +76532,7 @@ Converter.prototype.getValues = function(space) {
 module.exports = convert;
 
 /***/ }),
-/* 610 */
+/* 615 */
 /***/ (function(module, exports) {
 
 /* MIT license */
@@ -76648,11 +77236,11 @@ for (var key in cssKeywords) {
 
 
 /***/ }),
-/* 611 */
+/* 616 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* MIT license */
-var colorNames = __webpack_require__(612);
+var colorNames = __webpack_require__(617);
 
 module.exports = {
    getRgba: getRgba,
@@ -76875,7 +77463,7 @@ for (var name in colorNames) {
 
 
 /***/ }),
-/* 612 */
+/* 617 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77034,7 +77622,7 @@ module.exports = {
 
 
 /***/ }),
-/* 613 */
+/* 618 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77148,7 +77736,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 614 */
+/* 619 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77246,7 +77834,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 615 */
+/* 620 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77342,7 +77930,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 616 */
+/* 621 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -77566,7 +78154,7 @@ module.exports = Element.extend({
 
 
 /***/ }),
-/* 617 */
+/* 622 */
 /***/ (function(module, exports) {
 
 /**
@@ -77587,7 +78175,7 @@ module.exports = {
 
 
 /***/ }),
-/* 618 */
+/* 623 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -78051,22 +78639,22 @@ helpers.removeEvent = removeEventListener;
 
 
 /***/ }),
-/* 619 */
+/* 624 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Animation = __webpack_require__(324);
-var animations = __webpack_require__(325);
+var Animation = __webpack_require__(330);
+var animations = __webpack_require__(331);
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
-var Interaction = __webpack_require__(326);
-var layouts = __webpack_require__(82);
-var platform = __webpack_require__(327);
-var plugins = __webpack_require__(328);
+var Interaction = __webpack_require__(332);
+var layouts = __webpack_require__(84);
+var platform = __webpack_require__(333);
+var plugins = __webpack_require__(334);
 var scaleService = __webpack_require__(51);
-var Tooltip = __webpack_require__(329);
+var Tooltip = __webpack_require__(335);
 
 module.exports = function(Chart) {
 
@@ -79018,7 +79606,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 620 */
+/* 625 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -79354,14 +79942,14 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 621 */
+/* 626 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var helpers = __webpack_require__(6);
-var Scale = __webpack_require__(83);
+var Scale = __webpack_require__(85);
 
 /**
  * Generate a set of linear ticks
@@ -79558,13 +80146,13 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 622 */
+/* 627 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Scale = __webpack_require__(83);
+var Scale = __webpack_require__(85);
 var scaleService = __webpack_require__(51);
 
 module.exports = function() {
@@ -79700,7 +80288,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 623 */
+/* 628 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -79709,7 +80297,7 @@ module.exports = function() {
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
 var scaleService = __webpack_require__(51);
-var Ticks = __webpack_require__(84);
+var Ticks = __webpack_require__(86);
 
 module.exports = function(Chart) {
 
@@ -79899,16 +80487,16 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 624 */
+/* 629 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var helpers = __webpack_require__(6);
-var Scale = __webpack_require__(83);
+var Scale = __webpack_require__(85);
 var scaleService = __webpack_require__(51);
-var Ticks = __webpack_require__(84);
+var Ticks = __webpack_require__(86);
 
 /**
  * Generate a set of logarithmic ticks
@@ -80255,7 +80843,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 625 */
+/* 630 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -80264,7 +80852,7 @@ module.exports = function(Chart) {
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
 var scaleService = __webpack_require__(51);
-var Ticks = __webpack_require__(84);
+var Ticks = __webpack_require__(86);
 
 module.exports = function(Chart) {
 
@@ -80792,7 +81380,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 626 */
+/* 631 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -80804,7 +81392,7 @@ moment = typeof moment === 'function' ? moment : window.moment;
 
 var defaults = __webpack_require__(9);
 var helpers = __webpack_require__(6);
-var Scale = __webpack_require__(83);
+var Scale = __webpack_require__(85);
 var scaleService = __webpack_require__(51);
 
 // Integer constants are from the ES6 spec.
@@ -81584,7 +82172,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 627 */
+/* 632 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82072,7 +82660,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 628 */
+/* 633 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82252,7 +82840,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 629 */
+/* 634 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82560,7 +83148,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 630 */
+/* 635 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -82911,7 +83499,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 631 */
+/* 636 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83173,7 +83761,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 632 */
+/* 637 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83343,7 +83931,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 633 */
+/* 638 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83392,7 +83980,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 634 */
+/* 639 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83410,7 +83998,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 635 */
+/* 640 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83427,7 +84015,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 636 */
+/* 641 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83445,7 +84033,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 637 */
+/* 642 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83463,7 +84051,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 638 */
+/* 643 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83481,7 +84069,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 639 */
+/* 644 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83499,7 +84087,7 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 640 */
+/* 645 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83514,20 +84102,20 @@ module.exports = function(Chart) {
 
 
 /***/ }),
-/* 641 */
+/* 646 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 module.exports = {};
-module.exports.filler = __webpack_require__(642);
-module.exports.legend = __webpack_require__(643);
-module.exports.title = __webpack_require__(644);
+module.exports.filler = __webpack_require__(647);
+module.exports.legend = __webpack_require__(648);
+module.exports.title = __webpack_require__(649);
 
 
 /***/ }),
-/* 642 */
+/* 647 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83852,7 +84440,7 @@ module.exports = {
 
 
 /***/ }),
-/* 643 */
+/* 648 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -83861,7 +84449,7 @@ module.exports = {
 var defaults = __webpack_require__(9);
 var Element = __webpack_require__(39);
 var helpers = __webpack_require__(6);
-var layouts = __webpack_require__(82);
+var layouts = __webpack_require__(84);
 
 var noop = helpers.noop;
 
@@ -84435,7 +85023,7 @@ module.exports = {
 
 
 /***/ }),
-/* 644 */
+/* 649 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -84444,7 +85032,7 @@ module.exports = {
 var defaults = __webpack_require__(9);
 var Element = __webpack_require__(39);
 var helpers = __webpack_require__(6);
-var layouts = __webpack_require__(82);
+var layouts = __webpack_require__(84);
 
 var noop = helpers.noop;
 
@@ -84694,31 +85282,31 @@ module.exports = {
 
 
 /***/ }),
-/* 645 */
+/* 650 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(646), __esModule: true };
+module.exports = { "default": __webpack_require__(651), __esModule: true };
 
 /***/ }),
-/* 646 */
+/* 651 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(647);
+__webpack_require__(652);
 module.exports = __webpack_require__(23).Object.assign;
 
 
 /***/ }),
-/* 647 */
+/* 652 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.3.1 Object.assign(target, source)
 var $export = __webpack_require__(53);
 
-$export($export.S + $export.F, 'Object', { assign: __webpack_require__(649) });
+$export($export.S + $export.F, 'Object', { assign: __webpack_require__(654) });
 
 
 /***/ }),
-/* 648 */
+/* 653 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -84728,21 +85316,21 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 649 */
+/* 654 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 // 19.1.2.1 Object.assign(target, source, ...)
-var getKeys = __webpack_require__(105);
-var gOPS = __webpack_require__(151);
-var pIE = __webpack_require__(108);
-var toObject = __webpack_require__(109);
-var IObject = __webpack_require__(333);
+var getKeys = __webpack_require__(107);
+var gOPS = __webpack_require__(154);
+var pIE = __webpack_require__(110);
+var toObject = __webpack_require__(111);
+var IObject = __webpack_require__(339);
 var $assign = Object.assign;
 
 // should work with symbols and should have deterministic property order (V8 bug)
-module.exports = !$assign || __webpack_require__(78)(function () {
+module.exports = !$assign || __webpack_require__(79)(function () {
   var A = {};
   var B = {};
   // eslint-disable-next-line no-undef
@@ -84769,14 +85357,14 @@ module.exports = !$assign || __webpack_require__(78)(function () {
 
 
 /***/ }),
-/* 650 */
+/* 655 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(68);
-var toLength = __webpack_require__(334);
-var toAbsoluteIndex = __webpack_require__(651);
+var toLength = __webpack_require__(340);
+var toAbsoluteIndex = __webpack_require__(656);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -84798,10 +85386,10 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 651 */
+/* 656 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(147);
+var toInteger = __webpack_require__(150);
 var max = Math.max;
 var min = Math.min;
 module.exports = function (index, length) {
@@ -84811,10 +85399,10 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 652 */
+/* 657 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(653);
+__webpack_require__(658);
 var $Object = __webpack_require__(23).Object;
 module.exports = function defineProperty(it, key, desc) {
   return $Object.defineProperty(it, key, desc);
@@ -84822,7 +85410,7 @@ module.exports = function defineProperty(it, key, desc) {
 
 
 /***/ }),
-/* 653 */
+/* 658 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(53);
@@ -84831,26 +85419,26 @@ $export($export.S + $export.F * !__webpack_require__(66), 'Object', { defineProp
 
 
 /***/ }),
-/* 654 */
+/* 659 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(655), __esModule: true };
+module.exports = { "default": __webpack_require__(660), __esModule: true };
 
 /***/ }),
-/* 655 */
+/* 660 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(336);
-__webpack_require__(660);
-module.exports = __webpack_require__(155).f('iterator');
+__webpack_require__(342);
+__webpack_require__(665);
+module.exports = __webpack_require__(158).f('iterator');
 
 
 /***/ }),
-/* 656 */
+/* 661 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var toInteger = __webpack_require__(147);
-var defined = __webpack_require__(146);
+var toInteger = __webpack_require__(150);
+var defined = __webpack_require__(149);
 // true  -> String#at
 // false -> String#codePointAt
 module.exports = function (TO_STRING) {
@@ -84869,18 +85457,18 @@ module.exports = function (TO_STRING) {
 
 
 /***/ }),
-/* 657 */
+/* 662 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var create = __webpack_require__(153);
-var descriptor = __webpack_require__(85);
-var setToStringTag = __webpack_require__(154);
+var create = __webpack_require__(156);
+var descriptor = __webpack_require__(87);
+var setToStringTag = __webpack_require__(157);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
-__webpack_require__(75)(IteratorPrototype, __webpack_require__(40)('iterator'), function () { return this; });
+__webpack_require__(76)(IteratorPrototype, __webpack_require__(40)('iterator'), function () { return this; });
 
 module.exports = function (Constructor, NAME, next) {
   Constructor.prototype = create(IteratorPrototype, { next: descriptor(1, next) });
@@ -84889,12 +85477,12 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 658 */
+/* 663 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP = __webpack_require__(55);
-var anObject = __webpack_require__(76);
-var getKeys = __webpack_require__(105);
+var anObject = __webpack_require__(77);
+var getKeys = __webpack_require__(107);
 
 module.exports = __webpack_require__(66) ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject(O);
@@ -84908,7 +85496,7 @@ module.exports = __webpack_require__(66) ? Object.defineProperties : function de
 
 
 /***/ }),
-/* 659 */
+/* 664 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var document = __webpack_require__(54).document;
@@ -84916,13 +85504,13 @@ module.exports = document && document.documentElement;
 
 
 /***/ }),
-/* 660 */
+/* 665 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(661);
+__webpack_require__(666);
 var global = __webpack_require__(54);
-var hide = __webpack_require__(75);
-var Iterators = __webpack_require__(86);
+var hide = __webpack_require__(76);
+var Iterators = __webpack_require__(88);
 var TO_STRING_TAG = __webpack_require__(40)('toStringTag');
 
 var DOMIterables = ('CSSRuleList,CSSStyleDeclaration,CSSValueList,ClientRectList,DOMRectList,DOMStringList,' +
@@ -84941,21 +85529,21 @@ for (var i = 0; i < DOMIterables.length; i++) {
 
 
 /***/ }),
-/* 661 */
+/* 666 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var addToUnscopables = __webpack_require__(662);
-var step = __webpack_require__(663);
-var Iterators = __webpack_require__(86);
+var addToUnscopables = __webpack_require__(667);
+var step = __webpack_require__(668);
+var Iterators = __webpack_require__(88);
 var toIObject = __webpack_require__(68);
 
 // 22.1.3.4 Array.prototype.entries()
 // 22.1.3.13 Array.prototype.keys()
 // 22.1.3.29 Array.prototype.values()
 // 22.1.3.30 Array.prototype[@@iterator]()
-module.exports = __webpack_require__(337)(Array, 'Array', function (iterated, kind) {
+module.exports = __webpack_require__(343)(Array, 'Array', function (iterated, kind) {
   this._t = toIObject(iterated); // target
   this._i = 0;                   // next index
   this._k = kind;                // kind
@@ -84982,14 +85570,14 @@ addToUnscopables('entries');
 
 
 /***/ }),
-/* 662 */
+/* 667 */
 /***/ (function(module, exports) {
 
 module.exports = function () { /* empty */ };
 
 
 /***/ }),
-/* 663 */
+/* 668 */
 /***/ (function(module, exports) {
 
 module.exports = function (done, value) {
@@ -84998,24 +85586,24 @@ module.exports = function (done, value) {
 
 
 /***/ }),
-/* 664 */
+/* 669 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(665), __esModule: true };
+module.exports = { "default": __webpack_require__(670), __esModule: true };
 
 /***/ }),
-/* 665 */
+/* 670 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(666);
 __webpack_require__(671);
-__webpack_require__(672);
-__webpack_require__(673);
+__webpack_require__(676);
+__webpack_require__(677);
+__webpack_require__(678);
 module.exports = __webpack_require__(23).Symbol;
 
 
 /***/ }),
-/* 666 */
+/* 671 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85025,27 +85613,27 @@ var global = __webpack_require__(54);
 var has = __webpack_require__(67);
 var DESCRIPTORS = __webpack_require__(66);
 var $export = __webpack_require__(53);
-var redefine = __webpack_require__(338);
-var META = __webpack_require__(667).KEY;
-var $fails = __webpack_require__(78);
-var shared = __webpack_require__(149);
-var setToStringTag = __webpack_require__(154);
-var uid = __webpack_require__(107);
+var redefine = __webpack_require__(344);
+var META = __webpack_require__(672).KEY;
+var $fails = __webpack_require__(79);
+var shared = __webpack_require__(152);
+var setToStringTag = __webpack_require__(157);
+var uid = __webpack_require__(109);
 var wks = __webpack_require__(40);
-var wksExt = __webpack_require__(155);
-var wksDefine = __webpack_require__(156);
-var enumKeys = __webpack_require__(668);
-var isArray = __webpack_require__(669);
-var anObject = __webpack_require__(76);
-var isObject = __webpack_require__(77);
+var wksExt = __webpack_require__(158);
+var wksDefine = __webpack_require__(159);
+var enumKeys = __webpack_require__(673);
+var isArray = __webpack_require__(674);
+var anObject = __webpack_require__(77);
+var isObject = __webpack_require__(78);
 var toIObject = __webpack_require__(68);
-var toPrimitive = __webpack_require__(144);
-var createDesc = __webpack_require__(85);
-var _create = __webpack_require__(153);
-var gOPNExt = __webpack_require__(670);
-var $GOPD = __webpack_require__(157);
+var toPrimitive = __webpack_require__(147);
+var createDesc = __webpack_require__(87);
+var _create = __webpack_require__(156);
+var gOPNExt = __webpack_require__(675);
+var $GOPD = __webpack_require__(160);
 var $DP = __webpack_require__(55);
-var $keys = __webpack_require__(105);
+var $keys = __webpack_require__(107);
 var gOPD = $GOPD.f;
 var dP = $DP.f;
 var gOPN = gOPNExt.f;
@@ -85168,11 +85756,11 @@ if (!USE_NATIVE) {
 
   $GOPD.f = $getOwnPropertyDescriptor;
   $DP.f = $defineProperty;
-  __webpack_require__(340).f = gOPNExt.f = $getOwnPropertyNames;
-  __webpack_require__(108).f = $propertyIsEnumerable;
-  __webpack_require__(151).f = $getOwnPropertySymbols;
+  __webpack_require__(346).f = gOPNExt.f = $getOwnPropertyNames;
+  __webpack_require__(110).f = $propertyIsEnumerable;
+  __webpack_require__(154).f = $getOwnPropertySymbols;
 
-  if (DESCRIPTORS && !__webpack_require__(106)) {
+  if (DESCRIPTORS && !__webpack_require__(108)) {
     redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
   }
 
@@ -85246,7 +85834,7 @@ $JSON && $export($export.S + $export.F * (!USE_NATIVE || $fails(function () {
 });
 
 // 19.4.3.4 Symbol.prototype[@@toPrimitive](hint)
-$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(75)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
+$Symbol[PROTOTYPE][TO_PRIMITIVE] || __webpack_require__(76)($Symbol[PROTOTYPE], TO_PRIMITIVE, $Symbol[PROTOTYPE].valueOf);
 // 19.4.3.5 Symbol.prototype[@@toStringTag]
 setToStringTag($Symbol, 'Symbol');
 // 20.2.1.9 Math[@@toStringTag]
@@ -85256,18 +85844,18 @@ setToStringTag(global.JSON, 'JSON', true);
 
 
 /***/ }),
-/* 667 */
+/* 672 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var META = __webpack_require__(107)('meta');
-var isObject = __webpack_require__(77);
+var META = __webpack_require__(109)('meta');
+var isObject = __webpack_require__(78);
 var has = __webpack_require__(67);
 var setDesc = __webpack_require__(55).f;
 var id = 0;
 var isExtensible = Object.isExtensible || function () {
   return true;
 };
-var FREEZE = !__webpack_require__(78)(function () {
+var FREEZE = !__webpack_require__(79)(function () {
   return isExtensible(Object.preventExtensions({}));
 });
 var setMeta = function (it) {
@@ -85315,13 +85903,13 @@ var meta = module.exports = {
 
 
 /***/ }),
-/* 668 */
+/* 673 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // all enumerable object keys, includes symbols
-var getKeys = __webpack_require__(105);
-var gOPS = __webpack_require__(151);
-var pIE = __webpack_require__(108);
+var getKeys = __webpack_require__(107);
+var gOPS = __webpack_require__(154);
+var pIE = __webpack_require__(110);
 module.exports = function (it) {
   var result = getKeys(it);
   var getSymbols = gOPS.f;
@@ -85336,23 +85924,23 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 669 */
+/* 674 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.2.2 IsArray(argument)
-var cof = __webpack_require__(145);
+var cof = __webpack_require__(148);
 module.exports = Array.isArray || function isArray(arg) {
   return cof(arg) == 'Array';
 };
 
 
 /***/ }),
-/* 670 */
+/* 675 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
 var toIObject = __webpack_require__(68);
-var gOPN = __webpack_require__(340).f;
+var gOPN = __webpack_require__(346).f;
 var toString = {}.toString;
 
 var windowNames = typeof window == 'object' && window && Object.getOwnPropertyNames
@@ -85372,56 +85960,56 @@ module.exports.f = function getOwnPropertyNames(it) {
 
 
 /***/ }),
-/* 671 */
+/* 676 */
 /***/ (function(module, exports) {
 
-
-
-/***/ }),
-/* 672 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(156)('asyncIterator');
-
-
-/***/ }),
-/* 673 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(156)('observable');
-
-
-/***/ }),
-/* 674 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = { "default": __webpack_require__(675), __esModule: true };
-
-/***/ }),
-/* 675 */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(676);
-module.exports = __webpack_require__(23).Object.setPrototypeOf;
-
-
-/***/ }),
-/* 676 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// 19.1.3.19 Object.setPrototypeOf(O, proto)
-var $export = __webpack_require__(53);
-$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(677).set });
 
 
 /***/ }),
 /* 677 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(159)('asyncIterator');
+
+
+/***/ }),
+/* 678 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(159)('observable');
+
+
+/***/ }),
+/* 679 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = { "default": __webpack_require__(680), __esModule: true };
+
+/***/ }),
+/* 680 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(681);
+module.exports = __webpack_require__(23).Object.setPrototypeOf;
+
+
+/***/ }),
+/* 681 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// 19.1.3.19 Object.setPrototypeOf(O, proto)
+var $export = __webpack_require__(53);
+$export($export.S, 'Object', { setPrototypeOf: __webpack_require__(682).set });
+
+
+/***/ }),
+/* 682 */
+/***/ (function(module, exports, __webpack_require__) {
+
 // Works with __proto__ only. Old v8 can't work with null proto objects.
 /* eslint-disable no-proto */
-var isObject = __webpack_require__(77);
-var anObject = __webpack_require__(76);
+var isObject = __webpack_require__(78);
+var anObject = __webpack_require__(77);
 var check = function (O, proto) {
   anObject(O);
   if (!isObject(proto) && proto !== null) throw TypeError(proto + ": can't set as prototype!");
@@ -85430,7 +86018,7 @@ module.exports = {
   set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
     function (test, buggy, set) {
       try {
-        set = __webpack_require__(143)(Function.call, __webpack_require__(157).f(Object.prototype, '__proto__').set, 2);
+        set = __webpack_require__(146)(Function.call, __webpack_require__(160).f(Object.prototype, '__proto__').set, 2);
         set(test, []);
         buggy = !(test instanceof Array);
       } catch (e) { buggy = true; }
@@ -85446,16 +86034,16 @@ module.exports = {
 
 
 /***/ }),
-/* 678 */
+/* 683 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(679), __esModule: true };
+module.exports = { "default": __webpack_require__(684), __esModule: true };
 
 /***/ }),
-/* 679 */
+/* 684 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(680);
+__webpack_require__(685);
 var $Object = __webpack_require__(23).Object;
 module.exports = function create(P, D) {
   return $Object.create(P, D);
@@ -85463,16 +86051,16 @@ module.exports = function create(P, D) {
 
 
 /***/ }),
-/* 680 */
+/* 685 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $export = __webpack_require__(53);
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
-$export($export.S, 'Object', { create: __webpack_require__(153) });
+$export($export.S, 'Object', { create: __webpack_require__(156) });
 
 
 /***/ }),
-/* 681 */
+/* 686 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85480,11 +86068,11 @@ $export($export.S, 'Object', { create: __webpack_require__(153) });
 
 exports.__esModule = true;
 
-var _getPrototypeOf = __webpack_require__(682);
+var _getPrototypeOf = __webpack_require__(687);
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-var _getOwnPropertyDescriptor = __webpack_require__(685);
+var _getOwnPropertyDescriptor = __webpack_require__(690);
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
@@ -85516,28 +86104,28 @@ exports.default = function get(object, property, receiver) {
 };
 
 /***/ }),
-/* 682 */
+/* 687 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(683), __esModule: true };
+module.exports = { "default": __webpack_require__(688), __esModule: true };
 
 /***/ }),
-/* 683 */
+/* 688 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(684);
+__webpack_require__(689);
 module.exports = __webpack_require__(23).Object.getPrototypeOf;
 
 
 /***/ }),
-/* 684 */
+/* 689 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 Object.getPrototypeOf(O)
-var toObject = __webpack_require__(109);
-var $getPrototypeOf = __webpack_require__(339);
+var toObject = __webpack_require__(111);
+var $getPrototypeOf = __webpack_require__(345);
 
-__webpack_require__(341)('getPrototypeOf', function () {
+__webpack_require__(347)('getPrototypeOf', function () {
   return function getPrototypeOf(it) {
     return $getPrototypeOf(toObject(it));
   };
@@ -85545,16 +86133,16 @@ __webpack_require__(341)('getPrototypeOf', function () {
 
 
 /***/ }),
-/* 685 */
+/* 690 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(686), __esModule: true };
+module.exports = { "default": __webpack_require__(691), __esModule: true };
 
 /***/ }),
-/* 686 */
+/* 691 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(687);
+__webpack_require__(692);
 var $Object = __webpack_require__(23).Object;
 module.exports = function getOwnPropertyDescriptor(it, key) {
   return $Object.getOwnPropertyDescriptor(it, key);
@@ -85562,14 +86150,14 @@ module.exports = function getOwnPropertyDescriptor(it, key) {
 
 
 /***/ }),
-/* 687 */
+/* 692 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
 var toIObject = __webpack_require__(68);
-var $getOwnPropertyDescriptor = __webpack_require__(157).f;
+var $getOwnPropertyDescriptor = __webpack_require__(160).f;
 
-__webpack_require__(341)('getOwnPropertyDescriptor', function () {
+__webpack_require__(347)('getOwnPropertyDescriptor', function () {
   return function getOwnPropertyDescriptor(it, key) {
     return $getOwnPropertyDescriptor(toIObject(it), key);
   };
@@ -85577,7 +86165,7 @@ __webpack_require__(341)('getOwnPropertyDescriptor', function () {
 
 
 /***/ }),
-/* 688 */
+/* 693 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85590,7 +86178,7 @@ exports['default'] = addEventListener;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _EventObject = __webpack_require__(689);
+var _EventObject = __webpack_require__(694);
 
 var _EventObject2 = _interopRequireDefault(_EventObject);
 
@@ -85634,7 +86222,7 @@ function addEventListener(target, eventType, callback, option) {
 module.exports = exports['default'];
 
 /***/ }),
-/* 689 */
+/* 694 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85652,11 +86240,11 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _EventBaseObject = __webpack_require__(690);
+var _EventBaseObject = __webpack_require__(695);
 
 var _EventBaseObject2 = _interopRequireDefault(_EventBaseObject);
 
-var _objectAssign = __webpack_require__(136);
+var _objectAssign = __webpack_require__(139);
 
 var _objectAssign2 = _interopRequireDefault(_objectAssign);
 
@@ -85918,7 +86506,7 @@ exports['default'] = DomEventObject;
 module.exports = exports['default'];
 
 /***/ }),
-/* 690 */
+/* 695 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -85987,36 +86575,36 @@ exports["default"] = EventBaseObject;
 module.exports = exports["default"];
 
 /***/ }),
-/* 691 */
+/* 696 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = { "default": __webpack_require__(692), __esModule: true };
+module.exports = { "default": __webpack_require__(697), __esModule: true };
 
 /***/ }),
-/* 692 */
+/* 697 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(336);
-__webpack_require__(693);
+__webpack_require__(342);
+__webpack_require__(698);
 module.exports = __webpack_require__(23).Array.from;
 
 
 /***/ }),
-/* 693 */
+/* 698 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var ctx = __webpack_require__(143);
+var ctx = __webpack_require__(146);
 var $export = __webpack_require__(53);
-var toObject = __webpack_require__(109);
-var call = __webpack_require__(694);
-var isArrayIter = __webpack_require__(695);
-var toLength = __webpack_require__(334);
-var createProperty = __webpack_require__(696);
-var getIterFn = __webpack_require__(697);
+var toObject = __webpack_require__(111);
+var call = __webpack_require__(699);
+var isArrayIter = __webpack_require__(700);
+var toLength = __webpack_require__(340);
+var createProperty = __webpack_require__(701);
+var getIterFn = __webpack_require__(702);
 
-$export($export.S + $export.F * !__webpack_require__(699)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(704)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -86046,11 +86634,11 @@ $export($export.S + $export.F * !__webpack_require__(699)(function (iter) { Arra
 
 
 /***/ }),
-/* 694 */
+/* 699 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
-var anObject = __webpack_require__(76);
+var anObject = __webpack_require__(77);
 module.exports = function (iterator, fn, value, entries) {
   try {
     return entries ? fn(anObject(value)[0], value[1]) : fn(value);
@@ -86064,11 +86652,11 @@ module.exports = function (iterator, fn, value, entries) {
 
 
 /***/ }),
-/* 695 */
+/* 700 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
-var Iterators = __webpack_require__(86);
+var Iterators = __webpack_require__(88);
 var ITERATOR = __webpack_require__(40)('iterator');
 var ArrayProto = Array.prototype;
 
@@ -86078,13 +86666,13 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 696 */
+/* 701 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 var $defineProperty = __webpack_require__(55);
-var createDesc = __webpack_require__(85);
+var createDesc = __webpack_require__(87);
 
 module.exports = function (object, index, value) {
   if (index in object) $defineProperty.f(object, index, createDesc(0, value));
@@ -86093,12 +86681,12 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 697 */
+/* 702 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(698);
+var classof = __webpack_require__(703);
 var ITERATOR = __webpack_require__(40)('iterator');
-var Iterators = __webpack_require__(86);
+var Iterators = __webpack_require__(88);
 module.exports = __webpack_require__(23).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
@@ -86107,11 +86695,11 @@ module.exports = __webpack_require__(23).getIteratorMethod = function (it) {
 
 
 /***/ }),
-/* 698 */
+/* 703 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
-var cof = __webpack_require__(145);
+var cof = __webpack_require__(148);
 var TAG = __webpack_require__(40)('toStringTag');
 // ES3 wrong here
 var ARG = cof(function () { return arguments; }()) == 'Arguments';
@@ -86136,7 +86724,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 699 */
+/* 704 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ITERATOR = __webpack_require__(40)('iterator');
@@ -86164,7 +86752,7 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 700 */
+/* 705 */
 /***/ (function(module, exports) {
 
 //
@@ -86216,7 +86804,7 @@ module.exports = function shallowEqual(objA, objB, compare, compareContext) {
 
 
 /***/ }),
-/* 701 */
+/* 706 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -86224,9 +86812,9 @@ module.exports = function shallowEqual(objA, objB, compare, compareContext) {
  */
 
 try {
-  var index = __webpack_require__(343);
+  var index = __webpack_require__(349);
 } catch (err) {
-  var index = __webpack_require__(343);
+  var index = __webpack_require__(349);
 }
 
 /**

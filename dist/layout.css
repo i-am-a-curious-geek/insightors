@@ -7000,10 +7000,17 @@ tbody.datatable-facilities td {
   width: 50%;
 }
 
-.btn.btn-default.view-switcher {  
+.btn.btn-default.view-switcher,
+.btn.btn-default.view-switcher:hover,
+.btn.btn-default.view-switcher:focus,
+.btn.btn-default.view-switcher:active {
   right: 15px;
   position: fixed;
   z-index: 5000;
+  outline: none;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
 }
 
 #filter-box div.card-body {
@@ -7036,13 +7043,24 @@ tbody.datatable-facilities td {
   background: #a30032;
 }
 
+div.topbar__right div.topbar__button{
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #a30032;
+}
+
+div.topbar__right div.topbar__button:hover {
+  color: #ffffff;
+}
+
 ::selection {  
   color: #FFFFFF;
   background: #a30032;
   outline: #a30032;
-}
-
-.topbar {
+}.topbar {
   width: 100%;
   position: fixed;
   top: 0;
